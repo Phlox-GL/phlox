@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@calcit/procs": "^0.2.45"
+  },
+  "devDependencies": {
+    "vite": "^2.0.0-beta.62"
+  },
+  "version": "0.0.1"
+}
