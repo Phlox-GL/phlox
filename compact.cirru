@@ -425,10 +425,10 @@
       :proc $ quote ()
     |phlox.app.container $ {}
       :ns $ quote
-        ns phlox.app.container $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list >>) ([] phlox.app.comp.drafts :refer $ [] comp-drafts) ([] phlox.app.comp.keyboard :refer $ [] comp-keyboard) ([] phlox.comp.button :refer $ [] comp-button) ([] phlox.comp.drag-point :refer $ [] comp-drag-point) ([] phlox.comp.switch :refer $ [] comp-switch) ([] phlox.app.comp.slider-demo :refer $ [] comp-slider-demo comp-slider-point-demo) ([] phlox.input :refer $ [] request-text!) ([] phlox.comp.messages :refer $ [] comp-messages) ([] "\"shortid" :as shortid) ([] respo-ui.core :as ui)
+        ns phlox.app.container $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list >>) ([] phlox.app.comp.drafts :refer $ [] comp-drafts) ([] phlox.app.comp.keyboard :refer $ [] comp-keyboard) ([] phlox.comp.button :refer $ [] comp-button) ([] phlox.comp.drag-point :refer $ [] comp-drag-point) ([] phlox.comp.switch :refer $ [] comp-switch) ([] phlox.app.comp.slider-demo :refer $ [] comp-slider-demo comp-slider-point-demo) ([] phlox.input :refer $ [] request-text!) ([] phlox.comp.messages :refer $ [] comp-messages) ([] "\"shortid" :as shortid) ([] respo-ui.core :as ui) ([] memof.alias :refer $ [] memof-call)
       :defs $ {}
         |comp-grids $ quote
-          defcomp comp-grids ()
+          defcomp comp-grids () (echo "\"calculating grids")
             container ({})
               create-list :container
                 {} $ :position ([] 200 20)
@@ -569,7 +569,7 @@
                         [] idx $ comp-tab-entry tab title idx (= tab $ :tab store)
                 case (:tab store)
                   :drafts $ comp-drafts (:x store)
-                  :grids $ comp-grids
+                  :grids $ memof-call comp-grids
                   :curves $ comp-curves
                   :gradients $ comp-gradients
                   :keyboard $ comp-keyboard (:keyboard-on? store) (:counted store)
@@ -929,7 +929,7 @@
                       :on props
                     (some? $ :on-pointertap props)
                       {} $ :pointertap (:on-pointertap props)
-                    :else $ do
+                    true $ do
                 text $ {} (:text button-text) (:position $ [] 8 8)
                   :style $ {} (:fill color) (:font-size size) (:font-family font-family)
         |lilac-button $ quote
@@ -1001,16 +1001,16 @@
                         :rotation $ * 0.1 (+ idx x)
               graphics $ {}
                 :ops $ []
-                  [] :line-style $ {} (:width 4) (:color $ hslx 200 80 80) (:alpha 1)
-                  [] :begin-fill $ {} (:color $ hslx 0 80 20)
-                  [] :move-to $ []
+                  g :line-style $ {} (:width 4) (:color $ hslx 200 80 80) (:alpha 1)
+                  g :begin-fill $ {} (:color $ hslx 0 80 20)
+                  g :move-to $ []
                     + (* 20 x) 100
                     , 200
-                  [] :line-to $ []
+                  g :line-to $ []
                     + (* 20 x) 400
                     , 400
-                  [] :line-to $ [] (- 500 $ * 20 x) (, 300)
-                  [] :close-path
+                  g :line-to $ [] (- 500 $ * 20 x) (, 300)
+                  g :close-path
                 :rotation 0.1
                 :pivot $ [] 0 100
                 :alpha 0.5
@@ -1271,7 +1271,7 @@
       :proc $ quote ()
     |phlox.core $ {}
       :ns $ quote
-        ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.render :refer $ [] render-element update-element update-children) ([] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?) ([] "\"./hue-to-rgb" :refer $ [] hslToRgb) ([] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+) ([] phlox.keyboard :refer $ [] handle-keyboard-events) ([] memof.core :as memof)
+        ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.render :refer $ [] render-element update-element update-children) ([] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?) ([] "\"./hue-to-rgb" :refer $ [] hslToRgb) ([] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+) ([] phlox.keyboard :refer $ [] handle-keyboard-events) ([] memof.alias :refer $ [] reset-calling-caches! tick-calling-loop!)
       :defs $ {}
         |>> $ quote
           defn >> (states k)
@@ -1313,13 +1313,10 @@
                 do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                 rerender-app! expanded-app wrap-dispatch options
               reset! *tree-element expanded-app
-            memof/new-loop! *phlox-caches
+            tick-calling-loop!
         |create-list $ quote
           defn create-list (tag props children)
             {} (:name tag) (:phlox-node :element) (:props props) (:children $ remove-nil-values children)
-        |*phlox-caches $ quote
-          defatom *phlox-caches $ memof/new-states
-            {} (:trigger-loop 200) (:elapse-loop 600)
         |graphics $ quote
           defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
         |mount-app! $ quote
@@ -1353,9 +1350,11 @@
             {} (:p1 lilac-point) (:to-p lilac-point)
             {} $ :exact-keys? true
         |g $ quote
-          defn g (op data)
-            case op (:move-to $ dev-check-message "\"check :move-to" data lilac-point) (:line-to $ dev-check-message "\"check :line-to" data lilac-point) (:line-style $ dev-check-message "\"check :line-style" data lilac-line-style) (:begin-fill $ dev-check-message "\"check :fill" data lilac-begin-fill) (:end-fill $ do) (:close-path $ do) (:arc $ dev-check-message "\"check :arc" data lilac-arc) (:arc-to $ dev-check-message "\"check :arc-to" data lilac-arc-to) (:bezier-to $ dev-check-message "\"check :bezier-to" data lilac-bezier-to) (:quadratic-to $ dev-check-message "\"check :quadratic-to" data lilac-quodratic-to) (:begin-hole $ do) (:end-hole $ do) (op $ js/console.warn "\"not supported:" op)
-            [] op data
+          defn g (op & args)
+            let
+                data $ first args
+              case op (:move-to $ dev-check-message "\"check :move-to" data lilac-point) (:line-to $ dev-check-message "\"check :line-to" data lilac-point) (:line-style $ dev-check-message "\"check :line-style" data lilac-line-style) (:begin-fill $ dev-check-message "\"check :fill" data lilac-begin-fill) (:end-fill $ do) (:close-path $ do) (:arc $ dev-check-message "\"check :arc" data lilac-arc) (:arc-to $ dev-check-message "\"check :arc-to" data lilac-arc-to) (:bezier-to $ dev-check-message "\"check :bezier-to" data lilac-bezier-to) (:quadratic-to $ dev-check-message "\"check :quadratic-to" data lilac-quodratic-to) (:begin-hole $ do) (:end-hole $ do) (op $ js/console.warn "\"not supported:" op)
+              [] op data
         |*tree-element $ quote (defatom *tree-element nil)
         |rect $ quote
           defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
@@ -1371,7 +1370,7 @@
         |container $ quote
           defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
         |clear-phlox-caches! $ quote
-          defn clear-phlox-caches! () (memof/reset-entries! *phlox-caches)
+          defn clear-phlox-caches! () (reset-calling-caches!)
       :proc $ quote ()
     |phlox.render $ {}
       :ns $ quote
@@ -1594,7 +1593,8 @@
                   let
                       target $ .getChildAt parent-element idx
                     case (:name element) (:container $ update-container element old-element target) (:circle $ update-circle element old-element target dispatch!) (:rect $ update-rect element old-element target dispatch!) (:text $ update-text element old-element target) (:graphics $ update-graphics element old-element target dispatch!)
-                      do $ println "\"not implement yet for updating:" (:name element)
+                        :name element
+                        do $ println "\"not implement yet for updating:" (:name element)
                   update-children (:children element) (:children old-element) (.getChildAt parent-element idx) (, dispatch! options)
               (not= (:name element) (:name old-element))
                 do (.removeChildAt parent-element idx)
