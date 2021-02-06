@@ -4,9 +4,7 @@
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
-        ns phlox.check
-          :require $ [] lilac.core :refer ([] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+)
-          :require-macros $ [] phlox.check
+        ns phlox.check $ :require ([] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+)
       :defs $ {}
         |lilac-text-style $ quote
           def lilac-text-style $ record+
@@ -20,7 +18,7 @@
               :drop-shadow-blur $ number+
               :drop-shadow-color lilac-color
               :drop-shadow-distance $ number+
-              :fill $ or+ ([] lilac-color $ vector+ lilac-color)
+              :fill $ or+ ([] lilac-color $ list+ lilac-color)
               :fill-gradient-type $ enum+ (#{} :vertical :horizontal :v :h)
               :fill-gradient-stops $ any+
               :font-family $ string+
@@ -65,14 +63,20 @@
             {} (:width $ number+) (:color $ number+)
               :alpha $ optional+ (number+)
         |dev-check-message $ quote
-          defmacro dev-check-message (message data rule) (quote-replace "\"TODO")
+          defmacro dev-check-message (message data rule)
+            if (= "\"true" $ get-env "\"dev")
+              &let (result $ gensym "\"result")
+                quote-replace $ &let (~result $ validate-lilac ~data ~rule)
+                  when-not (:ok? ~result)
+                    js/console.error (:formatted-message ~result) &newline (str ~message "\", when props is:") (to-js-data ~data)
+              quote-replace $ do
         |lilac-graphics $ quote
           def lilac-graphics $ record+
             {} (:on $ optional+ lilac-event-map) (:position $ optional+ lilac-point) (:pivot $ optional+ lilac-point)
               :alpha $ optional+ (number+)
               :rotation $ optional+ (number+)
               :angle $ optional+ (number+)
-              :ops $ vector+
+              :ops $ list+
                 optional+ $ tuple+
                   [] (keyword+) (any+)
                 {} $ :allow-seq? true
@@ -90,7 +94,15 @@
             {} $ :check-keys? true
         |in-dev? $ quote (def in-dev? $ do ^boolean js/goog.DEBUG)
         |dev-check $ quote
-          defmacro dev-check (data rule) (quote-replace "\"TODO")
+          defmacro dev-check (data rule)
+            if (= "\"true" $ get-env "\"dev")
+              &let (result $ gensym "\"result")
+                quote-replace $ &let (~result $ validate-lilac ~data ~rule)
+                  when-not (:ok? ~result)
+                    js/console.error (:formatted-message ~result) &newline
+                      str "\"(dev-check " (quote ~data) "\" " (quote ~rule) "\") where props is:"
+                      to-js-data ~data
+              quote-replace $ do
         |lilac-event-map $ quote
           def lilac-event-map $ map+ (keyword+) (fn+)
         |lilac-text $ quote
@@ -109,7 +121,7 @@
       :proc $ quote ()
     |phlox.render.draw $ {}
       :ns $ quote
-        ns phlox.render.draw $ :require ([] phlox.util :refer $ [] use-number) ([] lilac.core :refer $ [] record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ vector+ or+) ([] phlox.check :refer $ [] dev-check dev-check-message lilac-point lilac-line-style lilac-color) ([] phlox.math :refer $ [] angle->radian)
+        ns phlox.render.draw $ :require ([] phlox.util :refer $ [] use-number) ([] lilac.core :refer $ [] record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ list+ or+) ([] phlox.check :refer $ [] dev-check dev-check-message lilac-point lilac-line-style lilac-color) ([] phlox.math :refer $ [] angle->radian)
       :defs $ {}
         |draw-circle $ quote
           defn draw-circle (target radius)
@@ -230,7 +242,7 @@
       :proc $ quote ()
     |phlox.comp.messages $ {}
       :ns $ quote
-        ns phlox.comp.messages $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check lilac-point) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+) ([] phlox.comp.button :refer $ [] comp-button)
+        ns phlox.comp.messages $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check lilac-point) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+) ([] phlox.comp.button :refer $ [] comp-button)
       :defs $ {}
         |comp-messages $ quote
           defcomp comp-messages (options) (dev-check options lilac-messages)
@@ -261,7 +273,7 @@
             {} (:messages lilac-message-list) (:color $ number+) (:fill $ number+) (:position lilac-point) (:bottom? $ boolean+) (:on-pointertap $ fn+)
             {} (:check-keys? true) (:all-optional? true)
         |lilac-message-list $ quote
-          def lilac-message-list $ vector+
+          def lilac-message-list $ list+
             record+
               {} (:id $ string+) (:text $ string+)
               {} $ :exact-keys? true
@@ -512,10 +524,9 @@
                   :on-pointertap $ fn (message d!)
                     d! cursor $ update state :messages
                       fn (xs)
-                        ->> xs
-                          remove $ fn (x)
+                        ->> xs $ filter-not
+                          fn (x)
                             = (:id x) (:id message)
-                          vec
         |comp-tab-entry $ quote
           defcomp comp-tab-entry (tab-value tab-title idx selected?)
             container
@@ -569,8 +580,9 @@
                   :input $ comp-text-input (>> states :input)
                   :messages $ comp-messages-demo (>> states :messages)
                   :slider-point $ comp-slider-point-demo (>> states :slider-point)
-                  text $ {} (:text "\"Unknown")
-                    :style $ {} (:fill $ hslx 0 100 80) (:font-size 12) (:font-family "\"Helvetica")
+                  (:tab store)
+                    text $ {} (:text "\"Unknown")
+                      :style $ {} (:fill $ hslx 0 100 80) (:font-size 12) (:font-family "\"Helvetica")
         |comp-switch-demo $ quote
           defcomp comp-switch-demo (states)
             let
@@ -675,7 +687,7 @@
       :proc $ quote ()
     |phlox.comp.switch $ {}
       :ns $ quote
-        ns phlox.comp.switch $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check lilac-point) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+)
+        ns phlox.comp.switch $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check lilac-point) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+)
       :defs $ {}
         |comp-switch $ quote
           defcomp comp-switch (props) (dev-check props lilac-switch)
@@ -733,14 +745,16 @@
         |main! $ quote
           defn main! () (; js/console.log PIXI)
             -> (new FontFaceObserver/default "\"Josefin Sans") (.load)
-              .then $ fn (event)
-                render! (comp-container @*store) dispatch! $ {}
-            add-watch *store :change $ fn (store prev)
-              render! (comp-container @*store) dispatch! $ {}
+              .then $ fn (event) (render-app!)
+            add-watch *store :change $ fn (store prev) (render-app!)
             println "\"App Started"
         |reload! $ quote
-          defn reload! () (println "\"Code updated") (clear-phlox-caches!)
-            render! (comp-container @*store) dispatch! $ {} (:swap? true)
+          defn reload! () (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
+            add-watch *store :change $ fn (store prev) (render-app!)
+            render-app! true
+        |render-app! $ quote
+          defn render-app! (& args)
+            render! (comp-container @*store) dispatch! $ either (first args) ({})
       :proc $ quote ()
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
@@ -756,7 +770,7 @@
       :proc $ quote ()
     |phlox.comp.slider $ {}
       :ns $ quote
-        ns phlox.comp.slider $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+)
+        ns phlox.comp.slider $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+)
       :defs $ {}
         |comp-slider $ quote
           defcomp comp-slider (states props)
@@ -826,7 +840,7 @@
                 tuple+ $ [] (number+) (number+)
             {} $ :check-keys? true
         |lilac-cursor $ quote
-          def lilac-cursor $ vector+
+          def lilac-cursor $ list+
             any+ $ {} (:some? true)
         |comp-slider-point $ quote
           defcomp comp-slider-point (states props)
@@ -889,7 +903,7 @@
       :proc $ quote ()
     |phlox.comp.button $ {}
       :ns $ quote
-        ns phlox.comp.button $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.util :refer $ [] measure-text-width!) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+) ([] phlox.check :refer $ [] lilac-event-map dev-check)
+        ns phlox.comp.button $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.util :refer $ [] measure-text-width!) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+) ([] phlox.check :refer $ [] lilac-event-map dev-check)
       :defs $ {}
         |comp-button $ quote
           defcomp comp-button (props) (dev-check props lilac-button)
@@ -1035,7 +1049,7 @@
       :proc $ quote ()
     |phlox.input $ {}
       :ns $ quote
-        ns phlox.input $ :require ([] respo.render.html :refer $ [] style->string) ([] respo.util.format :refer $ [] hsl) ([] respo-ui.core :as ui) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+) ([] phlox.check :refer $ [] dev-check)
+        ns phlox.input $ :require ([] respo.render.html :refer $ [] style->string) ([] respo.util.format :refer $ [] hsl) ([] respo-ui.core :as ui) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+) ([] phlox.check :refer $ [] dev-check)
       :defs $ {}
         |request-text! $ quote
           defn request-text! (e options cb) (dev-check options lilac-input)
@@ -1111,7 +1125,7 @@
       :proc $ quote ()
     |phlox.comp.drag-point $ {}
       :ns $ quote
-        ns phlox.comp.drag-point $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ vector+ or+ is+) ([] phlox.complex :as complex)
+        ns phlox.comp.drag-point $ :require ([] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list) ([] phlox.check :refer $ [] lilac-event-map dev-check) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+) ([] phlox.complex :as complex)
       :defs $ {}
         |comp-drag-point $ quote
           defn comp-drag-point (states props)
@@ -1186,7 +1200,7 @@
               :on-change $ fn+
             {} $ :check-keys? true
         |lilac-cursor $ quote
-          def lilac-cursor $ vector+
+          def lilac-cursor $ list+
             any+ $ {} (:some? true)
       :proc $ quote ()
     |phlox.app.comp.slider-demo $ {}
@@ -1257,9 +1271,7 @@
       :proc $ quote ()
     |phlox.core $ {}
       :ns $ quote
-        ns phlox.core
-          :require ([] "\"pixi.js" :as PIXI) ([] phlox.render :refer $ [] render-element update-element update-children) ([] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?) ([] "\"./hue-to-rgb" :refer $ [] hslToRgb) ([] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ vector+ or+) ([] phlox.keyboard :refer $ [] handle-keyboard-events) ([] memof.core :as memof)
-          :require-macros $ [] phlox.core
+        ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.render :refer $ [] render-element update-element update-children) ([] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?) ([] "\"./hue-to-rgb" :refer $ [] hslToRgb) ([] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style) ([] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+) ([] phlox.keyboard :refer $ [] handle-keyboard-events) ([] memof.core :as memof)
       :defs $ {}
         |>> $ quote
           defn >> (states k)
@@ -1317,15 +1329,6 @@
               .addChild (.-stage @*app) element-tree
         |*app $ quote (defatom *app nil)
         |*renderer $ quote (defatom *renderer nil)
-        |call-comp-helper $ quote
-          defn call-comp-helper (f params)
-            if (or $ some fn? params) (apply f params)
-              let
-                  v $ memof/access-record *phlox-caches f params
-                if (some? v) v $ let
-                    result $ apply f params
-                  memof/write-record! *phlox-caches f params result
-                  , result
         |lilac-arc-to $ quote
           def lilac-arc-to $ record+
             {} (:p1 lilac-point) (:p2 lilac-point) (:radius $ number+)
@@ -1599,9 +1602,8 @@
               :else $ js/console.warn "\"Unknown case:" element old-element
         |update-children $ quote
           defn update-children (children-dict old-children-dict parent-container dispatch! options)
-            when in-dev? $ assert
+            when in-dev? $ assert "\"children should not contain nil element"
               and (every? some? $ map last children-dict) (every? some? $ map last old-children-dict)
-              , "\"children should not contain nil element"
             let
                 list-ops $ find-minimal-ops lcs-state-0 (map first old-children-dict) (map first children-dict)
               ; js/console.log "\"ops" $ :total list-ops
@@ -1621,20 +1623,19 @@
                         update-element (last $ first xs) (last $ first ys) (, parent-container idx dispatch! options)
                         recur (inc idx) (rest ops) (rest xs) (rest ys)
                       :add $ do
-                        when in-dev? $ assert
+                        when in-dev? $ assert "\"check key"
                           = (last op) (first $ first xs)
-                          , "\"check key"
                         .addChildAt parent-container
                           render-element (last $ first xs) (, dispatch!)
                           , idx
                         recur (inc idx) (rest ops) (rest xs) (, ys)
                       :remove $ do
-                        when in-dev? $ assert
+                        when in-dev? $ assert "\"check key"
                           = (last op) (first $ first ys)
-                          , "\"check key"
                         .removeChildAt parent-container idx
                         recur idx (rest ops) xs $ rest ys
-                      do $ println "\"Unknown op:" op
+                      (first op)
+                        do $ println "\"Unknown op:" op
       :proc $ quote ()
     |phlox.math $ {}
       :ns $ quote (ns phlox.math)
