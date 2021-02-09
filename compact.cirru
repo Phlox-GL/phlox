@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:version |0.4.1)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:version |0.4.2)
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -1040,7 +1040,8 @@
                   ->> (:children tree)
                     map $ fn (pair)
                       let[] (k child) pair $ handle-event kind child event dispatch!
-                do $ js/console.log "\"unknown tree for handling event:" tree
+                (:phlox-node tree)
+                  do $ js/console.log "\"unknown tree for handling event:" tree
         |wrap-event $ quote
           defn wrap-event (event)
             {} (:event event) (:key $ .-key event) (:key-code $ .-keyCode event) (:ctrl? $ .-ctrlKey event) (:meta? $ .-metaKey event) (:shift? $ .-shiftKey event)
