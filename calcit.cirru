@@ -9311,14 +9311,20 @@
                                           |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910706691) (:text |listener)
                                           |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910924139) (:text |event)
                                           |r $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910750393) (:text |dispatch!)
-                      |x $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1582910445439)
+                      |x $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1612874347497)
                         :data $ {}
-                          |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910445840) (:text |do)
-                          |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1582910446603)
+                          |T $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1582910445439)
                             :data $ {}
-                              |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910465723) (:text |js/console.log)
-                              |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910459417) (:text "|\"unknown tree for handling event:")
-                              |r $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910461407) (:text |tree)
+                              |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910445840) (:text |do)
+                              |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1582910446603)
+                                :data $ {}
+                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910465723) (:text |js/console.log)
+                                  |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910459417) (:text "|\"unknown tree for handling event:")
+                                  |r $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910461407) (:text |tree)
+                          |D $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1612874348250)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1612874348250) (:text |:phlox-node)
+                              |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1612874348250) (:text |tree)
                       |n $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1582910468295)
                         :data $ {}
                           |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1582910468295) (:text |:component)
@@ -15480,4 +15486,4 @@
                                     :data $ {}
                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583033687554) (:text |{})
         :proc $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1573356292089) (:data $ {})
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:output |src) (:port 6001) (:extension |.cljs) (:init-fn |phlox.app.main/main!) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.1)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:output |src) (:port 6001) (:extension |.cljs) (:init-fn |phlox.app.main/main!) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.2)
