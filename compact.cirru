@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:version |0.4.0)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:version |0.4.1)
   :files $ {}
     |phlox.check $ {}
       :ns $ quote

@@ -15480,4 +15480,4 @@
                                     :data $ {}
                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583033687554) (:text |{})
         :proc $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1573356292089) (:data $ {})
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:output |src) (:port 6001) (:extension |.cljs) (:init-fn |phlox.app.main/main!) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.0)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:output |src) (:port 6001) (:extension |.cljs) (:init-fn |phlox.app.main/main!) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.1)
