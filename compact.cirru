@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:version |0.4.2)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:version |0.4.3)
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -806,8 +806,8 @@
                                   + (:v0 state)
                                     * unit $ - x2 (:x0 state)
                                   (fn (v) (if round? (js/Math.round v) v))
-                                  (fn (v) (if (some? $ :max props) (min (:max props) v) (, v)))
-                                  (fn (v) (if (some? $ :min props) (max (:min props) v) (, v)))
+                                  (fn (v) (if (some? $ :max props) (&min (:max props) v) (, v)))
+                                  (fn (v) (if (some? $ :min props) (&max (:min props) v) (, v)))
                                 , d!
                               js/console.log "\"[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
@@ -875,8 +875,8 @@
                                   + (:v0 state)
                                     * unit $ - x2 (:x0 state)
                                   (fn (v) (if round? (js/Math.round v) v))
-                                  (fn (v) (if (some? $ :max props) (min (:max props) v) (, v)))
-                                  (fn (v) (if (some? $ :min props) (max (:min props) v) (, v)))
+                                  (fn (v) (if (some? $ :max props) (&min (:max props) v) (, v)))
+                                  (fn (v) (if (some? $ :min props) (&max (:min props) v) (, v)))
                                 , d!
                               js/console.log "\"[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)

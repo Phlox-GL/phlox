@@ -7060,7 +7060,7 @@
                                                                               |v $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556851592) (:text |v)
                                                                               |p $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556878874)
                                                                                 :data $ {}
-                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556892186) (:text |min)
+                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1612961927474) (:text |&min)
                                                                                   |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556884603)
                                                                                     :data $ {}
                                                                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556885207) (:text |:max)
@@ -7087,7 +7087,7 @@
                                                                               |v $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556851592) (:text |v)
                                                                               |p $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556878874)
                                                                                 :data $ {}
-                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556905679) (:text |max)
+                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1612943649032) (:text |&max)
                                                                                   |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556884603)
                                                                                     :data $ {}
                                                                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556903222) (:text |:min)
@@ -7713,7 +7713,7 @@
                                                                               |v $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556851592) (:text |v)
                                                                               |p $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556878874)
                                                                                 :data $ {}
-                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556892186) (:text |min)
+                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1612961934059) (:text |&min)
                                                                                   |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556884603)
                                                                                     :data $ {}
                                                                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556885207) (:text |:max)
@@ -7740,7 +7740,7 @@
                                                                               |v $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556851592) (:text |v)
                                                                               |p $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556878874)
                                                                                 :data $ {}
-                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556905679) (:text |max)
+                                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1612961935996) (:text |&max)
                                                                                   |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1583556884603)
                                                                                     :data $ {}
                                                                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583556903222) (:text |:min)
@@ -15486,4 +15486,4 @@
                                     :data $ {}
                                       |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1583033687554) (:text |{})
         :proc $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1573356292089) (:data $ {})
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:output |src) (:port 6001) (:extension |.cljs) (:init-fn |phlox.app.main/main!) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.2)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/) (:output |src) (:port 6001) (:extension |.cljs) (:init-fn |phlox.app.main/main!) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.3)
