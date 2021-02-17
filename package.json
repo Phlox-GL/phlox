@@ -1,12 +1,12 @@
 {
   "version": "0.4.3",
   "dependencies": {
-    "@calcit/procs": "^0.2.55",
+    "@calcit/procs": "^0.2.62",
     "fontfaceobserver-es": "^3.3.3",
     "pixi.js": "^5.3.7",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "vite": "^2.0.0-beta.62"
+    "vite": "^2.0.0"
   }
 }
