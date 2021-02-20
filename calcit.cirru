@@ -15521,4 +15521,4 @@
     :init-fn |phlox.app.main/main!
     :compact-output? true
     :storage-key |calcit.cirru
-    :version |0.4.3
+    :version |0.4.4
