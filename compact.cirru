@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.5
+    :version |0.4.6
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -1276,7 +1276,9 @@
                   :pointertap $ fn (e dispatch!) (println "\"clicked")
       :proc $ quote ()
     |phlox.keyboard $ {}
-      :ns $ quote (ns phlox.keyboard)
+      :ns $ quote
+        ns phlox.keyboard $ :require
+          [] phlox.util :refer $ [] element?
       :defs $ {}
         |handle-keyboard-events $ quote
           defn handle-keyboard-events (*tree-element dispatch!)
