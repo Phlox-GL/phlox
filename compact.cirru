@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.4
+    :version |0.4.5
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -296,13 +296,13 @@
     |phlox.comp.messages $ {}
       :ns $ quote
         ns phlox.comp.messages $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
           [] phlox.comp.button :refer $ [] comp-button
       :defs $ {}
         |comp-messages $ quote
-          defcomp comp-messages (options) (dev-check options lilac-messages)
+          defn comp-messages (options) (dev-check options lilac-messages)
             let
                 messages $ :messages options
                 bottom? $ :bottom? options
@@ -347,14 +347,13 @@
       :proc $ quote ()
     |phlox.util $ {}
       :ns $ quote
-        ns phlox.util $ :require ([] "\"pixi.js" :as PIXI)
+        ns phlox.util $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
       :defs $ {}
         |convert-line-style $ quote
           defn convert-line-style (props)
             ->> props (to-pairs)
               map $ fn (pair)
                 let-sugar
-                    
                       [] k v
                       , pair
                     key-name $ camel-case
@@ -390,15 +389,12 @@
             .-width $ .measureText @*ctx-instance text
         |element? $ quote
           defn element? (x)
-            = :element $ :phlox-node x
+            and (record? x) (relevant-record? x schema/PhloxElement)
         |camel-case $ quote
           defn camel-case (x)
             .replace x (new js/RegExp "\"-[a-z]")
               fn (x idx full-text)
                 .toUpperCase $ get x 1
-        |component? $ quote
-          defn component? (x)
-            = :component $ :phlox-node x
         |use-number $ quote
           defn use-number (x)
             if
@@ -444,7 +440,6 @@
         |add $ quote
           defn add (p1 p2)
             let-sugar
-                
                   [] a b
                   , p1
                 ([] x y) p2
@@ -482,7 +477,6 @@
       :defs $ {}
         |cdn? $ quote
           def cdn? $ cond
-            
               exists? js/window
               , false
             (exists? js/process) (= "\"true" js/process.env.cdn)
@@ -494,7 +488,7 @@
     |phlox.app.container $ {}
       :ns $ quote
         ns phlox.app.container $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list >>
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
           [] phlox.app.comp.drafts :refer $ [] comp-drafts
           [] phlox.app.comp.keyboard :refer $ [] comp-keyboard
           [] phlox.comp.button :refer $ [] comp-button
@@ -508,7 +502,7 @@
           [] memof.alias :refer $ [] memof-call
       :defs $ {}
         |comp-grids $ quote
-          defcomp comp-grids () (echo "\"calculating grids")
+          defn comp-grids () (echo "\"calculating grids")
             container ({})
               create-list :container
                 {} $ :position ([] 200 20)
@@ -525,7 +519,7 @@
                         :on $ {}
                           :pointerover $ fn (e d!) (println "\"hover:" x y)
         |comp-points-demo $ quote
-          defcomp comp-points-demo (states)
+          defn comp-points-demo (states)
             let
                 cursor $ :cursor states
                 state $ either (:data states)
@@ -570,7 +564,7 @@
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p5 position
         |comp-text-input $ quote
-          defcomp comp-text-input (states)
+          defn comp-text-input (states)
             let
                 cursor $ :cursor states
                 state $ either (:data states)
@@ -614,7 +608,7 @@
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
         |comp-buttons $ quote
-          defcomp comp-buttons () $ container
+          defn comp-buttons () $ container
             {} $ :position ([] 300 100)
             comp-button $ {} (:text "\"DEMO BUTTON")
               :position $ [] 100 0
@@ -628,7 +622,7 @@
               :position $ [] 100 120
               :on-pointertap $ fn (e d!) (println "\"clicked")
         |comp-messages-demo $ quote
-          defcomp comp-messages-demo (states)
+          defn comp-messages-demo (states)
             let
                 cursor $ :cursor states
                 state $ either (:data states)
@@ -660,7 +654,7 @@
                           fn (x)
                             = (:id x) (:id message)
         |comp-tab-entry $ quote
-          defcomp comp-tab-entry (tab-value tab-title idx selected?)
+          defn comp-tab-entry (tab-value tab-title idx selected?)
             container
               {} $ :position
                 [] 10 $ + 50 (* idx 40)
@@ -679,7 +673,7 @@
         |tabs $ quote
           def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point")
         |comp-gradients $ quote
-          defcomp comp-gradients () $ container ({})
+          defn comp-gradients () $ container ({})
             text $ {} (:text "\"long long text")
               :position $ [] 200 160
               :style $ {}
@@ -695,7 +689,7 @@
               :style $ {}
                 :fill $ hslx 20 90 60
         |comp-container $ quote
-          defcomp comp-container (store)
+          defn comp-container (store)
             ; println "\"Store" store $ :tab store
             let
                 cursor $ []
@@ -705,7 +699,6 @@
                   ->> tabs $ map-indexed
                     fn (idx info)
                       let-sugar
-                          
                             [] tab title
                             , info
                         [] idx $ comp-tab-entry tab title idx
@@ -730,7 +723,7 @@
                         :font-size 12
                         :font-family "\"Helvetica"
         |comp-switch-demo $ quote
-          defcomp comp-switch-demo (states)
+          defn comp-switch-demo (states)
             let
                 cursor $ :cursor states
                 state $ either (:data states)
@@ -749,7 +742,7 @@
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
         |comp-curves $ quote
-          defcomp comp-curves () $ graphics
+          defn comp-curves () $ graphics
             {} $ :ops
               []
                 g :line-style $ {} (:width 2)
@@ -805,7 +798,6 @@
           defn find-minimal-ops (state xs ys)
             ; println "\"find ops" state (count xs) (count ys)
             cond
-              
                 and (empty? xs) (empty? ys)
                 , state
               (and (empty? xs) (not (empty? ys)))
@@ -876,12 +868,12 @@
     |phlox.comp.switch $ {}
       :ns $ quote
         ns phlox.comp.switch $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
       :defs $ {}
         |comp-switch $ quote
-          defcomp comp-switch (props) (dev-check props lilac-switch)
+          defn comp-switch (props) (dev-check props lilac-switch)
             let
                 value $ :value props
                 on-change $ :on-change props
@@ -972,7 +964,6 @@
         |update-states $ quote
           defn update-states (store op-data)
             let-sugar
-                
                   [] cursor data
                   , op-data
               assoc-in store
@@ -982,12 +973,12 @@
     |phlox.comp.slider $ {}
       :ns $ quote
         ns phlox.comp.slider $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
       :defs $ {}
         |comp-slider $ quote
-          defcomp comp-slider (states props)
+          defn comp-slider (states props)
             dev-check (:cursor states) lilac-cursor
             dev-check props lilac-slider
             let
@@ -1066,7 +1057,7 @@
           def lilac-cursor $ list+
             any+ $ {} (:some? true)
         |comp-slider-point $ quote
-          defcomp comp-slider-point (states props)
+          defn comp-slider-point (states props)
             dev-check (:cursor states) lilac-cursor
             dev-check props lilac-slider-point
             let
@@ -1134,13 +1125,13 @@
     |phlox.comp.button $ {}
       :ns $ quote
         ns phlox.comp.button $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ []  g hslx rect circle text container graphics create-list
           [] phlox.util :refer $ [] measure-text-width!
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
           [] phlox.check :refer $ [] lilac-event-map dev-check
       :defs $ {}
         |comp-button $ quote
-          defcomp comp-button (props) (dev-check props lilac-button)
+          defn comp-button (props) (dev-check props lilac-button)
             let
                 button-text $ either (:text props) "\"BUTTON"
                 size $ either (:font-size props) 14
@@ -1204,10 +1195,10 @@
     |phlox.app.comp.drafts $ {}
       :ns $ quote
         ns phlox.app.comp.drafts $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
       :defs $ {}
         |comp-drafts $ quote
-          defcomp comp-drafts (x)
+          defn comp-drafts (x)
             container
               {}
                 :position $ [] 400 100
@@ -1298,17 +1289,15 @@
         |handle-event $ quote
           defn handle-event (kind tree event dispatch!)
             when (some? tree)
-              case (:phlox-node tree)
-                :component $ recur kind (:tree tree) event dispatch!
-                :element $ do
+              if (element? tree)
+                do
                   let
                       listener $ get-in tree ([] :props :on-keyboard kind)
                     when (fn? listener) (listener event dispatch!)
                   ->> (:children tree)
                     map $ fn (pair)
                       let[] (k child) pair $ handle-event kind child event dispatch!
-                (:phlox-node tree)
-                  do $ js/console.log "\"unknown tree for handling event:" tree
+                do $ js/console.log "\"unknown tree for handling event:" tree
         |wrap-event $ quote
           defn wrap-event (event)
             {} (:event event)
@@ -1416,7 +1405,7 @@
     |phlox.comp.drag-point $ {}
       :ns $ quote
         ns phlox.comp.drag-point $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
           [] phlox.complex :as complex
@@ -1511,11 +1500,11 @@
     |phlox.app.comp.slider-demo $ {}
       :ns $ quote
         ns phlox.app.comp.slider-demo $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list >>
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
           [] phlox.comp.slider :refer $ [] comp-slider comp-slider-point
       :defs $ {}
         |comp-slider-demo $ quote
-          defcomp comp-slider-demo (states)
+          defn comp-slider-demo (states)
             let
                 cursor $ :cursor states
                 state $ either (:data states)
@@ -1625,7 +1614,7 @@
       :proc $ quote ()
     |phlox.core $ {}
       :ns $ quote
-        ns phlox.core $ :require ([] "\"pixi.js" :as PIXI)
+        ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
           [] phlox.render :refer $ [] render-element update-element update-children
           [] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?
           [] "\"./hue-to-rgb" :refer $ [] hslToRgb
@@ -1655,7 +1644,7 @@
               , r0
         |create-element $ quote
           defn create-element (tag props children)
-            {} (:name tag) (:phlox-node :element) (:props props)
+            %{} schema/PhloxElement (:name tag) (:props props)
               :children $ remove-nil-values (index-items children)
         |render! $ quote
           defn render! (expanded-app dispatch! options)
@@ -1688,7 +1677,7 @@
             tick-calling-loop!
         |create-list $ quote
           defn create-list (tag props children)
-            {} (:name tag) (:phlox-node :element) (:props props)
+            %{} schema/PhloxElement (:name tag) (:props props)
               :children $ remove-nil-values children
         |graphics $ quote
           defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
@@ -1764,10 +1753,16 @@
         |clear-phlox-caches! $ quote
           defn clear-phlox-caches! () $ reset-calling-caches!
       :proc $ quote ()
+    |phlox.schema $ {}
+      :ns $ quote (ns phlox.schema)
+      :defs $ {}
+        |PhloxElement $ quote (defrecord PhloxElement :name :props :children)
+      :proc $ quote ()
+      :configs $ {}
     |phlox.render $ {}
       :ns $ quote
         ns phlox.render $ :require ([] "\"pixi.js" :as PIXI)
-          [] phlox.util :refer $ [] use-number component? element? remove-nil-values index-items convert-line-style
+          [] phlox.util :refer $ [] use-number element? remove-nil-values index-items convert-line-style
           [] phlox.util.lcs :refer $ [] find-minimal-ops lcs-state-0
           [] phlox.render.draw :refer $ [] call-graphics-ops update-position update-pivot update-rotation update-alpha update-events draw-circle draw-rect init-events init-position init-pivot init-angle init-rotation init-alpha init-line-style
           [] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-circle
@@ -1780,20 +1775,18 @@
                 js/console.log "\"nil child:" child-pair
         |render-element $ quote
           defn render-element (element dispatch!)
-            case (:phlox-node element)
-              :element $ case (:name element) (nil nil)
+            if (element? element)
+              case-default (:name element)
+                do
+                  println "\"unknown tag:" $ :tag element
+                  {}
+                nil nil
                 :container $ render-container element dispatch!
                 :graphics $ render-graphics element dispatch!
                 :circle $ render-circle element dispatch!
                 :rect $ render-rect element dispatch!
                 :text $ render-text element dispatch!
-                (:name element)
-                  do
-                    println "\"unknown tag:" $ :tag element
-                    {}
-              :component $ render-element (:tree element) dispatch!
-              (:phlox-node element)
-                do $ js/console.error "\"Unknown element:" element
+              do $ js/console.error "\"Unknown element:" element
         |update-circle $ quote
           defn update-circle (element old-element target dispatch!)
             let
@@ -1981,19 +1974,6 @@
             cond
                 or (nil? element) (nil? element)
                 js/console.error "\"Not supposed to be empty"
-              (and (component? element) (component? old-element) (= (:name element) (:name old-element)))
-                if
-                  and
-                    = (:args element) (:args old-element)
-                    not $ :swap? options
-                  ; do
-                    js/console.log "\"Same, no changes" $ :name element
-                    js/console.log (:args element) (:args old-element)
-                  recur (:tree element) (:tree old-element) parent-element idx dispatch! options
-              (and (component? element) (element? old-element))
-                recur (:tree element) old-element parent-element idx dispatch! options
-              (and (element? element) (component? old-element))
-                recur element (:tree old-element) parent-element idx dispatch! options
               (and (element? element) (element? old-element) (= (:name element) (:name old-element)))
                 do
                   let
@@ -2109,10 +2089,10 @@
     |phlox.app.comp.keyboard $ {}
       :ns $ quote
         ns phlox.app.comp.keyboard $ :require
-          [] phlox.core :refer $ [] defcomp g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
       :defs $ {}
         |comp-keyboard $ quote
-          defcomp comp-keyboard (on? counted)
+          defn comp-keyboard (on? counted)
             container
               {} $ :position ([] 400 200)
               container

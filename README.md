@@ -13,9 +13,9 @@ Previews http://r.tiye.me/Quamolit/phlox.calcit/ .
 ```cirru
 ns app.main $
   :require $ [] phlox.core :refer
-    []defcomp hslx render! create-list rect circle text container graphics >>
+    [] hslx render! create-list rect circle text container graphics >>
 
-defcomp comp-demo (data)
+defn comp-demo (data)
   rect
     {}
       :position $ [] 800 40
