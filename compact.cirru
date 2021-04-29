@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.6
+    :version |0.4.7
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -82,7 +82,7 @@
                   ~result $ validate-lilac ~data ~rule
                   when-not (:ok? ~result)
                     js/console.error (:formatted-message ~result) &newline (str ~message "\", when props is:") (to-js-data ~data)
-              quote-replace $ do
+              quote-replace nil
         |lilac-graphics $ quote
           def lilac-graphics $ record+
             {}
@@ -127,7 +127,7 @@
                     js/console.error (:formatted-message ~result) &newline
                       str "\"(dev-check " (quote ~data) "\" " (quote ~rule) "\") where props is:"
                       to-js-data ~data
-              quote-replace $ do
+              quote-replace nil
         |lilac-event-map $ quote
           def lilac-event-map $ map+ (keyword+) (fn+)
         |lilac-text $ quote
@@ -242,7 +242,7 @@
                           some? $ :radian data
                           :radian data
                         (some? (:angle data))
-                          map angle->radian $ :angle data
+                          map (:angle data) angle->radian
                         :else $ do (js/console.warn "\"Unknown arc" data) ([] 0 0)
                     .arc target (first center) (last center) (:radius data) (first radian) (last radian) (:anticlockwise? data)
                   :arc-to $ let
@@ -314,7 +314,7 @@
                   fn (x d!) (println "\"missing message handler:" x)
               create-list :container
                 {} $ :position base-position
-                ->> messages $ map-indexed
+                -> messages $ map-indexed
                   fn (idx message)
                     [] (:id message)
                       comp-button $ {}
@@ -351,7 +351,7 @@
       :defs $ {}
         |convert-line-style $ quote
           defn convert-line-style (props)
-            ->> props (to-pairs)
+            -> props (to-pairs)
               map $ fn (pair)
                 let-sugar
                       [] k v
@@ -415,11 +415,11 @@
                 , true $ recur (rest params)
         |index-items $ quote
           defn index-items (xs)
-            ->> xs $ map-indexed
+            -> xs $ map-indexed
               fn (idx x) ([] idx x)
         |remove-nil-values $ quote
           defn remove-nil-values (dict)
-            ->> dict $ filter
+            -> dict $ filter
               fn (pair)
                 some? $ last pair
         |rand-color $ quote
@@ -506,9 +506,9 @@
             container ({})
               create-list :container
                 {} $ :position ([] 200 20)
-                ->> (range 60)
+                -> (range 60)
                   mapcat $ fn (x)
-                    ->> (range 40)
+                    -> (range 40)
                       map $ fn (y) ([] x y)
                   map $ fn (pair)
                     let[] (x y) pair $ [] (str x "\"+" y)
@@ -696,7 +696,7 @@
                 states $ :states store
               container ({})
                 create-list :container ({})
-                  ->> tabs $ map-indexed
+                  -> tabs $ map-indexed
                     fn (idx info)
                       let-sugar
                             [] tab title
@@ -828,7 +828,7 @@
                         update :step inc
                       rest xs
                       rest ys
-                  (any? (fn (y) (= x0 y)) ys)
+                  (any? ys (fn (y) (= x0 y)))
                     recur
                       -> state
                         update :acc $ fn (acc)
@@ -836,7 +836,7 @@
                         update :step inc
                       rest xs
                       , ys
-                  (any? (fn (x) (= y0 x)) xs)
+                  (any? ys (fn (x) (= y0 x)))
                     recur
                       -> state
                         update :acc $ fn (acc)
@@ -945,7 +945,7 @@
                 op-time $ .now js/Date
               reset! *store $ updater @*store op op-data op-id op-time
         |main! $ quote
-          defn main! () (; js/console.log PIXI)
+          defn main! () (; js/console.log PIXI) (load-console-formatter!)
             -> (new FontFaceObserver/default "\"Josefin Sans") (.load)
               .then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
@@ -1155,7 +1155,7 @@
                       :on props
                     (some? (:on-pointertap props))
                       {} $ :pointertap (:on-pointertap props)
-                    true $ do
+                    true nil
                 text $ {} (:text button-text)
                   :position $ [] 8 8
                   :style $ {} (:fill color) (:font-size size) (:font-family font-family)
@@ -1228,7 +1228,7 @@
                   :text $ str "\"Text demo:"
                     + 1 $ * 0.1 x
                     , &newline "\"pivot"
-                    pr-str $ {} (:x 100) (:y 100)
+                      pr-str $ {} (:x 100) (:y 100)
                   :style $ {} (:font-family "\"Menlo") (:font-size 12)
                     :fill $ hslx 200 80 90
                     :align :center
@@ -1240,7 +1240,7 @@
                   :align :center
                 :alpha 1
               create-list :container ({})
-                ->> (range 20)
+                -> (range 20)
                   map $ fn (idx)
                     [] idx $ text
                       {}
@@ -1296,7 +1296,7 @@
                   let
                       listener $ get-in tree ([] :props :on-keyboard kind)
                     when (fn? listener) (listener event dispatch!)
-                  ->> (:children tree)
+                  -> (:children tree)
                     map $ fn (pair)
                       let[] (k child) pair $ handle-event kind child event dispatch!
                 do $ js/console.log "\"unknown tree for handling event:" tree
@@ -1467,10 +1467,10 @@
                           either (first position) 0
                           , 1
                         , "\", "
-                        .toFixed
-                          either (last position) 0
-                          , 1
-                        , "\")➤" (str unit)
+                          .toFixed
+                            either (last position) 0
+                            , 1
+                          , "\")➤" (str unit)
                       :alpha 0.3
                       :position $ [] -20 -16
                       :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "\"Menlo, monospace")
@@ -1727,14 +1727,14 @@
                 :line-to $ dev-check-message "\"check :line-to" data lilac-point
                 :line-style $ dev-check-message "\"check :line-style" data lilac-line-style
                 :begin-fill $ dev-check-message "\"check :fill" data lilac-begin-fill
-                :end-fill $ do
-                :close-path $ do
+                :end-fill nil
+                :close-path nil
                 :arc $ dev-check-message "\"check :arc" data lilac-arc
                 :arc-to $ dev-check-message "\"check :arc-to" data lilac-arc-to
                 :bezier-to $ dev-check-message "\"check :bezier-to" data lilac-bezier-to
                 :quadratic-to $ dev-check-message "\"check :quadratic-to" data lilac-quodratic-to
-                :begin-hole $ do
-                :end-hole $ do
+                :begin-hole nil
+                :end-hole nil
                 op $ js/console.warn "\"not supported:" op
               [] op data
         |*tree-element $ quote (defatom *tree-element nil)
@@ -1997,10 +1997,10 @@
           defn update-children (children-dict old-children-dict parent-container dispatch! options)
             when in-dev? $ assert "\"children should not contain nil element"
               and
-                every? some? $ map last children-dict
-                every? some? $ map last old-children-dict
+                every? (map children-dict last) some?
+                every? (map old-children-dict last) some?
             let
-                list-ops $ find-minimal-ops lcs-state-0 (map first old-children-dict) (map first children-dict)
+                list-ops $ find-minimal-ops lcs-state-0 (map old-children-dict first) (map children-dict first)
               ; js/console.log "\"ops" $ :total list-ops
               loop
                   idx 0
