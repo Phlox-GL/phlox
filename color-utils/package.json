@@ -1,0 +1,13 @@
+{
+  "name": "@quamolit/phlox-utils",
+  "version": "0.0.1",
+  "description": "color utils for Phlox.calcit",
+  "main": "hue-to-rgb.js",
+  "repository": "https://github.com/Quamolit/phlox.calcit",
+  "author": "jiyinyiyong",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@quamolit/phlox-utils": "^0.0.1"
+  }
+}
