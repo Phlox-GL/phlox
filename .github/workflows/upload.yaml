@@ -28,7 +28,6 @@ jobs:
     - name: "compiles to js"
       run: >
         ./ci-bin/calcit_runner --emit-js --once
-        && cp assets/* js-out/
         && yarn && yarn vite build --base=./
 
     - name: Deploy to server

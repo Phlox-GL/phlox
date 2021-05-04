@@ -11706,7 +11706,7 @@
                 |y $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1581003642849)
                   :data $ {}
                     |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1581003642849) (:text |[])
-                    |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1581003642849) (:text "|\"./hue-to-rgb")
+                    |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1619800954920) (:text "|\"@quamolit/phlox-utils")
                     |r $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1581003642849) (:text |:refer)
                     |v $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1581003642849)
                       :data $ {}
@@ -15340,4 +15340,4 @@
     :init-fn |phlox.app.main/main!
     :compact-output? true
     :storage-key |calcit.cirru
-    :version |0.4.7
+    :version |0.4.8

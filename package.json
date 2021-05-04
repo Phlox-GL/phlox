@@ -1,7 +1,8 @@
 {
-  "version": "0.4.7",
+  "version": "0.4.8",
   "dependencies": {
     "@calcit/procs": "^0.3.0-a10",
+    "@quamolit/phlox-utils": "^0.0.1",
     "fontfaceobserver-es": "^3.3.3",
     "pixi.js": "^6.0.2",
     "shortid": "^2.2.16"

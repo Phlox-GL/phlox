@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.7
+    :version |0.4.8
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -1619,7 +1619,7 @@
         ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
           [] phlox.render :refer $ [] render-element update-element update-children
           [] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?
-          [] "\"./hue-to-rgb" :refer $ [] hslToRgb
+          [] "\"@quamolit/phlox-utils" :refer $ [] hslToRgb
           [] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+
           [] phlox.keyboard :refer $ [] handle-keyboard-events
