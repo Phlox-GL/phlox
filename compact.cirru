@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.8
+    :version |0.4.9
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -159,6 +159,8 @@
           [] lilac.core :refer $ [] record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ list+ or+
           [] phlox.check :refer $ [] dev-check dev-check-message lilac-point lilac-line-style lilac-color
           [] phlox.math :refer $ [] angle->radian
+          phlox.render.draw :refer $ init-line-style
+          "\"pixi.js" :as PIXI
       :defs $ {}
         |draw-circle $ quote
           defn draw-circle (target radius)
@@ -208,6 +210,14 @@
                 pair $ to-pairs events
                 let[] (k listener) pair $ .on target (turn-string k)
                   fn (event) (listener event dispatch!)
+        |read-line-join $ quote
+          defn read-line-join (x)
+            case-default x
+              do $ println "\"unknown line-join value:" x
+              nil nil
+              :bevel $ .-BEVEL PIXI/LINE_JOIN
+              :milter $ .-MILTER PIXI/LINE_JOIN
+              :round $ .-ROUND PIXI/LINE_JOIN
         |init-pivot $ quote
           defn init-pivot (target pivot)
             when (some? pivot)
@@ -228,10 +238,7 @@
                 let[] (op data) pair $ case op
                   :move-to $ .moveTo target (first data) (last data)
                   :line-to $ .lineTo target (first data) (last data)
-                  :line-style $ .lineStyle target
-                    use-number $ :width data
-                    use-number $ :color data
-                    :alpha data
+                  :line-style $ init-line-style target data
                   :begin-fill $ .beginFill target (:color data)
                     either (:alpha data) 1
                   :end-fill $ .endFill target
@@ -272,10 +279,19 @@
         |init-line-style $ quote
           defn init-line-style (target line-style)
             when (some? line-style)
-              .lineStyle target
-                use-number $ :width line-style
-                use-number $ :color line-style
-                :alpha line-style
+              .lineStyle target $ to-js-data
+                {}
+                  :width $ use-number (:width line-style)
+                  :color $ use-number (:color line-style)
+                  :alpha $ either (:alpha line-style) 1
+                  :join $ read-line-join (:join line-style)
+                  :cap $ read-line-cap (:cap line-style)
+        |read-line-cap $ quote
+          defn read-line-cap (x)
+            case-default x (println "\"unknown line-cap:" x) (nil nil)
+              :butt $ .-BUTT PIXI/LINE_CAP
+              :round $ .-ROUND PIXI/LINE_CAP
+              :square $ .-SQUARE PIXI/LINE_CAP
         |update-rotation $ quote
           defn update-rotation (target v v0)
             when (not= v v0)
@@ -400,7 +416,7 @@
             if
               and (number? x)
                 not $ js/isNaN x
-              , x $ do (js/console.error "\"Invalid number:" x) 0
+              , x $ do (js/console.error "\"Invalid number:" x) nil
         |detect-func-in-map? $ quote
           defn detect-func-in-map? (params)
             if (empty? params) false $ let
@@ -650,7 +666,7 @@
                   :on-pointertap $ fn (message d!)
                     d! cursor $ update state :messages
                       fn (xs)
-                        ->> xs $ filter-not
+                        -> xs $ filter-not
                           fn (x)
                             = (:id x) (:id message)
         |comp-tab-entry $ quote
@@ -756,7 +772,8 @@
                   :radius 90
                 g :line-style $ {} (:width 2)
                   :color $ hslx 0 80 80
-                  :alpha 1
+                  :join :round
+                  :cap :round
                 g :arc $ {}
                   :center $ [] 260 120
                   :radius 40
