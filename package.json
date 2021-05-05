@@ -1,13 +1,13 @@
 {
   "version": "0.4.8",
   "dependencies": {
-    "@calcit/procs": "^0.3.0-a10",
+    "@calcit/procs": "^0.3.6",
     "@quamolit/phlox-utils": "^0.0.1",
     "fontfaceobserver-es": "^3.3.3",
     "pixi.js": "^6.0.2",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "vite": "^2.2.3"
+    "vite": "^2.2.4"
   }
 }
