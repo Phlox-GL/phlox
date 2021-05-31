@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.9
+    :version |0.4.10
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -165,7 +165,7 @@
         |draw-circle $ quote
           defn draw-circle (target radius)
             if (number? radius)
-              .drawCircle target 0 0 $ use-number radius
+              .!drawCircle target 0 0 $ use-number radius
               js/console.warn "\"Unknown radius"  radius
         |init-alpha $ quote
           defn init-alpha (target alpha)
@@ -190,11 +190,11 @@
             when (some? old-events)
               &doseq
                 pair $ to-pairs old-events
-                let[] (k listener) pair $ .off target (turn-string k)
+                let[] (k listener) pair $ .!off target (turn-string k)
             when (some? events)
               &doseq
                 pair $ to-pairs events
-                let[] (k listener) pair $ .on target (turn-string k)
+                let[] (k listener) pair $ .!on target (turn-string k)
                   fn (event) (listener event dispatch!)
             if (some? events)
               do
@@ -208,7 +208,7 @@
             when (some? events) (aset target "\"interactive" true) (aset target "\"buttonMode" true)
               &doseq
                 pair $ to-pairs events
-                let[] (k listener) pair $ .on target (turn-string k)
+                let[] (k listener) pair $ .!on target (turn-string k)
                   fn (event) (listener event dispatch!)
         |read-line-join $ quote
           defn read-line-join (x)
@@ -236,13 +236,13 @@
             &doseq (pair ops)
               when (some? pair)
                 let[] (op data) pair $ case op
-                  :move-to $ .moveTo target (first data) (last data)
-                  :line-to $ .lineTo target (first data) (last data)
+                  :move-to $ .!moveTo target (first data) (last data)
+                  :line-to $ .!lineTo target (first data) (last data)
                   :line-style $ init-line-style target data
-                  :begin-fill $ .beginFill target (:color data)
+                  :begin-fill $ .!beginFill target (:color data)
                     either (:alpha data) 1
-                  :end-fill $ .endFill target
-                  :close-path $ .closePath target
+                  :end-fill $ .!endFill target
+                  :close-path $ .!closePath target
                   :arc $ let
                       center $ :center data
                       radian $ cond
@@ -251,22 +251,22 @@
                         (some? (:angle data))
                           map (:angle data) angle->radian
                         :else $ do (js/console.warn "\"Unknown arc" data) ([] 0 0)
-                    .arc target (first center) (last center) (:radius data) (first radian) (last radian) (:anticlockwise? data)
+                    .!arc target (first center) (last center) (:radius data) (first radian) (last radian) (:anticlockwise? data)
                   :arc-to $ let
                       p1 $ :p1 data
                       p2 $ :p2 data
-                    .arcTo target (first p1) (last p1) (first p2) (last p2) (:radius data)
+                    .!arcTo target (first p1) (last p1) (first p2) (last p2) (:radius data)
                   :bezier-to $ let
                       p1 $ :p1 data
                       p2 $ :p2 data
                       to-p $ :to-p data
-                    .bezierCurveTo target (first p1) (last p1) (first p2) (last p2) (first to-p) (last to-p)
+                    .!bezierCurveTo target (first p1) (last p1) (first p2) (last p2) (first to-p) (last to-p)
                   :quadratic-to $ let
                       p1 $ :p1 data
                       to-p $ :to-p data
-                    .quadraticCurveTo target (first p1) (last p1) (first to-p) (last to-p)
-                  :begin-hole $ .beginHole target
-                  :end-hole $ .endHole target
+                    .!quadraticCurveTo target (first p1) (last p1) (first to-p) (last to-p)
+                  :begin-hole $ .!beginHole target
+                  :end-hole $ .!endHole target
                   op $ js/console.warn "\"not supported op:" op data
         |init-position $ quote
           defn init-position (target point)
@@ -279,7 +279,7 @@
         |init-line-style $ quote
           defn init-line-style (target line-style)
             when (some? line-style)
-              .lineStyle target $ to-js-data
+              .!lineStyle target $ to-js-data
                 {}
                   :width $ use-number (:width line-style)
                   :color $ use-number (:color line-style)
@@ -300,11 +300,11 @@
           defn draw-rect (target size radius)
             if (list? size)
               if (some? radius)
-                .drawRoundedRect target 0 0
+                .!drawRoundedRect target 0 0
                   use-number $ first size
                   use-number $ last size
                   , radius
-                .drawRect target 0 0
+                .!drawRect target 0 0
                   use-number $ first size
                   use-number $ last size
               js/console.warn "\"Unknown size" size
@@ -379,12 +379,12 @@
                         (string? k) k
                         true $ str k
                   [] key-name $ case k
-                    :fill-gradient-type $ case v
+                    :fill-gradient-type $ case-default v
+                      do (println "\"unknown gradient type:") v
                       :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
                       :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
                       :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
                       :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
-                      v $ do (println "\"unknown gradient type:") v
                     k $ cond
                         keyword? v
                         turn-string v
@@ -400,17 +400,17 @@
             when (nil? @*ctx-instance)
               let
                   el $ js/document.createElement "\"canvas"
-                reset! *ctx-instance $ .getContext el "\"2d"
+                reset! *ctx-instance $ .!getContext el "\"2d"
             set! (.-font @*ctx-instance) (str size "\"px " font-family)
-            .-width $ .measureText @*ctx-instance text
+            .-width $ .!measureText @*ctx-instance text
         |element? $ quote
           defn element? (x)
             and (record? x) (relevant-record? x schema/PhloxElement)
         |camel-case $ quote
           defn camel-case (x)
-            .replace x (new js/RegExp "\"-[a-z]")
+            .!replace x (new js/RegExp "\"-[a-z]")
               fn (x idx full-text)
-                .toUpperCase $ get x 1
+                .!toUpperCase $ get x 1
         |use-number $ quote
           defn use-number (x)
             if
@@ -959,12 +959,12 @@
               println "\"dispatch!" op op-data
             let
                 op-id $ shortid/generate
-                op-time $ .now js/Date
+                op-time $ js/Date.now
               reset! *store $ updater @*store op op-data op-id op-time
         |main! $ quote
           defn main! () (; js/console.log PIXI) (load-console-formatter!)
-            -> (new FontFaceObserver/default "\"Josefin Sans") (.load)
-              .then $ fn (event) (render-app!)
+            -> (new FontFaceObserver/default "\"Josefin Sans") (.!load)
+              .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
             println "\"App Started"
         |reload! $ quote
@@ -1041,7 +1041,7 @@
                   text $ {}
                     :text $ str "\"◀ "
                       if (number? value)
-                        .toFixed value $ if round? 0 4
+                        .!toFixed value $ if round? 0 4
                         , "\"nil"
                       , "\" ▶"
                     :position $ [] 4 4
@@ -1120,7 +1120,7 @@
                   text $ {}
                     :text $ str
                       if (number? value)
-                        .toFixed value $ if round? 0 4
+                        .!toFixed value $ if round? 0 4
                         , "\"nil"
                     :position $ [] 16 1
                     :style $ {} (:fill color) (:font-size 10) (:font-family "\"Menlo, monospace")
@@ -1299,11 +1299,11 @@
       :defs $ {}
         |handle-keyboard-events $ quote
           defn handle-keyboard-events (*tree-element dispatch!)
-            .addEventListener js/window "\"keydown" $ fn (event)
+            .!addEventListener js/window "\"keydown" $ fn (event)
               handle-event :down (get-value *tree-element) (wrap-event event) dispatch!
-            .addEventListener js/window "\"keyup" $ fn (event)
+            .!addEventListener js/window "\"keyup" $ fn (event)
               handle-event :up (get-value *tree-element) (wrap-event event) dispatch!
-            .addEventListener js/window "\"keypress" $ fn (event)
+            .!addEventListener js/window "\"keypress" $ fn (event)
               handle-event :press (get-value *tree-element) (wrap-event event) dispatch!
         |handle-event $ quote
           defn handle-event (kind tree event dispatch!)
@@ -1348,12 +1348,12 @@
                 x $ -> e .-data .-global .-x
                 y $ -> e .-data .-global .-y
                 close $ js/document.createElement "\"span"
-              .appendChild root input
-              .appendChild root control
-              .appendChild control close
-              when textarea? (.appendChild control submit)
+              .!appendChild root input
+              .!appendChild root control
+              .!appendChild control close
+              when textarea? (.!appendChild control submit)
                 set! (.-innerText submit) "\"Ok"
-                .appendChild root control
+                .!appendChild root control
               set! (.-style root)
                 style->string $ to-pairs
                   merge ui/row style-container
@@ -1380,22 +1380,22 @@
               set! (.-value input)
                 either (:initial options) "\""
               set! (.-innerText close) "\"×"
-              .addEventListener input "\"keydown" $ fn (event)
+              .!addEventListener input "\"keydown" $ fn (event)
                 when
                   and
                     = "\"Enter" $ .-key event
                     if textarea? (.-metaKey event) true
                   cb $ .-value input
-                  .remove root
-              .addEventListener close "\"click" $ fn (event) (.remove root)
+                  .!remove root
+              .!addEventListener close "\"click" $ fn (event) (.!remove root)
               when textarea?
                 set! (.-style submit)
                   style->string $ to-pairs style-submit
-                .addEventListener submit "\"click" $ fn (event)
+                .!addEventListener submit "\"click" $ fn (event)
                   cb $ .-value input
-                  .remove root
-              .appendChild js/document.body root
-              .select input
+                  .!remove root
+              .!appendChild js/document.body root
+              .!select input
         |lilac-input $ quote
           def lilac-input $ record+
             {}
@@ -1480,11 +1480,11 @@
                   if-not hide-text? $ text
                     {}
                       :text $ str "\"("
-                        .toFixed
+                        .!toFixed
                           either (first position) 0
                           , 1
                         , "\", "
-                          .toFixed
+                          .!toFixed
                             either (last position) 0
                             , 1
                           , "\")➤" (str unit)
@@ -1658,7 +1658,7 @@
             let-sugar
                   [] r g b
                   to-calcit-data $ hslToRgb (/ h 360) (* 0.01 s) (* 0.01 l)
-                r0 $ .rgb2hex PIXI/utils
+                r0 $ .!rgb2hex PIXI/utils
                   to-js-data $ [] r g b
               , r0
         |create-element $ quote
@@ -1679,9 +1679,9 @@
                       :height js/window.innerHeight
                       :interactive true
                 reset! *app pixi-app
-                -> js/document .-body $ .appendChild (.-view pixi-app)
-                .addEventListener js/window "\"resize" $ fn (event)
-                  -> pixi-app .-renderer $ .resize js/window.innerWidth js/window.innerHeight
+                -> js/document .-body $ .!appendChild (.-view pixi-app)
+                .!addEventListener js/window "\"resize" $ fn (event)
+                  -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
               aset js/window "\"_phloxTree" @*app
             let
                 wrap-dispatch $ fn (op data)
@@ -1704,7 +1704,7 @@
           defn mount-app! (app dispatch!)
             let
                 element-tree $ render-element app dispatch!
-              .addChild (.-stage @*app) element-tree
+              .!addChild (.-stage @*app) element-tree
         |*app $ quote (defatom *app nil)
         |*renderer $ quote (defatom *renderer nil)
         |lilac-arc-to $ quote
@@ -1790,7 +1790,7 @@
           defn render-children (target children dispatch!)
             &doseq (child-pair children)
               if (some? child-pair)
-                .addChild target $ render-element (last child-pair) dispatch!
+                .!addChild target $ render-element (last child-pair) dispatch!
                 js/console.log "\"nil child:" child-pair
         |render-element $ quote
           defn render-element (element dispatch!)
@@ -1820,7 +1820,7 @@
               when
                 or (not= position position') (not= radius radius') (not= line-style line-style')
                   not= (:fill props) (:fill props')
-                .clear target
+                .!clear target
                 init-fill target $ :fill props
                 init-line-style target line-style
                 draw-circle target $ :radius props
@@ -1906,7 +1906,7 @@
                 props' $ :props old-element
                 ops $ :ops props
                 ops' $ :ops props'
-              when (not= ops ops') (.clear target) (call-graphics-ops target ops)
+              when (not= ops ops') (.!clear target) (call-graphics-ops target ops)
               update-position target (:position props) (:position props')
               update-rotation target (:rotation props) (:rotation props')
               update-angle target (:angle props) (:angle props')
@@ -1929,7 +1929,7 @@
               when
                 or (not= size size') (not= radius radius') (not= line-style line-style')
                   not= (:fill props) (:fill props')
-                .clear target
+                .!clear target
                 init-fill target $ :fill props
                 init-line-style target line-style
                 draw-rect target size $ :radius props
@@ -1950,8 +1950,8 @@
               update-rotation target (:rotation props) (:rotation props')
               update-alpha target (:alpha props) (:alpha props')
         |init-fill $ quote
-          defn init-fill (target color) (.endFill target)
-            if (some? color) (.beginFill target color)
+          defn init-fill (target color) (.!endFill target)
+            if (some? color) (.!beginFill target color)
         |in-dev? $ quote (def in-dev? false)
         |render-text $ quote
           defn render-text (element dispatch!)
@@ -1996,7 +1996,7 @@
               (and (element? element) (element? old-element) (= (:name element) (:name old-element)))
                 do
                   let
-                      target $ .getChildAt parent-element idx
+                      target $ .!getChildAt parent-element idx
                     case (:name element)
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
@@ -2005,10 +2005,10 @@
                       :graphics $ update-graphics element old-element target dispatch!
                       (:name element)
                         do $ println "\"not implement yet for updating:" (:name element)
-                  update-children (:children element) (:children old-element) (.getChildAt parent-element idx) dispatch! options
+                  update-children (:children element) (:children old-element) (.!getChildAt parent-element idx) dispatch! options
               (not= (:name element) (:name old-element))
-                do (.removeChildAt parent-element idx)
-                  .addChildAt parent-element (render-element element dispatch!) idx
+                do (.!removeChildAt parent-element idx)
+                  .!addChildAt parent-element (render-element element dispatch!) idx
               :else $ js/console.warn "\"Unknown case:" element old-element
         |update-children $ quote
           defn update-children (children-dict old-children-dict parent-container dispatch! options)
@@ -2043,7 +2043,7 @@
                         when in-dev? $ assert "\"check key"
                           = (last op)
                             first $ first xs
-                        .addChildAt parent-container
+                        .!addChildAt parent-container
                           render-element
                             last $ first xs
                             , dispatch!
@@ -2053,7 +2053,7 @@
                         when in-dev? $ assert "\"check key"
                           = (last op)
                             first $ first ys
-                        .removeChildAt parent-container idx
+                        .!removeChildAt parent-container idx
                         recur idx (rest ops) xs $ rest ys
                       (first op)
                         do $ println "\"Unknown op:" op
