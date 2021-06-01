@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/
-    :version |0.4.11
+    :version |0.4.12
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -1740,10 +1740,12 @@
                       :width js/window.innerWidth
                       :height js/window.innerHeight
                       :interactive true
+                .!stop $ .-ticker pixi-app
                 reset! *app pixi-app
                 -> js/document .-body $ .!appendChild (.-view pixi-app)
                 .!addEventListener js/window "\"resize" $ fn (event)
                   -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
+                  .!render (.-renderer @*app) (.-stage @*app)
               aset js/window "\"_phloxTree" @*app
             let
                 wrap-dispatch $ fn (op data)
@@ -1755,6 +1757,7 @@
                 do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                 rerender-app! expanded-app wrap-dispatch options
               reset! *tree-element expanded-app
+            .!render (.-renderer @*app) (.-stage @*app)
             tick-calling-loop!
         |create-list $ quote
           defn create-list (tag props children)
