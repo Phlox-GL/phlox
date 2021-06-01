@@ -1,8 +1,8 @@
 
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
-    :modules $ [] |memof/ |lilac/ |respo.calcit/ |respo-ui.calcit/
-    :version |0.4.10
+    :modules $ [] |memof/ |lilac/
+    :version |0.4.11
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -514,8 +514,8 @@
           [] phlox.input :refer $ [] request-text!
           [] phlox.comp.messages :refer $ [] comp-messages
           [] "\"shortid" :as shortid
-          [] respo-ui.core :as ui
           [] memof.alias :refer $ [] memof-call
+          phlox.util.styles :refer $ font-code
       :defs $ {}
         |comp-grids $ quote
           defn comp-grids () (echo "\"calculating grids")
@@ -614,7 +614,7 @@
                         request-text! e
                           {}
                             :initial $ :long-text state
-                            :style $ {} (:font-family ui/font-code)
+                            :style $ {} (:font-family font-code)
                             :textarea? true
                           fn (result)
                             d! cursor $ assoc state :long-text result
@@ -882,6 +882,70 @@
             :acc $ []
             :step 0
       :proc $ quote ()
+    |phlox.util.styles $ {}
+      :ns $ quote (ns phlox.util.styles)
+      :defs $ {}
+        |layout-column $ quote
+          def layout-column $ {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
+        |style->string $ quote
+          defn style->string (styles)
+            -> styles
+              map $ fn (entry)
+                let
+                    k $ first entry
+                    style-name $ turn-string k
+                    v $ get-style-value (last entry) (dashed->camel style-name)
+                  str style-name |: (escape-html v) |;
+              join-str |
+        |dashed->camel $ quote
+          defn dashed->camel (x) (dashed->camel-iter | x false)
+        |hsl $ quote
+          defn hsl (h s l ? arg)
+            let
+                a $ either arg 1
+              str "\"hsl(" h "\"," s "\"%," l "\"%," a "\")"
+        |font-code $ quote (def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace")
+        |dashed->camel-iter $ quote
+          defn dashed->camel-iter (acc piece promoted?)
+            if (= piece |) acc $ let
+                cursor $ get piece 0
+                piece-followed $ substr piece 1
+              if (= cursor |-) (recur acc piece-followed true)
+                recur
+                  str acc $ if promoted? (upper-case cursor) cursor
+                  , piece-followed false
+        |upper-case $ quote
+          defn upper-case (x)
+            if
+              > (count x) 0
+              let
+                  code $ .!charCodeAt x 0
+                if
+                  and (>= code 97) (<= code 122)
+                  js/String.fromCharCode $ - code 32
+                  , x
+              , x
+        |layout-expand $ quote
+          def layout-expand $ {} (:flex 1) (:overflow :auto)
+        |escape-html $ quote
+          defn escape-html (text)
+            if (nil? text) "\"" $ -> text (replace "|\"" |&quot;) (replace |< |&lt;) (replace |> |&gt;) (replace &newline "\"&#13;&#10;")
+        |get-style-value $ quote
+          defn get-style-value (x prop)
+            cond
+                string? x
+                , x
+              (keyword? x) (turn-string x)
+              (number? x)
+                if (.!test pattern-non-dimension-props prop) (str x) (str x "\"px")
+              true $ str x
+        |font-normal $ quote (def font-normal "|Hind, Helvatica, Arial, sans-serif")
+        |pattern-non-dimension-props $ quote
+          def pattern-non-dimension-props $ new js/RegExp "\"acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera" "\"i"
+        |layout-row $ quote
+          def layout-row $ {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
+      :proc $ quote ()
+      :configs $ {}
     |phlox.comp.switch $ {}
       :ns $ quote
         ns phlox.comp.switch $ :require
@@ -1331,9 +1395,7 @@
     |phlox.input $ {}
       :ns $ quote
         ns phlox.input $ :require
-          [] respo.render.html :refer $ [] style->string
-          [] respo.util.format :refer $ [] hsl
-          [] respo-ui.core :as ui
+          [] phlox.util.styles :refer $ [] hsl style->string layout-row layout-column layout-expand font-code font-normal
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
           [] phlox.check :refer $ [] dev-check
       :defs $ {}
@@ -1356,7 +1418,7 @@
                 .!appendChild root control
               set! (.-style root)
                 style->string $ to-pairs
-                  merge ui/row style-container
+                  merge layout-row style-container
                     {} (:top y) (:left x)
                     if textarea? $ {} (:width 320)
                     if
@@ -1367,12 +1429,12 @@
                       {} (:top nil) (:bottom 8)
               set! (.-style input)
                 style->string $ to-pairs
-                  merge ui/expand style-input
+                  merge layout-expand style-input
                     if textarea? $ {} (:height 80)
                     :style options
               set! (.-style control)
                 style->string $ to-pairs
-                  merge ui/column $ {} (:justify-content :space-evenly)
+                  merge layout-column $ {} (:justify-content :space-evenly)
               set! (.-style close)
                 style->string $ to-pairs style-close
               set! (.-placeholder input)
@@ -1411,7 +1473,7 @@
             :width 240
             :border-radius "\"2px"
         |style-input $ quote
-          def style-input $ {} (:outline :none) (:font-family ui/font-normal) (:line-height "\"20px") (:font-size 14) (:padding "\"6px 8px") (:width "\"100%") (:border-radius "\"2px") (:border :none) (:height 28)
+          def style-input $ {} (:outline :none) (:font-family font-normal) (:line-height "\"20px") (:font-size 14) (:padding "\"6px 8px") (:width "\"100%") (:border-radius "\"2px") (:border :none) (:height 28)
         |style-close $ quote
           def style-close $ {} (:margin-left 8) (:font-family "\"Helvetica, sans-serif") (:font-size 24) (:font-weight 100)
             :color $ hsl 0 80 80
