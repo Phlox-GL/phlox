@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/
-    :version |0.4.12
+    :version |0.4.13
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -78,11 +78,11 @@
               = "\"true" $ get-env "\"dev"
               &let
                 result $ gensym "\"result"
-                quote-replace $ &let
+                quasiquote $ &let
                   ~result $ validate-lilac ~data ~rule
                   when-not (:ok? ~result)
                     js/console.error (:formatted-message ~result) &newline (str ~message "\", when props is:") (to-js-data ~data)
-              quote-replace nil
+              quasiquote nil
         |lilac-graphics $ quote
           def lilac-graphics $ record+
             {}
@@ -121,13 +121,13 @@
               = "\"true" $ get-env "\"dev"
               &let
                 result $ gensym "\"result"
-                quote-replace $ &let
+                quasiquote $ &let
                   ~result $ validate-lilac ~data ~rule
                   when-not (:ok? ~result)
                     js/console.error (:formatted-message ~result) &newline
                       str "\"(dev-check " (quote ~data) "\" " (quote ~rule) "\") where props is:"
                       to-js-data ~data
-              quote-replace nil
+              quasiquote nil
         |lilac-event-map $ quote
           def lilac-event-map $ map+ (keyword+) (fn+)
         |lilac-text $ quote
@@ -405,7 +405,7 @@
             .-width $ .!measureText @*ctx-instance text
         |element? $ quote
           defn element? (x)
-            and (record? x) (relevant-record? x schema/PhloxElement)
+            and (record? x) (.matches? schema/PhloxElement x)
         |camel-case $ quote
           defn camel-case (x)
             .!replace x (new js/RegExp "\"-[a-z]")
@@ -889,7 +889,7 @@
           def layout-column $ {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
         |style->string $ quote
           defn style->string (styles)
-            -> styles
+            -> styles (.to-list)
               map $ fn (entry)
                 let
                     k $ first entry
@@ -909,7 +909,7 @@
           defn dashed->camel-iter (acc piece promoted?)
             if (= piece |) acc $ let
                 cursor $ get piece 0
-                piece-followed $ substr piece 1
+                piece-followed $ &str:slice piece 1
               if (= cursor |-) (recur acc piece-followed true)
                 recur
                   str acc $ if promoted? (upper-case cursor) cursor
@@ -929,7 +929,7 @@
           def layout-expand $ {} (:flex 1) (:overflow :auto)
         |escape-html $ quote
           defn escape-html (text)
-            if (nil? text) "\"" $ -> text (replace "|\"" |&quot;) (replace |< |&lt;) (replace |> |&gt;) (replace &newline "\"&#13;&#10;")
+            if (nil? text) "\"" $ -> text (.replace "|\"" |&quot;) (.replace |< |&lt;) (.replace |> |&gt;) (.replace &newline "\"&#13;&#10;")
         |get-style-value $ quote
           defn get-style-value (x prop)
             cond
@@ -1072,7 +1072,7 @@
                 fill $ either (:fill props) (hslx 0 0 30)
                 color $ either (:color props) (hslx 0 0 100)
                 on-change $ :on-change props
-                round? $ :round? props
+                rounded? $ :round? props
               container
                 {} $ :position (:position props)
                 rect
@@ -1093,7 +1093,7 @@
                                 ->
                                   + (:v0 state)
                                     * unit $ - x2 (:x0 state)
-                                  (fn (v) (if round? (js/Math.round v) v))
+                                  (fn (v) (if rounded? (js/Math.round v) v))
                                   (fn (v) (if (some? (:max props)) (&min (:max props) v) v))
                                   (fn (v) (if (some? (:min props)) (&max (:min props) v) v))
                                 , d!
@@ -1105,7 +1105,7 @@
                   text $ {}
                     :text $ str "\"◀ "
                       if (number? value)
-                        .!toFixed value $ if round? 0 4
+                        .!toFixed value $ if rounded? 0 4
                         , "\"nil"
                       , "\" ▶"
                     :position $ [] 4 4
@@ -1150,7 +1150,7 @@
                 fill $ either (:fill props) (hslx 0 0 30)
                 color $ either (:color props) (hslx 0 0 100)
                 on-change $ :on-change props
-                round? $ :round? props
+                rounded? $ :round? props
               container
                 {} $ :position (:position props)
                 rect
@@ -1172,7 +1172,7 @@
                                 ->
                                   + (:v0 state)
                                     * unit $ - x2 (:x0 state)
-                                  (fn (v) (if round? (js/Math.round v) v))
+                                  (fn (v) (if rounded? (js/Math.round v) v))
                                   (fn (v) (if (some? (:max props)) (&min (:max props) v) v))
                                   (fn (v) (if (some? (:min props)) (&max (:min props) v) v))
                                 , d!
@@ -1184,7 +1184,7 @@
                   text $ {}
                     :text $ str
                       if (number? value)
-                        .!toFixed value $ if round? 0 4
+                        .!toFixed value $ if rounded? 0 4
                         , "\"nil"
                     :position $ [] 16 1
                     :style $ {} (:fill color) (:font-size 10) (:font-family "\"Menlo, monospace")
@@ -1831,7 +1831,7 @@
             {} $ :exact-keys? true
         |defcomp $ quote
           defmacro defcomp (name params & body)
-            quote-replace $ defn ~name ~params ~@body
+            quasiquote $ defn ~name ~params ~@body
         |container $ quote
           defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
         |clear-phlox-caches! $ quote
