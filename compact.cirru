@@ -1,8 +1,8 @@
 
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
-    :modules $ [] |memof/ |lilac/
-    :version |0.4.13
+    :modules $ [] |memof/ |lilac/ |pointed-prompt/
+    :version |0.4.14
   :files $ {}
     |phlox.check $ {}
       :ns $ quote
@@ -74,8 +74,7 @@
               :alpha $ optional+ (number+)
         |dev-check-message $ quote
           defmacro dev-check-message (message data rule)
-            if
-              = "\"true" $ get-env "\"dev"
+            if in-dev?
               &let
                 result $ gensym "\"result"
                 quasiquote $ &let
@@ -114,11 +113,10 @@
               :on-keyboard $ optional+ lilac-event-map
             {} $ :check-keys? true
         |in-dev? $ quote
-          def in-dev? $ do ^boolean js/goog.DEBUG
+          def in-dev? $ = "\"true" (get-env "\"dev")
         |dev-check $ quote
           defmacro dev-check (data rule)
-            if
-              = "\"true" $ get-env "\"dev"
+            if in-dev?
               &let
                 result $ gensym "\"result"
                 quasiquote $ &let
@@ -497,7 +495,8 @@
               , false
             (exists? js/process) (= "\"true" js/process.env.cdn)
             :else false
-        |dev? $ quote (def dev? true)
+        |dev? $ quote
+          def dev? $ = "\"true" (get-env "\"dev")
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main.css") (:cdn-url "\"http://cdn.tiye.me/phlox/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox")
       :proc $ quote ()
@@ -887,61 +886,15 @@
       :defs $ {}
         |layout-column $ quote
           def layout-column $ {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
-        |style->string $ quote
-          defn style->string (styles)
-            -> styles (.to-list)
-              map $ fn (entry)
-                let
-                    k $ first entry
-                    style-name $ turn-string k
-                    v $ get-style-value (last entry) (dashed->camel style-name)
-                  str style-name |: (escape-html v) |;
-              join-str |
-        |dashed->camel $ quote
-          defn dashed->camel (x) (dashed->camel-iter | x false)
         |hsl $ quote
           defn hsl (h s l ? arg)
             let
                 a $ either arg 1
               str "\"hsl(" h "\"," s "\"%," l "\"%," a "\")"
         |font-code $ quote (def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace")
-        |dashed->camel-iter $ quote
-          defn dashed->camel-iter (acc piece promoted?)
-            if (= piece |) acc $ let
-                cursor $ get piece 0
-                piece-followed $ &str:slice piece 1
-              if (= cursor |-) (recur acc piece-followed true)
-                recur
-                  str acc $ if promoted? (upper-case cursor) cursor
-                  , piece-followed false
-        |upper-case $ quote
-          defn upper-case (x)
-            if
-              > (count x) 0
-              let
-                  code $ .!charCodeAt x 0
-                if
-                  and (>= code 97) (<= code 122)
-                  js/String.fromCharCode $ - code 32
-                  , x
-              , x
         |layout-expand $ quote
           def layout-expand $ {} (:flex 1) (:overflow :auto)
-        |escape-html $ quote
-          defn escape-html (text)
-            if (nil? text) "\"" $ -> text (.replace "|\"" |&quot;) (.replace |< |&lt;) (.replace |> |&gt;) (.replace &newline "\"&#13;&#10;")
-        |get-style-value $ quote
-          defn get-style-value (x prop)
-            cond
-                string? x
-                , x
-              (keyword? x) (turn-string x)
-              (number? x)
-                if (.!test pattern-non-dimension-props prop) (str x) (str x "\"px")
-              true $ str x
         |font-normal $ quote (def font-normal "|Hind, Helvatica, Arial, sans-serif")
-        |pattern-non-dimension-props $ quote
-          def pattern-non-dimension-props $ new js/RegExp "\"acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera" "\"i"
         |layout-row $ quote
           def layout-row $ {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
       :proc $ quote ()
@@ -1395,69 +1348,15 @@
     |phlox.input $ {}
       :ns $ quote
         ns phlox.input $ :require
-          [] phlox.util.styles :refer $ [] hsl style->string layout-row layout-column layout-expand font-code font-normal
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
           [] phlox.check :refer $ [] dev-check
+          pointed-prompt.core :refer $ prompt-at!
       :defs $ {}
         |request-text! $ quote
           defn request-text! (e options cb) (dev-check options lilac-input)
-            let
-                root $ js/document.createElement "\"div"
-                control $ js/document.createElement "\"div"
-                textarea? $ :textarea? options
-                input $ js/document.createElement (if textarea? "\"textarea" "\"input")
-                submit $ js/document.createElement "\"a"
-                x $ -> e .-data .-global .-x
-                y $ -> e .-data .-global .-y
-                close $ js/document.createElement "\"span"
-              .!appendChild root input
-              .!appendChild root control
-              .!appendChild control close
-              when textarea? (.!appendChild control submit)
-                set! (.-innerText submit) "\"Ok"
-                .!appendChild root control
-              set! (.-style root)
-                style->string $ to-pairs
-                  merge layout-row style-container
-                    {} (:top y) (:left x)
-                    if textarea? $ {} (:width 320)
-                    if
-                      < (- js/window.innerWidth x) 240
-                      {} (:left nil) (:right 8)
-                    if
-                      < (- js/window.innerHeight y) 70
-                      {} (:top nil) (:bottom 8)
-              set! (.-style input)
-                style->string $ to-pairs
-                  merge layout-expand style-input
-                    if textarea? $ {} (:height 80)
-                    :style options
-              set! (.-style control)
-                style->string $ to-pairs
-                  merge layout-column $ {} (:justify-content :space-evenly)
-              set! (.-style close)
-                style->string $ to-pairs style-close
-              set! (.-placeholder input)
-                either (:placeholder options) "\"text..."
-              set! (.-value input)
-                either (:initial options) "\""
-              set! (.-innerText close) "\"×"
-              .!addEventListener input "\"keydown" $ fn (event)
-                when
-                  and
-                    = "\"Enter" $ .-key event
-                    if textarea? (.-metaKey event) true
-                  cb $ .-value input
-                  .!remove root
-              .!addEventListener close "\"click" $ fn (event) (.!remove root)
-              when textarea?
-                set! (.-style submit)
-                  style->string $ to-pairs style-submit
-                .!addEventListener submit "\"click" $ fn (event)
-                  cb $ .-value input
-                  .!remove root
-              .!appendChild js/document.body root
-              .!select input
+            prompt-at!
+              [] (-> e .-data .-global .-x) (-> e .-data .-global .-y)
+              , options cb
         |lilac-input $ quote
           def lilac-input $ record+
             {}
@@ -1466,22 +1365,6 @@
               :style $ map+ (keyword+) (any+)
               :textarea? $ boolean+
             {} (:all-optional? true) (:check-keys? true)
-        |style-container $ quote
-          def style-container $ {} (:position :absolute) (:padding "\"10px 12px")
-            :background-color $ hsl 0 0 30 0.9
-            :border $ str "\"1px solid " (hsl 0 0 30)
-            :width 240
-            :border-radius "\"2px"
-        |style-input $ quote
-          def style-input $ {} (:outline :none) (:font-family font-normal) (:line-height "\"20px") (:font-size 14) (:padding "\"6px 8px") (:width "\"100%") (:border-radius "\"2px") (:border :none) (:height 28)
-        |style-close $ quote
-          def style-close $ {} (:margin-left 8) (:font-family "\"Helvetica, sans-serif") (:font-size 24) (:font-weight 100)
-            :color $ hsl 0 80 80
-            :cursor :pointer
-        |style-submit $ quote
-          def style-submit $ {} (:margin-left 8)
-            :color $ hsl 200 80 80
-            :cursor :pointer
       :proc $ quote ()
     |phlox.comp.drag-point $ {}
       :ns $ quote
