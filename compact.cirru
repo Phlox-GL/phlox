@@ -227,19 +227,18 @@
                 do
                   let
                       target $ .!getChildAt parent-element idx
-                    case (:name element)
+                    case-default (:name element)
+                      do $ println "\"not implement yet for updating:" (:name element)
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
                       :rect $ update-rect element old-element target dispatch!
                       :text $ update-text element old-element target
                       :graphics $ update-graphics element old-element target dispatch!
-                      (:name element)
-                        do $ println "\"not implement yet for updating:" (:name element)
                   update-children (:children element) (:children old-element) (.!getChildAt parent-element idx) dispatch! options
               (not= (:name element) (:name old-element))
                 do (.!removeChildAt parent-element idx)
                   .!addChildAt parent-element (render-element element dispatch!) idx
-              :else $ js/console.warn "\"Unknown case:" element old-element
+              true $ js/console.warn "\"Unknown case:" element old-element
         |update-container $ quote
           defn update-container (element old-element target)
             let
@@ -329,7 +328,8 @@
                 when-not (empty? ops)
                   let
                       op $ first ops
-                    case (first op)
+                    case-default (first op)
+                      do $ println "\"Unknown op:" op
                       :remains $ do
                         when in-dev? $ assert
                           = (last op)
@@ -357,8 +357,6 @@
                             first $ first ys
                         .!removeChildAt parent-container idx
                         recur idx (rest ops) xs $ rest ys
-                      (first op)
-                        do $ println "\"Unknown op:" op
         |render-container $ quote
           defn render-container (element dispatch!)
             let
