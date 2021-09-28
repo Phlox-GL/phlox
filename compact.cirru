@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.15
+    :version |0.4.16
   :files $ {}
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
@@ -75,6 +75,7 @@
                 radius $ either (:radius props) 8
                 color $ either (:color props) (hslx 0 0 100)
                 fill $ either (:fill props) (hslx 0 0 60)
+                alpha $ either (:alpha props) 1
                 on-change $ :on-change props
                 hide-text? $ either (:hide-text? props) false
               let
@@ -84,6 +85,7 @@
                   circle $ {} (:radius radius)
                     :position $ [] 0 0
                     :fill fill
+                    :alpha alpha
                     :on $ {}
                       :pointerdown $ fn (e d!)
                         let
@@ -121,7 +123,7 @@
                             either (last position) 0
                             , 1
                           , "\")➤" (str unit)
-                      :alpha 0.3
+                      :alpha $ * alpha 0.3
                       :position $ [] -20 -16
                       :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "\"Menlo, monospace")
                   if
@@ -129,7 +131,7 @@
                       some? $ :title props
                     text $ {}
                       :text $ :title props
-                      :alpha 0.3
+                      :alpha $ * alpha 0.3
                       :position $ [] -12 6
                       :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "\"Menlo, monospace") (:align :center)
         |lilac-drag-point $ quote
@@ -755,6 +757,7 @@
                   {}
                     :position $ :p4 state
                     :title "\"base"
+                    :alpha 0.6
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p4 position
                 comp-drag-point (>> states :p5)
