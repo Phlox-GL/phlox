@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.14
+    :version |0.4.15
   :files $ {}
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
@@ -17,14 +17,16 @@
                 , data
     |phlox.app.main $ {}
       :ns $ quote
-        ns phlox.app.main $ :require ([] "\"pixi.js" :as PIXI)
-          [] phlox.core :refer $ [] render! clear-phlox-caches!
-          [] phlox.app.container :refer $ [] comp-container
-          [] phlox.app.schema :as schema
-          [] phlox.app.config :refer $ [] dev?
-          [] "\"shortid" :as shortid
-          [] phlox.app.updater :refer $ [] updater
-          [] "\"fontfaceobserver-es" :as FontFaceObserver
+        ns phlox.app.main $ :require ("\"pixi.js" :as PIXI)
+          phlox.core :refer $ render! clear-phlox-caches!
+          phlox.app.container :refer $ comp-container
+          phlox.app.schema :as schema
+          phlox.app.config :refer $ dev?
+          "\"shortid" :as shortid
+          phlox.app.updater :refer $ updater
+          "\"fontfaceobserver-es" :as FontFaceObserver
+          "\"./calcit.build-errors" :default build-errors
+          "\"bottom-tip" :default hud!
       :defs $ {}
         |render-app! $ quote
           defn render-app! (? arg)
@@ -46,9 +48,12 @@
                 op-time $ js/Date.now
               reset! *store $ updater @*store op op-data op-id op-time
         |reload! $ quote
-          defn reload! () (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
-            add-watch *store :change $ fn (store prev) (render-app!)
-            render-app! true
+          defn reload! () $ if (nil? build-errors)
+            do (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
+              add-watch *store :change $ fn (store prev) (render-app!)
+              render-app! true
+              hud! "\"ok~" "\"OK"
+            hud! "\"error" build-errors
     |phlox.comp.drag-point $ {}
       :ns $ quote
         ns phlox.comp.drag-point $ :require
@@ -67,7 +72,7 @@
                   {} (:dragging? false)
                     :x0 $ [] 0 0
                 unit $ either (:unit props) 1
-                radius $ either (:radius props) 3
+                radius $ either (:radius props) 8
                 color $ either (:color props) (hslx 0 0 100)
                 fill $ either (:fill props) (hslx 0 0 60)
                 on-change $ :on-change props
@@ -433,7 +438,7 @@
           defn comp-drafts (x)
             container
               {}
-                :position $ [] 400 100
+                :position $ [] 100 100
                 :rotation 0
               circle $ {}
                 :position $ [] 200 100
@@ -576,7 +581,7 @@
               container ({})
                 rect
                   {}
-                    :position $ [] 240 110
+                    :position $ [] 140 110
                     :size $ [] 80 24
                     :fill $ hslx 0 0 20
                     :on $ {}
@@ -594,7 +599,7 @@
                       :fill $ hslx 0 0 80
                 rect
                   {}
-                    :position $ [] 240 180
+                    :position $ [] 140 180
                     :size $ [] 200 100
                     :fill $ hslx 0 0 20
                     :on $ {}
@@ -617,7 +622,8 @@
             let
                 cursor $ []
                 states $ :states store
-              container ({})
+              container
+                {} $ :position ([] -200 -360)
                 create-list :container ({})
                   -> tabs $ map-indexed
                     fn (idx info)
@@ -626,7 +632,12 @@
                             , info
                         [] idx $ comp-tab-entry tab title idx
                           = tab $ :tab store
-                case (:tab store)
+                case-default (:tab store)
+                  text $ {} (:text "\"Unknown")
+                    :style $ {}
+                      :fill $ hslx 0 100 80
+                      :font-size 12
+                      :font-family "\"Helvetica"
                   :drafts $ comp-drafts (:x store)
                   :grids $ memof-call comp-grids
                   :curves $ comp-curves
@@ -639,12 +650,6 @@
                   :input $ comp-text-input (>> states :input)
                   :messages $ comp-messages-demo (>> states :messages)
                   :slider-point $ comp-slider-point-demo (>> states :slider-point)
-                  (:tab store)
-                    text $ {} (:text "\"Unknown")
-                      :style $ {}
-                        :fill $ hslx 0 100 80
-                        :font-size 12
-                        :font-family "\"Helvetica"
         |tabs $ quote
           def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point")
         |comp-tab-entry $ quote
@@ -654,7 +659,7 @@
                 [] 10 $ + 50 (* idx 40)
               rect $ {}
                 :position $ [] 0 0
-                :size $ [] 160 32
+                :size $ [] 100 32
                 :fill $ if selected? (hslx 180 50 50) (hslx 180 50 30)
                 :on $ {}
                   :pointertap $ fn (event dispatch!) (dispatch! :tab tab-value)
@@ -691,7 +696,7 @@
                     :bottom? false
               container ({})
                 comp-button $ {} (:text "\"Add message")
-                  :position $ [] 400 200
+                  :position $ [] 120 200
                   :on-pointertap $ fn (e d!)
                     d! cursor $ update state :messages
                       fn (xs)
@@ -701,7 +706,7 @@
                 comp-switch $ {}
                   :value $ :bottom? state
                   :title "\"At bottom"
-                  :position $ [] 400 280
+                  :position $ [] 200 280
                   :on-change $ fn (e d!)
                     d! cursor $ update state :bottom? not
                 comp-messages $ {}
@@ -720,12 +725,12 @@
                 state $ either (:data states)
                   {}
                     :p1 $ [] 0 0
-                    :p2 $ [] 0 20
-                    :p3 $ [] 0 40
-                    :p4 $ [] 0 60
-                    :p5 $ [] 0 80
+                    :p2 $ [] 0 40
+                    :p3 $ [] 0 80
+                    :p4 $ [] 0 120
+                    :p5 $ [] 0 160
               container
-                {} $ :position ([] 300 200)
+                {} $ :position ([] 160 100)
                 comp-drag-point (>> states :p1)
                   {}
                     :position $ :p1 state
@@ -741,7 +746,7 @@
                   {}
                     :position $ :p3 state
                     :unit 0.4
-                    :radius 6
+                    :radius 10
                     :fill $ hslx 0 90 60
                     :color $ hslx 0 0 50
                     :on-change $ fn (position d!)
@@ -810,7 +815,7 @@
                 ; g :line-to $ [] 400 400
         |comp-buttons $ quote
           defn comp-buttons () $ container
-            {} $ :position ([] 300 100)
+            {} $ :position ([] 100 100)
             comp-button $ {} (:text "\"DEMO BUTTON")
               :position $ [] 100 0
               :on $ {}
@@ -829,7 +834,7 @@
                 state $ either (:data states)
                   {} $ :value false
               container
-                {} $ :position ([] 300 300)
+                {} $ :position ([] 120 300)
                 comp-switch $ {}
                   :value $ :value state
                   :position $ [] 0 0
@@ -844,17 +849,17 @@
         |comp-gradients $ quote
           defn comp-gradients () $ container ({})
             text $ {} (:text "\"long long text")
-              :position $ [] 200 160
+              :position $ [] 120 160
               :style $ {}
                 :fill $ [] (hslx 0 0 100) (hslx 0 0 40)
                 :fill-gradient-type :v
             text $ {} (:text "\"long long text")
-              :position $ [] 200 200
+              :position $ [] 120 200
               :style $ {}
                 :fill $ [] (hslx 0 0 100) (hslx 0 0 40)
                 :fill-gradient-type :h
             text $ {} (:text "\"long long text")
-              :position $ [] 200 120
+              :position $ [] 120 120
               :style $ {}
                 :fill $ hslx 20 90 60
     |phlox.comp.button $ {}
@@ -1125,7 +1130,7 @@
                 {} $ :position (:position props)
                 rect
                   {}
-                    :size $ [] 12 12
+                    :size $ [] 16 16
                     :fill fill
                     :radius 4
                     :on $ {}
@@ -1156,7 +1161,7 @@
                       if (number? value)
                         .!toFixed value $ if rounded? 0 4
                         , "\"nil"
-                    :position $ [] 16 1
+                    :position $ [] 20 3
                     :style $ {} (:fill color) (:font-size 10) (:font-family "\"Menlo, monospace")
         |comp-slider $ quote
           defn comp-slider (states props)
@@ -1306,7 +1311,7 @@
                 state $ either (:data states)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
-                {} $ :position ([] 300 100)
+                {} $ :position ([] 100 100)
                 comp-slider (>> states :a)
                   {}
                     :value $ :a state
@@ -1362,7 +1367,7 @@
                 state $ either (:data states)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
-                {} $ :position ([] 300 100)
+                {} $ :position ([] 120 100)
                 comp-slider-point (>> states :a)
                   {}
                     :value $ :a state
@@ -1523,7 +1528,7 @@
             when (nil? @*app)
               let
                   pixi-app $ new PIXI/Application
-                    to-js-data $ {}
+                    js-object
                       :backgroundColor $ hslx 0 0 0
                       :antialias true
                       :autoDensity true
@@ -1536,6 +1541,8 @@
                 -> js/document .-body $ .!appendChild (.-view pixi-app)
                 .!addEventListener js/window "\"resize" $ fn (event)
                   -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
+                  -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
+                  -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
                   .!render (.-renderer @*app) (.-stage @*app)
               aset js/window "\"_phloxTree" @*app
             let
@@ -1548,6 +1555,8 @@
                 do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                 rerender-app! expanded-app wrap-dispatch options
               reset! *tree-element expanded-app
+            -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
+            -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
             .!render (.-renderer @*app) (.-stage @*app)
             tick-calling-loop!
     |phlox.math $ {}
@@ -1683,7 +1692,7 @@
         |comp-keyboard $ quote
           defn comp-keyboard (on? counted)
             container
-              {} $ :position ([] 400 200)
+              {} $ :position ([] 120 200)
               container
                 {} $ :position ([] 0 0)
                 rect $ {}
