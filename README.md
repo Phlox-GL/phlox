@@ -204,6 +204,7 @@ comp-drag-point (>> states :p3) $ {}
   :title "|DEMO"
   :radius 6
   :fill (hslx 0 90 60)
+  :alpha 1
   :color (hslx 0 0 50)
   :hide-text? false
   :on-change $ fn (position d!) (d! cursor (assoc state :p3 position))
