@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.16
+    :version |0.4.17
   :files $ {}
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
@@ -2040,8 +2040,12 @@
                 bottom? $ :bottom? options
                 base-position $ either (:position options)
                   if bottom?
-                    [] (- js/window.innerWidth 16) (- js/window.innerHeight 16)
-                    [] (- js/window.innerWidth 16) 16
+                    []
+                      - (* 0.5 js/window.innerWidth) 16
+                      - (* 0.5 js/window.innerHeight) 16
+                    []
+                      - (* 0.5 js/window.innerWidth) 16
+                      - 16 $ * 0.5 js/window.innerWidth
                 on-pointertap $ either (:on-pointertap options)
                   fn (x d!) (println "\"missing message handler:" x)
               create-list :container
