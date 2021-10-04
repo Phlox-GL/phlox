@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.17
+    :version |0.4.18
   :files $ {}
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
@@ -926,7 +926,7 @@
             (exists? js/process) (= "\"true" js/process.env.cdn)
             :else false
         |dev? $ quote
-          def dev? $ = "\"true" (get-env "\"dev")
+          def dev? $ = "\"dev" (get-env "\"mode")
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main.css") (:cdn-url "\"http://cdn.tiye.me/phlox/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox")
     |phlox.check $ {}
@@ -954,7 +954,7 @@
             [] (number+) (number+)
             {} $ :check-size? true
         |in-dev? $ quote
-          def in-dev? $ = "\"true" (get-env "\"dev")
+          def in-dev? $ = "\"dev" (get-env "\"mode")
         |lilac-text-style $ quote
           def lilac-text-style $ record+
             {}
