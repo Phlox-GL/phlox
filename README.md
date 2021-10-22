@@ -4,7 +4,7 @@ Phlox in calcit-js
 
 > Pixi.js DSL in ClojureScript with hot code swapping, inspired by Virtual DOMs. Currently only a small subset of Pixi.js features is supported.
 
-Previews http://r.tiye.me/Quamolit/phlox.calcit/ .
+Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### Usage
 
