@@ -127,6 +127,8 @@ Draw text:
     :down (fn ())
 ```
 
+> `:align :center` is handled via special logic, need deeper investigation.
+
 Draw graphics(use `phlox.core/g` for validations):
 
 ```cirru
@@ -194,6 +196,21 @@ comp-slider (>> states :c) $ {}
 ```
 
 Also `comp-slider-point` is a minimal version for `comp-slider`, it does not accept `:title`s.
+
+`comp-spin-slider` support change value via touch and spin:
+
+```cirru
+comp-spin-slider (>> states :c) $ {}
+  :value (:c state)
+  :unit 10
+  :min 1
+  :max 10
+  :position $ [] 20 120
+  :fill (hslx 50 90 70)
+  :color (hslx 200 90 30)
+  :on-change $ fn (value d!) (d! cursor (assoc state :c value))
+  :fraction 1
+```
 
 `phlox.comp.drag-point/comp-drag-point` provides a point for dragging:
 
