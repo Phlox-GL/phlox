@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.19
+    :version |0.4.20
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -210,7 +210,7 @@
               init-rotation target $ :rotation props
               init-alpha target $ :alpha props
               if
-                = :center $ :align style
+                = :center $ :align props
                 .!set (.-anchor target) 0.5
               render-children target (:children element) dispatch!
               , target
@@ -305,6 +305,12 @@
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
               update-alpha target (:alpha props) (:alpha props')
+              if
+                not= (:align props) (:align props')
+                if
+                  = :center $ :align props
+                  .!set (.-anchor target) 0.5
+                  .!set (.-anchor target) nil
         |render-graphics $ quote
           defn render-graphics (element dispatch!)
             let
@@ -1321,7 +1327,8 @@
                         .!toFixed v $ either (:fraction props) 1
                         , "\"-"
                   :position $ [] 4 4
-                  :style $ {} (:fill color) (:align :center) (:font-size font-size) (:font-family "\"Menlo, monospace")
+                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Menlo, monospace")
+                  :align :center
         |*prev-spin-point $ quote (defatom *prev-spin-point nil)
     |phlox.comp.switch $ {}
       :ns $ quote
