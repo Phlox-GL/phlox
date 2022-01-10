@@ -2,7 +2,8 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.18
+    :version |0.4.20
+  :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
@@ -208,6 +209,9 @@
               init-angle target $ :angle props
               init-rotation target $ :rotation props
               init-alpha target $ :alpha props
+              if
+                = :center $ :align props
+                .!set (.-anchor target) 0.5
               render-children target (:children element) dispatch!
               , target
         |update-graphics $ quote
@@ -301,6 +305,12 @@
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
               update-alpha target (:alpha props) (:alpha props')
+              if
+                not= (:align props) (:align props')
+                if
+                  = :center $ :align props
+                  .!set (.-anchor target) 0.5
+                  .!set (.-anchor target) nil
         |render-graphics $ quote
           defn render-graphics (element dispatch!)
             let
@@ -549,15 +559,15 @@
                 - n $ rand-int (* 2 n)
                 - m $ rand-int (* 2 m)
         |rebase $ quote
-          defn rebase
-              [] x y
-              [] a b
-            , "\"complex number division, renamed since naming collision" $ let
-                inverted $ / 1
-                  + (* a a) (* b b)
-              []
-                * inverted $ + (* x a) (* y b)
-                * inverted $ - (* y a) (* x b)
+          defn rebase (value base) "\"complex number division, renamed since naming collision" $ let-sugar
+                [] x y
+                , value
+              ([] a b) base
+              inverted $ / 1
+                + (* a a) (* b b)
+            []
+              * inverted $ + (* x a) (* y b)
+              * inverted $ - (* y a) (* x b)
     |phlox.app.container $ {}
       :ns $ quote
         ns phlox.app.container $ :require
@@ -567,7 +577,7 @@
           [] phlox.comp.button :refer $ [] comp-button
           [] phlox.comp.drag-point :refer $ [] comp-drag-point
           [] phlox.comp.switch :refer $ [] comp-switch
-          [] phlox.app.comp.slider-demo :refer $ [] comp-slider-demo comp-slider-point-demo
+          [] phlox.app.comp.slider-demo :refer $ [] comp-slider-demo comp-slider-point-demo comp-spin-slider-demo
           [] phlox.input :refer $ [] request-text!
           [] phlox.comp.messages :refer $ [] comp-messages
           [] "\"shortid" :as shortid
@@ -625,7 +635,8 @@
                 cursor $ []
                 states $ :states store
               container
-                {} $ :position ([] -200 -360)
+                {} $ :position
+                  [] (* -0.5 js/window.innerWidth) (* -0.5 js/window.innerHeight)
                 create-list :container ({})
                   -> tabs $ map-indexed
                     fn (idx info)
@@ -652,13 +663,14 @@
                   :input $ comp-text-input (>> states :input)
                   :messages $ comp-messages-demo (>> states :messages)
                   :slider-point $ comp-slider-point-demo (>> states :slider-point)
+                  :spin-slider $ comp-spin-slider-demo (>> states :spin-slider)
         |tabs $ quote
-          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point")
+          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider")
         |comp-tab-entry $ quote
           defn comp-tab-entry (tab-value tab-title idx selected?)
             container
               {} $ :position
-                [] 10 $ + 50 (* idx 40)
+                [] 10 $ + 10 (* idx 40)
               rect $ {}
                 :position $ [] 0 0
                 :size $ [] 100 32
@@ -1100,6 +1112,8 @@
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          phlox.math :refer $ vec-length bound-x
+          phlox.complex :refer $ rebase
       :defs $ {}
         |lilac-slider-point $ quote
           def lilac-slider-point $ record+
@@ -1245,6 +1259,77 @@
               :position $ optional+
                 tuple+ $ [] (number+) (number+)
             {} $ :check-keys? true
+        |comp-spin-slider $ quote
+          defn comp-spin-slider (states props)
+            let
+                cursor $ :cursor states
+                state $ either (:data states)
+                  {} $ :dragging? false
+                unit $ either (:unit props) 1
+                radius $ either (:radius props) 48
+                color $ either (:color props) (hslx 0 0 100)
+                fill $ either (:fill props) (hslx 180 80 40)
+                font-size $ either (:font-size props) (&* radius 0.5)
+                alpha $ either (:alpha props) 1
+                on-change $ :on-change props
+                position $ either (:position props) ([] 0 0)
+              container
+                {} $ :position position
+                circle $ {} (:radius radius)
+                  :position $ [] 0 0
+                  :fill fill
+                  :alpha alpha
+                  :on $ {}
+                    :pointerdown $ fn (e d!)
+                      let
+                          x $ -> e .-data .-global .-x
+                          y $ -> e .-data .-global .-y
+                        reset! *prev-spin-point $ []
+                          - x $ first position
+                          - y $ first position
+                        d! cursor $ assoc state :dragging? true
+                    :pointermove $ fn (e d!)
+                      let
+                          x $ -> e .-data .-global .-x
+                          y $ -> e .-data .-global .-y
+                        if (:dragging? state)
+                          let
+                              current-point $ []
+                                - x $ first position
+                                - y $ first position
+                              prev-point @*prev-spin-point
+                            if
+                              < (vec-length current-point) (&* 0.5 radius)
+                              reset! *prev-spin-point nil
+                              do
+                                if (some? prev-point)
+                                  let
+                                      delta-vec $ rebase current-point prev-point
+                                      delta $ js/Math.atan2 (last delta-vec) (first delta-vec)
+                                    if (fn? on-change)
+                                      on-change
+                                        bound-x
+                                          + (:value props) (&* unit delta)
+                                          :min props
+                                          :max props
+                                        , d!
+                                      js/console.warn "\"missing :on-change for spin-slider"
+                                reset! *prev-spin-point current-point
+                    :pointerup $ fn (e d!) (reset! *prev-spin-point nil)
+                      d! cursor $ assoc state :dragging? false
+                    :pointerupoutside $ fn (e d!) (reset! *prev-spin-point nil)
+                      d! cursor $ assoc state :dragging? false
+                text $ {}
+                  :text $ str
+                    let
+                        v $ :value props
+                      if (number? v)
+                        .!toFixed v $ either (:fraction props) 1
+                        , "\"-"
+                  :position $ [] 4 4
+                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Menlo, monospace")
+                  :align :center
+        |*prev-spin-point $ quote (defatom *prev-spin-point nil)
     |phlox.comp.switch $ {}
       :ns $ quote
         ns phlox.comp.switch $ :require
@@ -1305,7 +1390,7 @@
       :ns $ quote
         ns phlox.app.comp.slider-demo $ :require
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
-          [] phlox.comp.slider :refer $ [] comp-slider comp-slider-point
+          [] phlox.comp.slider :refer $ [] comp-slider comp-slider-point comp-spin-slider
       :defs $ {}
         |comp-slider-demo $ quote
           defn comp-slider-demo (states)
@@ -1415,6 +1500,23 @@
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :f value
                     :max 10
+        |comp-spin-slider-demo $ quote
+          defn comp-spin-slider-demo (states)
+            let
+                cursor $ :cursor states
+                state $ either (:data states)
+                  {} $ :v1 10
+              container ({})
+                comp-spin-slider (>> states :demo)
+                  {}
+                    :position $ [] 240 240
+                    :value $ :v1 state
+                    :unit 1
+                    :on-change $ fn (v d!)
+                      d! cursor $ assoc state :v1 v
+                    :min 1
+                    :fill $ hslx 50 90 44
+                    :fraction 1
     |phlox.core $ {}
       :ns $ quote
         ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
@@ -1569,6 +1671,14 @@
           def radian-ratio $ / js/Math.PI 180
         |angle->radian $ quote
           defn angle->radian (x) (* x radian-ratio)
+        |vec-length $ quote
+          defn vec-length (point)
+            let[] (x y) point $ js/Math.sqrt
+              &+ (&* x x) (&* y y)
+        |bound-x $ quote
+          defn bound-x (x lower higher)
+            js/Math.min (either higher js/+Infinity)
+              js/Math.max (either lower js/-Infinity) x
     |phlox.test $ {}
       :ns $ quote
         ns phlox.test $ :require
