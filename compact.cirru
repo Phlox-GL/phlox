@@ -37,6 +37,7 @@
             -> (new FontFaceObserver/default "\"Josefin Sans") (.!load)
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
+            .!addEventListener js/window "\"resize" $ fn (e) (render-app!)
             println "\"App Started"
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -539,17 +540,21 @@
               / (first point) x
               / (last point) x
         |minus $ quote
-          defn minus
-              [] a b
-              [] x y
-            [] (- a x) (- b y)
+          defn minus (v1 v2)
+            let-sugar
+                  [] a b
+                  , v1
+                ([] x y) v2
+              [] (- a x) (- b y)
         |times $ quote
-          defn times
-              [] a b
-              [] x y
-            []
-              - (* a x) (* b y)
-              + (* a y) (* b x)
+          defn times (v1 v2)
+            let-sugar
+                  [] a b
+                  , v1
+                ([] x y) v2
+              []
+                - (* a x) (* b y)
+                + (* a y) (* b x)
         |rand-point $ quote
           defn$ rand-point
               n
@@ -583,6 +588,7 @@
           [] "\"shortid" :as shortid
           [] memof.alias :refer $ [] memof-call
           phlox.util.styles :refer $ font-code
+          phlox.comp.arrow :refer $ comp-arrow
       :defs $ {}
         |comp-text-input $ quote
           defn comp-text-input (states)
@@ -664,8 +670,9 @@
                   :messages $ comp-messages-demo (>> states :messages)
                   :slider-point $ comp-slider-point-demo (>> states :slider-point)
                   :spin-slider $ comp-spin-slider-demo (>> states :spin-slider)
+                  :arrows $ comp-arrows-demo (>> states :arrows)
         |tabs $ quote
-          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider")
+          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows")
         |comp-tab-entry $ quote
           defn comp-tab-entry (tab-value tab-title idx selected?)
             container
@@ -861,6 +868,22 @@
                   :title "\"Custom title"
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
+        |comp-arrows-demo $ quote
+          defn comp-arrows-demo (states)
+            let
+                cursor $ :cursor states
+                state $ either (:data states)
+                  {}
+                    :from $ [] 100 100
+                    :to $ [] 200 200
+              comp-arrow (>> states :demo1)
+                {}
+                  :from $ :from state
+                  :to $ :to state
+                  :width 2
+                  :arm-length 8
+                  :on-change $ fn (from to d!)
+                    d! cursor $ assoc state :from from :to to
         |comp-gradients $ quote
           defn comp-gradients () $ container ({})
             text $ {} (:text "\"long long text")
@@ -2001,6 +2024,53 @@
         |font-normal $ quote (def font-normal "|Hind, Helvatica, Arial, sans-serif")
         |layout-row $ quote
           def layout-row $ {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
+    |phlox.comp.arrow $ {}
+      :ns $ quote
+        ns phlox.comp.arrow $ :require
+          phlox.core :refer $ g hslx rect circle text container graphics create-list >>
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] phlox.check :refer $ [] lilac-event-map dev-check
+          phlox.complex :as complex
+          phlox.comp.drag-point :refer $ comp-drag-point
+          phlox.math :refer $ vec-length
+      :defs $ {}
+        |comp-arrow $ quote
+          defn comp-arrow (states props) (; dev-check props lilac-arrow)
+            let
+                color $ either (:color props) (hslx 0 0 100)
+                from $ :from props
+                to $ :to props
+                width $ either (:width props) 1
+                arg-length $ either (:arm-length props) 10
+                on-change $ :on-change props
+                reversed-vec $ complex/minus from to
+                reversed-unit $ complex/divide-by reversed-vec (vec-length reversed-vec)
+                arm-left $ complex/times reversed-unit
+                  [] arg-length $ negate arg-length
+                arm-right $ complex/times reversed-unit ([] arg-length arg-length)
+              container
+                {} $ :position ([] 0 0)
+                comp-drag-point (>> states :from)
+                  {} (:position from)
+                    :fill $ hslx 200 80 20
+                    :hide-text? true
+                    :on-change $ fn (position d!)
+                      if (fn? on-change) (on-change position to d!) (js/console.warn "\"missing onchange for arrow")
+                comp-drag-point (>> states :to)
+                  {} (:position to) (:hide-text? true)
+                    :fill $ hslx 200 80 20
+                    :on-change $ fn (position d!)
+                      if (fn? on-change) (on-change from position d!) (js/console.warn "\"missing onchange for arrow")
+                graphics $ {}
+                  :ops $ []
+                    g :line-style $ {} (:width width)
+                      :color $ hslx 200 80 80
+                      :alpha 1
+                    g :move-to from
+                    g :line-to to
+                    g :line-to $ complex/add to arm-left
+                    g :move-to to
+                    g :line-to $ complex/add to arm-right
     |phlox.keyboard $ {}
       :ns $ quote
         ns phlox.keyboard $ :require
