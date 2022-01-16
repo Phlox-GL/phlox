@@ -213,7 +213,7 @@ comp-spin-slider (>> states :c) $ {}
   :spin-pivot $ [] 20 120
 ```
 
-> `:spin-pivot` is supposed to provide an **absolute** position of area center, which is actually center for calculating spin angles. Since PIXI does not expose absolute position of a circle easily, now we need to add by hand.
+> `:spin-pivot` is supposed to provide an **absolute** position of area center, which is actually center for calculating spin angles. Since PIXI does not expose absolute position of a circle easily, now we need to add by hand. By default, we use center of screen as a universal spin pivot.
 
 `phlox.comp.drag-point/comp-drag-point` provides a point for dragging:
 
