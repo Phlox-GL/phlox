@@ -1296,6 +1296,8 @@
                 alpha $ either (:alpha props) 1
                 on-change $ :on-change props
                 position $ either (:position props) ([] 0 0)
+                spin-pivot $ either (:spin-pivot props)
+                  [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
               container
                 {} $ :position position
                 circle $ {} (:radius radius)
@@ -1308,8 +1310,8 @@
                           x $ -> e .-data .-global .-x
                           y $ -> e .-data .-global .-y
                         reset! *prev-spin-point $ []
-                          - x $ first position
-                          - y $ first position
+                          - x $ first spin-pivot
+                          - y $ last spin-pivot
                         d! cursor $ assoc state :dragging? true
                     :pointermove $ fn (e d!)
                       let
@@ -1318,8 +1320,8 @@
                         if (:dragging? state)
                           let
                               current-point $ []
-                                - x $ first position
-                                - y $ first position
+                                - x $ first spin-pivot
+                                - y $ last spin-pivot
                               prev-point @*prev-spin-point
                             if
                               < (vec-length current-point) (&* 0.5 radius)
@@ -1533,6 +1535,7 @@
                 comp-spin-slider (>> states :demo)
                   {}
                     :position $ [] 240 240
+                    :spin-pivot nil
                     :value $ :v1 state
                     :unit 1
                     :on-change $ fn (v d!)
