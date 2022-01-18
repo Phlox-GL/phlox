@@ -1132,11 +1132,13 @@
     |phlox.comp.slider $ {}
       :ns $ quote
         ns phlox.comp.slider $ :require
-          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g >> hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
           phlox.math :refer $ vec-length bound-x
           phlox.complex :refer $ rebase
+          phlox.complex :as complex
+          phlox.comp.drag-point :refer $ comp-drag-point
       :defs $ {}
         |lilac-slider-point $ quote
           def lilac-slider-point $ record+
@@ -1296,14 +1298,12 @@
                 alpha $ either (:alpha props) 1
                 on-change $ :on-change props
                 position $ either (:position props) ([] 0 0)
+                on-move $ :on-move props
                 spin-pivot $ either (:spin-pivot props)
                   [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
               container
-                {} $ :position position
-                circle $ {} (:radius radius)
-                  :position $ [] 0 0
-                  :fill fill
-                  :alpha alpha
+                {} $ :position ([] 0 0)
+                circle $ {} (:radius radius) (:position position) (:fill fill) (:alpha alpha)
                   :on $ {}
                     :pointerdown $ fn (e d!)
                       let
@@ -1351,9 +1351,17 @@
                       if (number? v)
                         .!toFixed v $ either (:fraction props) 1
                         , "\"-"
-                  :position $ [] 4 4
+                  :position $ complex/add position ([] 4 4)
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Menlo, monospace")
                   :align :center
+                container
+                  {} $ :position ([] 0 24)
+                  comp-drag-point (>> states :move)
+                    {} (:position position) (:unit 1) (:radius 10)
+                      :fill $ hslx 0 90 60
+                      :hide-text? true
+                      :alpha 0.5
+                      :on-change $ fn (pos d!) (on-move pos d!)
         |*prev-spin-point $ quote (defatom *prev-spin-point nil)
     |phlox.comp.switch $ {}
       :ns $ quote
@@ -1530,19 +1538,22 @@
             let
                 cursor $ :cursor states
                 state $ either (:data states)
-                  {} $ :v1 10
+                  {} (:v1 10)
+                    :pos $ [] 240 240
               container ({})
                 comp-spin-slider (>> states :demo)
                   {}
-                    :position $ [] 240 240
-                    :spin-pivot nil
+                    :position $ :pos state
+                    :spin-pivot $ :pos state
                     :value $ :v1 state
                     :unit 1
-                    :on-change $ fn (v d!)
-                      d! cursor $ assoc state :v1 v
                     :min 1
                     :fill $ hslx 50 90 44
                     :fraction 1
+                    :on-change $ fn (v d!)
+                      d! cursor $ assoc state :v1 v
+                    :on-move $ fn (pos d!)
+                      d! cursor $ assoc state :pos pos
     |phlox.core $ {}
       :ns $ quote
         ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
