@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.21
+    :version |0.4.22
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -23,7 +23,7 @@
           phlox.app.container :refer $ comp-container
           phlox.app.schema :as schema
           phlox.app.config :refer $ dev?
-          "\"shortid" :as shortid
+          "\"nanoid" :refer $ nanoid
           phlox.app.updater :refer $ updater
           "\"fontfaceobserver-es" :as FontFaceObserver
           "\"./calcit.build-errors" :default build-errors
@@ -46,7 +46,7 @@
               and dev? $ not= op :states
               println "\"dispatch!" op op-data
             let
-                op-id $ shortid/generate
+                op-id $ nanoid
                 op-time $ js/Date.now
               reset! *store $ updater @*store op op-data op-id op-time
         |reload! $ quote
@@ -585,7 +585,7 @@
           [] phlox.app.comp.slider-demo :refer $ [] comp-slider-demo comp-slider-point-demo comp-spin-slider-demo
           [] phlox.input :refer $ [] request-text!
           [] phlox.comp.messages :refer $ [] comp-messages
-          [] "\"shortid" :as shortid
+          [] "\"nanoid" :refer $ nanoid
           [] memof.alias :refer $ [] memof-call
           phlox.util.styles :refer $ font-code
           phlox.comp.arrow :refer $ comp-arrow
@@ -721,9 +721,10 @@
                   :on-pointertap $ fn (e d!)
                     d! cursor $ update state :messages
                       fn (xs)
-                        conj xs $ {}
-                          :id $ shortid/generate
-                          :text $ str "\"Messages of. " (shortid/generate)
+                        conj xs $ let
+                            id $ nanoid
+                          {} (:id id)
+                            :text $ str "\"Messages of " id
                 comp-switch $ {}
                   :value $ :bottom? state
                   :title "\"At bottom"
