@@ -307,7 +307,7 @@
                           |T $ {} (:text |op-id) (:type :leaf) (:at 1583036785574) (:by |rJG4IHzWf)
                           |j $ {}
                             :data $ {}
-                              |T $ {} (:text |shortid/generate) (:type :leaf) (:at 1583036785574) (:by |rJG4IHzWf)
+                              |T $ {} (:text |nanoid) (:type :leaf) (:at 1643605587752) (:by |rJG4IHzWf)
                             :type :expr
                             :at 1583036785574
                             :by |rJG4IHzWf
@@ -468,9 +468,11 @@
               :data $ {}
                 |yT $ {}
                   :data $ {}
-                    |j $ {} (:text "|\"shortid") (:type :leaf) (:at 1580869191409) (:by |rJG4IHzWf)
-                    |r $ {} (:text |:as) (:type :leaf) (:at 1580869192078) (:by |rJG4IHzWf)
-                    |v $ {} (:text |shortid) (:type :leaf) (:at 1580869195036) (:by |rJG4IHzWf)
+                    |j $ {} (:text "|\"nanoid") (:type :leaf) (:at 1643605578702) (:by |rJG4IHzWf)
+                    |r $ {} (:text |:refer) (:type :leaf) (:at 1643605581908) (:by |rJG4IHzWf)
+                    |v $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1643605582185)
+                      :data $ {}
+                        |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605583718) (:text |nanoid)
                   :type :expr
                   :at 1580869187547
                   :by |rJG4IHzWf
@@ -9087,43 +9089,44 @@
                                                     :data $ {}
                                                       |T $ {} (:text |conj) (:type :leaf) (:at 1586601758567) (:by |rJG4IHzWf)
                                                       |j $ {} (:text |xs) (:type :leaf) (:at 1586601759235) (:by |rJG4IHzWf)
-                                                      |r $ {}
+                                                      |r $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1643605604493)
                                                         :data $ {}
-                                                          |T $ {} (:text |{}) (:type :leaf) (:at 1586601760551) (:by |rJG4IHzWf)
-                                                          |j $ {}
+                                                          |T $ {}
                                                             :data $ {}
-                                                              |T $ {} (:text |:id) (:type :leaf) (:at 1586601766250) (:by |rJG4IHzWf)
+                                                              |T $ {} (:text |{}) (:type :leaf) (:at 1586601760551) (:by |rJG4IHzWf)
                                                               |j $ {}
                                                                 :data $ {}
-                                                                  |T $ {} (:text |shortid/generate) (:type :leaf) (:at 1612514179789) (:by |rJG4IHzWf)
+                                                                  |T $ {} (:text |:id) (:type :leaf) (:at 1586601766250) (:by |rJG4IHzWf)
+                                                                  |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605609290) (:text |id)
                                                                 :type :expr
-                                                                :at 1586601769053
+                                                                :at 1586601761221
                                                                 :by |rJG4IHzWf
-                                                            :type :expr
-                                                            :at 1586601761221
-                                                            :by |rJG4IHzWf
-                                                          |r $ {}
-                                                            :data $ {}
-                                                              |T $ {} (:text |:text) (:type :leaf) (:at 1586601786754) (:by |rJG4IHzWf)
-                                                              |j $ {}
+                                                              |r $ {}
                                                                 :data $ {}
-                                                                  |D $ {} (:text |str) (:type :leaf) (:at 1586601802122) (:by |rJG4IHzWf)
-                                                                  |T $ {} (:text "|\"Messages of. ") (:type :leaf) (:at 1586601809119) (:by |rJG4IHzWf)
+                                                                  |T $ {} (:text |:text) (:type :leaf) (:at 1586601786754) (:by |rJG4IHzWf)
                                                                   |j $ {}
                                                                     :data $ {}
-                                                                      |j $ {} (:text |shortid/generate) (:type :leaf) (:at 1612514182583) (:by |rJG4IHzWf)
+                                                                      |D $ {} (:text |str) (:type :leaf) (:at 1586601802122) (:by |rJG4IHzWf)
+                                                                      |T $ {} (:text "|\"Messages of ") (:type :leaf) (:at 1643605617859) (:by |rJG4IHzWf)
+                                                                      |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605614245) (:text |id)
                                                                     :type :expr
-                                                                    :at 1586601809353
+                                                                    :at 1586601801316
                                                                     :by |rJG4IHzWf
                                                                 :type :expr
-                                                                :at 1586601801316
+                                                                :at 1586601799188
                                                                 :by |rJG4IHzWf
                                                             :type :expr
-                                                            :at 1586601799188
+                                                            :at 1586601760126
                                                             :by |rJG4IHzWf
-                                                        :type :expr
-                                                        :at 1586601760126
-                                                        :by |rJG4IHzWf
+                                                          |D $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605605164) (:text |let)
+                                                          |L $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1643605605636)
+                                                            :data $ {}
+                                                              |T $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1643605605732)
+                                                                :data $ {}
+                                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605606056) (:text |id)
+                                                                  |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1643605607787)
+                                                                    :data $ {}
+                                                                      |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605656799) (:text |nanoid)
                                                     :type :expr
                                                     :at 1586601757899
                                                     :by |rJG4IHzWf
@@ -11507,9 +11510,11 @@
                 |yy $ {}
                   :data $ {}
                     |T $ {} (:text |[]) (:type :leaf) (:at 1586601777045) (:by |rJG4IHzWf)
-                    |j $ {} (:text "|\"shortid") (:type :leaf) (:at 1586601779518) (:by |rJG4IHzWf)
-                    |r $ {} (:text |:as) (:type :leaf) (:at 1586601780086) (:by |rJG4IHzWf)
-                    |v $ {} (:text |shortid) (:type :leaf) (:at 1586601781086) (:by |rJG4IHzWf)
+                    |j $ {} (:text "|\"nanoid") (:type :leaf) (:at 1643605625908) (:by |rJG4IHzWf)
+                    |r $ {} (:text |:refer) (:type :leaf) (:at 1643605628198) (:by |rJG4IHzWf)
+                    |v $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1643605628556)
+                      :data $ {}
+                        |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1643605629549) (:text |nanoid)
                   :type :expr
                   :at 1586601776776
                   :by |rJG4IHzWf
@@ -28562,7 +28567,7 @@
           :type :expr
           :at 1586601241785
           :by |rJG4IHzWf
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:output |src) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.21)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:output |src) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.22)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
     :init-fn |phlox.app.main/main!
     :extension |.cljs
