@@ -955,12 +955,6 @@
     |phlox.app.config $ {}
       :ns $ quote (ns phlox.app.config)
       :defs $ {}
-        |cdn? $ quote
-          def cdn? $ cond
-              exists? js/window
-              , false
-            (exists? js/process) (= "\"true" js/process.env.cdn)
-            :else false
         |dev? $ quote
           def dev? $ = "\"dev" (get-env "\"mode")
         |site $ quote
@@ -1938,7 +1932,7 @@
                           :radian data
                         (some? (:angle data))
                           map (:angle data) angle->radian
-                        :else $ do (js/console.warn "\"Unknown arc" data) ([] 0 0)
+                        true $ do (js/console.warn "\"Unknown arc" data) ([] 0 0)
                     .!arc target (first center) (last center) (:radius data) (first radian) (last radian) (:anticlockwise? data)
                   :arc-to $ let
                       p1 $ :p1 data
@@ -1998,8 +1992,10 @@
         |init-position $ quote
           defn init-position (target point)
             when (some? point)
-              aset (-> target .-position) "\"x" $ if (list? point) (first point) 0
-              aset (-> target .-position) "\"y" $ if (list? point) (last point) 0
+              -> target .-position .-x $ set!
+                if (list? point) (first point) 0
+              -> target .-position .-y $ set!
+                if (list? point) (last point) 0
         |draw-circle $ quote
           defn draw-circle (target radius)
             if (number? radius)
@@ -2167,7 +2163,7 @@
                     update :step inc
                   rest xs
                   []
-              :else $ let
+              true $ let
                   x0 $ first xs
                   y0 $ first ys
                 cond
@@ -2194,7 +2190,7 @@
                           conj acc $ [] :add y0
                         update :step inc
                       , xs $ rest ys
-                  :else $ let
+                  true $ let
                       solution-a $ find-minimal-ops
                         -> state
                           update :acc $ fn (acc)
