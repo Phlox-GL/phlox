@@ -21293,15 +21293,15 @@
                                         :by |rJG4IHzWf
                                       |z $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1646326798673)
                                         :data $ {}
-                                          |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646326800560) (:text |:transparent)
+                                          |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646327795639) (:text |:backgroundAlpha)
                                           |b $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1646326882306)
                                             :data $ {}
                                               |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646326883790) (:text |either)
                                               |b $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1646326884592)
                                                 :data $ {}
-                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646326887090) (:text |:transparent)
+                                                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646327800453) (:text |:background-alpha)
                                                   |b $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646326889795) (:text |options)
-                                              |h $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646326893799) (:text |false)
+                                              |h $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1646327808656) (:text |1)
                                     :type :expr
                                     :at 1573368159226
                                     :by |rJG4IHzWf
@@ -28515,7 +28515,7 @@
           :type :expr
           :at 1586601241785
           :by |rJG4IHzWf
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:output |src) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.23)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:output |src) (:compact-output? true) (:storage-key |calcit.cirru) (:version |0.4.24)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
     :init-fn |phlox.app.main/main!
     :extension |.cljs
