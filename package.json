@@ -1,7 +1,7 @@
 {
-  "version": "0.4.22",
+  "version": "0.4.24",
   "dependencies": {
-    "@calcit/procs": "^0.5.18",
+    "@calcit/procs": "^0.5.21",
     "@quamolit/phlox-utils": "^0.0.1",
     "fontfaceobserver-es": "^3.3.3",
     "nanoid": "^3.3.1",
@@ -9,6 +9,6 @@
   },
   "devDependencies": {
     "bottom-tip": "^0.1.3",
-    "vite": "^2.8.4"
+    "vite": "^2.8.6"
   }
 }

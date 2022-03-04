@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.22
+    :version |0.4.24
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -1666,13 +1666,14 @@
               let
                   pixi-app $ new PIXI/Application
                     js-object
-                      :backgroundColor $ hslx 0 0 0
+                      :backgroundColor $ either (:background-color options) (hslx 0 0 0)
                       :antialias true
                       :autoDensity true
                       :resolution 2
                       :width js/window.innerWidth
                       :height js/window.innerHeight
-                      :interactive true
+                      :interactive $ either (:interactive options) true
+                      :backgroundAlpha $ either (:background-alpha options) 1
                 .!stop $ .-ticker pixi-app
                 reset! *app pixi-app
                 -> js/document .-body $ .!appendChild (.-view pixi-app)
