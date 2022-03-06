@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.24
+    :version |0.4.25
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -37,7 +37,7 @@
             -> (new FontFaceObserver/default "\"Josefin Sans") (.!load)
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
-            .!addEventListener js/window "\"resize" $ fn (e) (render-app!)
+            set! js/window.onresize $ fn (e) (render-app!)
             println "\"App Started"
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -54,6 +54,7 @@
             do (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app! true
+              set! js/window.onresize $ fn (e) (render-app!)
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
     |phlox.comp.drag-point $ {}
@@ -573,22 +574,28 @@
             []
               * inverted $ + (* x a) (* y b)
               * inverted $ - (* y a) (* x b)
+        |polar-position $ quote
+          defn polar-position (angle r)
+            []
+              * r $ js/Math.cos angle
+              * r $ js/Math.sin angle
     |phlox.app.container $ {}
       :ns $ quote
         ns phlox.app.container $ :require
-          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
-          [] phlox.app.comp.drafts :refer $ [] comp-drafts
-          [] phlox.app.comp.keyboard :refer $ [] comp-keyboard
-          [] phlox.comp.button :refer $ [] comp-button
-          [] phlox.comp.drag-point :refer $ [] comp-drag-point
-          [] phlox.comp.switch :refer $ [] comp-switch
-          [] phlox.app.comp.slider-demo :refer $ [] comp-slider-demo comp-slider-point-demo comp-spin-slider-demo
-          [] phlox.input :refer $ [] request-text!
-          [] phlox.comp.messages :refer $ [] comp-messages
-          [] "\"nanoid" :refer $ nanoid
-          [] memof.alias :refer $ [] memof-call
+          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >>
+          phlox.app.comp.drafts :refer $ comp-drafts
+          phlox.app.comp.keyboard :refer $ comp-keyboard
+          phlox.comp.button :refer $ comp-button
+          phlox.comp.drag-point :refer $ comp-drag-point
+          phlox.comp.switch :refer $ comp-switch
+          phlox.app.comp.slider-demo :refer $ comp-slider-demo comp-slider-point-demo comp-spin-slider-demo
+          phlox.input :refer $ request-text!
+          phlox.comp.messages :refer $ comp-messages
+          "\"nanoid" :refer $ nanoid
+          memof.alias :refer $ memof-call
           phlox.util.styles :refer $ font-code
           phlox.comp.arrow :refer $ comp-arrow
+          phlox.complex :refer $ polar-position
       :defs $ {}
         |comp-text-input $ quote
           defn comp-text-input (states)
@@ -787,9 +794,9 @@
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p5 position
         |comp-curves $ quote
-          defn comp-curves () $ graphics
-            {} $ :ops
-              []
+          defn comp-curves () $ container ({})
+            graphics $ {}
+              :ops $ []
                 g :line-style $ {} (:width 2)
                   :color $ hslx 200 80 80
                   :alpha 1
@@ -836,6 +843,17 @@
                   :anticlockwise? false
                 g :end-fill nil
                 ; g :line-to $ [] 400 400
+            polyline $ {}
+              :style $ {} (:width 4)
+                :color $ hslx 40 100 60
+                :alpha 1
+              :position $ [] 300 300
+              :points $ -> (range 200)
+                map $ fn (idx)
+                  let
+                      r $ * 0.4 idx
+                      angle $ * 0.1 idx
+                    polar-position angle r
         |comp-buttons $ quote
           defn comp-buttons () $ container
             {} $ :position ([] 100 100)
@@ -1060,6 +1078,20 @@
                 optional+ $ tuple+
                   [] (keyword+) (any+)
                 {} $ :allow-seq? true
+              :on-keyboard $ optional+ lilac-event-map
+            {} $ :check-keys? true
+        |lilac-polyline $ quote
+          def lilac-polyline $ record+
+            {}
+              :on $ optional+ lilac-event-map
+              :position $ optional+ lilac-point
+              :pivot $ optional+ lilac-point
+              :alpha $ optional+ (number+)
+              :rotation $ optional+ (number+)
+              :angle $ optional+ (number+)
+              :line-style lilac-line-style
+              :points $ list+
+                tuple+ $ [] (number+) (number+)
               :on-keyboard $ optional+ lilac-event-map
             {} $ :check-keys? true
         |lilac-circle $ quote
@@ -1555,7 +1587,7 @@
           [] phlox.render :refer $ [] render-element update-element update-children
           [] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?
           [] "\"@quamolit/phlox-utils" :refer $ [] hslToRgb
-          [] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style
+          [] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+
           [] phlox.keyboard :refer $ [] handle-keyboard-events
           [] memof.alias :refer $ [] reset-calling-caches! tick-calling-loop!
@@ -1621,6 +1653,18 @@
               [] $ [] 0 @*tree-element
               .-stage @*app
               , dispatch! options
+        |polyline $ quote
+          defn polyline (props & children) (dev-check props lilac-polyline)
+            let
+                line-style $ :style props
+                points $ :points props
+              create-element :graphics
+                assoc props :ops $ concat
+                  [] (g :line-style line-style)
+                    g :move-to $ first points
+                  -> points rest $ map
+                    fn (p) (g :line-to p)
+                , children
         |lilac-arc-to $ quote
           def lilac-arc-to $ record+
             {} (:p1 lilac-point) (:p2 lilac-point)
@@ -1645,7 +1689,7 @@
           defn g (op ? arg)
             let
                 data arg
-              case op
+              case-default op (js/console.warn "\"not supported:" op)
                 :move-to $ dev-check-message "\"check :move-to" data lilac-point
                 :line-to $ dev-check-message "\"check :line-to" data lilac-point
                 :line-style $ dev-check-message "\"check :line-style" data lilac-line-style
@@ -1658,7 +1702,6 @@
                 :quadratic-to $ dev-check-message "\"check :quadratic-to" data lilac-quodratic-to
                 :begin-hole nil
                 :end-hole nil
-                op $ js/console.warn "\"not supported:" op
               [] op data
         |render! $ quote
           defn render! (expanded-app dispatch! options)
@@ -1792,14 +1835,8 @@
                           turn-string k
                         (string? k) k
                         true $ str k
-                  [] key-name $ case k
-                    :fill-gradient-type $ case-default v
-                      do (println "\"unknown gradient type:") v
-                      :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                      :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                      :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
-                      :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
-                    k $ cond
+                  [] key-name $ case-default k
+                    cond
                         keyword? v
                         turn-string v
                       (string? v) v
@@ -1807,6 +1844,12 @@
                       (bool? v) v
                       (list? v) v
                       true $ do (println "\"Unknown style value:" v) v
+                    :fill-gradient-type $ case-default v
+                      do (println "\"unknown gradient type:") v
+                      :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
+                      :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
+                      :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                      :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
               pairs-map
               to-js-data
         |detect-func-in-map? $ quote
@@ -1918,7 +1961,7 @@
           defn call-graphics-ops (target ops)
             &doseq (pair ops)
               when (some? pair)
-                let[] (op data) pair $ case op
+                let[] (op data) pair $ case-default op (js/console.warn "\"not supported op:" op data)
                   :move-to $ .!moveTo target (first data) (last data)
                   :line-to $ .!lineTo target (first data) (last data)
                   :line-style $ init-line-style target data
@@ -1950,7 +1993,6 @@
                     .!quadraticCurveTo target (first p1) (last p1) (first to-p) (last to-p)
                   :begin-hole $ .!beginHole target
                   :end-hole $ .!endHole target
-                  op $ js/console.warn "\"not supported op:" op data
         |update-alpha $ quote
           defn update-alpha (target alpha alpha0)
             when (not= alpha alpha0)
@@ -2125,7 +2167,8 @@
       :defs $ {}
         |updater $ quote
           defn updater (store op op-data op-id op-time)
-            case op
+            case-default op
+              do (println "\"unknown op" op op-data) store
               :add-x $ update store :x
                 fn (x)
                   if (> x 10) 0 $ + x 1
@@ -2134,7 +2177,6 @@
               :counted $ update store :counted inc
               :states $ update-states store op-data
               :hydrate-storage op-data
-              op $ do (println "\"unknown op" op op-data) store
     |phlox.util.lcs $ {}
       :ns $ quote (ns phlox.util.lcs)
       :defs $ {}
