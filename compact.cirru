@@ -574,8 +574,8 @@
             []
               * inverted $ + (* x a) (* y b)
               * inverted $ - (* y a) (* x b)
-        |polar-position $ quote
-          defn polar-position (angle r)
+        |polar-point $ quote
+          defn polar-point (angle r)
             []
               * r $ js/Math.cos angle
               * r $ js/Math.sin angle
@@ -595,7 +595,7 @@
           memof.alias :refer $ memof-call
           phlox.util.styles :refer $ font-code
           phlox.comp.arrow :refer $ comp-arrow
-          phlox.complex :refer $ polar-position
+          phlox.complex :refer $ polar-point
       :defs $ {}
         |comp-text-input $ quote
           defn comp-text-input (states)
@@ -853,7 +853,7 @@
                   let
                       r $ * 0.4 idx
                       angle $ * 0.1 idx
-                    polar-position angle r
+                    polar-point angle r
         |comp-buttons $ quote
           defn comp-buttons () $ container
             {} $ :position ([] 100 100)
