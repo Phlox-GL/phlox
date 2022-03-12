@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.25
+    :version |0.4.26
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -178,6 +178,7 @@
               init-pivot target $ :pivot props
               init-angle target $ :angle props
               init-alpha target $ :alpha props
+              init-filters target $ :filters props
               render-children target (:children element) dispatch!
               , target
         |render-rect $ quote
@@ -195,6 +196,7 @@
               init-angle target $ :angle props
               init-alpha target $ :alpha props
               init-events target events dispatch!
+              init-filters target $ :filters props
               render-children target (:children element) dispatch!
               , target
         |render-text $ quote
@@ -214,6 +216,7 @@
               if
                 = :center $ :align props
                 .!set (.-anchor target) 0.5
+              init-filters target $ :filters props
               render-children target (:children element) dispatch!
               , target
         |update-graphics $ quote
@@ -230,6 +233,7 @@
               update-pivot target (:pivot props) (:pivot props')
               update-alpha target (:alpha props) (:alpha props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
+              update-filters target (:filters props) (:filters props')
         |in-dev? $ quote (def in-dev? false)
         |update-element $ quote
           defn update-element (element old-element parent-element idx dispatch! options)
@@ -262,6 +266,7 @@
               update-angle target (:angle props) (:angle props')
               update-rotation target (:rotation props) (:rotation props')
               update-alpha target (:alpha props) (:alpha props')
+              update-filters target (:filters props) (:filters props')
         |update-rect $ quote
           defn update-rect (element old-element target dispatch!)
             let
@@ -288,6 +293,7 @@
               update-pivot target (:pivot props) (:pivot props')
               update-alpha target (:alpha props) (:alpha props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
+              update-filters target (:filters props) (:filters props')
         |update-text $ quote
           defn update-text (element old-element target)
             let
@@ -313,6 +319,14 @@
                   = :center $ :align props
                   .!set (.-anchor target) 0.5
                   .!set (.-anchor target) nil
+              update-filters target (:filters props) (:filters props')
+        |update-filters $ quote
+          defn update-filters (target filters filters0)
+            if
+              not=
+                map (.to-list filters) last
+                map (.to-list filters0) last
+              init-filters target filters
         |render-graphics $ quote
           defn render-graphics (element dispatch!)
             let
@@ -328,6 +342,7 @@
               init-position target $ :position props
               init-alpha target $ :alpha props
               init-events target events dispatch!
+              init-filters target $ :filters props
               render-children target (:children element) dispatch!
               , target
         |update-children $ quote
@@ -387,6 +402,7 @@
               init-angle target $ :angle props
               init-pivot target $ :pivot props
               init-alpha target $ :alpha props
+              init-filters target $ :filters props
               , target
         |init-fill $ quote
           defn init-fill (target color) (.!endFill target)
@@ -395,6 +411,20 @@
           defn update-angle (target v v0)
             when (not= v v0)
               set! (.-angle target) v
+        |init-filters $ quote
+          defn init-filters (target filters)
+            if
+              not $ empty? filters
+              let
+                  filters-arr $ js-array
+                &doseq (ft filters)
+                  if
+                    and (list? ft)
+                      &= 2 $ count ft
+                    let[] (ctor options) ft $ .!push filters-arr
+                      new ctor $ to-js-data (nth ft 1)
+                    js/console.warn "\"Unknown filter:" ft
+                set! (.-filters target) filters-arr
         |render-element $ quote
           defn render-element (element dispatch!)
             if (element? element)
@@ -439,6 +469,7 @@
               update-rotation target (:rotation props) (:rotation props')
               update-pivot target (:pivot props) (:pivot props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
+              update-filters target (:filters props) (:filters props')
     |phlox.schema $ {}
       :ns $ quote (ns phlox.schema)
       :defs $ {}
@@ -596,6 +627,8 @@
           phlox.util.styles :refer $ font-code
           phlox.comp.arrow :refer $ comp-arrow
           phlox.complex :refer $ polar-point
+          phlox.util :refer $ canvas-center!
+          "\"@pixi/filter-drop-shadow" :refer $ DropShadowFilter
       :defs $ {}
         |comp-text-input $ quote
           defn comp-text-input (states)
@@ -678,16 +711,17 @@
                   :slider-point $ comp-slider-point-demo (>> states :slider-point)
                   :spin-slider $ comp-spin-slider-demo (>> states :spin-slider)
                   :arrows $ comp-arrows-demo (>> states :arrows)
+                  :shadow $ comp-shadow-demo
         |tabs $ quote
-          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows")
+          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows") ([] :shadow "\"Shadow")
         |comp-tab-entry $ quote
           defn comp-tab-entry (tab-value tab-title idx selected?)
             container
               {} $ :position
-                [] 10 $ + 10 (* idx 40)
+                [] 10 $ + 10 (* idx 36)
               rect $ {}
                 :position $ [] 0 0
-                :size $ [] 100 32
+                :size $ [] 100 30
                 :fill $ if selected? (hslx 180 50 50) (hslx 180 50 30)
                 :on $ {}
                   :pointertap $ fn (event dispatch!) (dispatch! :tab tab-value)
@@ -696,7 +730,7 @@
                   :fill $ hslx 200 90 100
                   :font-size 20
                   :font-family "\"Josefin Sans"
-                :position $ [] 10 3
+                :position $ [] 10 2
         |comp-grids $ quote
           defn comp-grids () (echo "\"calculating grids")
             container ({})
@@ -887,6 +921,22 @@
                   :title "\"Custom title"
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
+        |comp-shadow-demo $ quote
+          defn comp-shadow-demo () $ container
+            {} $ :position (canvas-center!)
+            text $ {} (:text "\"Shadows")
+              :style $ {}
+                :fill $ hslx 200 100 50
+                :font-size 40
+                :font-family "\"Josefin Sans"
+              :filters $ []
+                [] DropShadowFilter $ {}
+                  :color $ hslx 10 90 100
+                  :distance 2
+                  :rotation 30
+                  :alpha 1
+                  :quality 4
+                  :blur 6
         |comp-arrows-demo $ quote
           defn comp-arrows-demo (states)
             let
@@ -1738,7 +1788,7 @@
               reset! *tree-element expanded-app
             -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
             -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
-            .!render (.-renderer @*app) (.-stage @*app)
+            -> @*app .-renderer $ .!render (.-stage @*app)
             tick-calling-loop!
     |phlox.math $ {}
       :ns $ quote (ns phlox.math)
@@ -1808,6 +1858,8 @@
               and (number? x)
                 not $ js/isNaN x
               , x $ do (js/console.error "\"Invalid number:" x) nil
+        |canvas-center! $ quote
+          defn canvas-center! () $ [] (&* 0.5 js/window.innerWidth) (&* 0.5 js/window.innerHeight)
         |camel-case $ quote
           defn camel-case (x)
             .!replace x (new js/RegExp "\"-[a-z]")
