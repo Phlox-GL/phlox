@@ -1,6 +1,6 @@
 {
   "name": "@quamolit/phlox-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "color utils for Phlox.calcit",
   "main": "hue-to-rgb.js",
   "repository": "https://github.com/Quamolit/phlox.calcit",
@@ -8,6 +8,6 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@quamolit/phlox-utils": "^0.0.1"
+    "d3-color": "^3.0.1"
   }
 }

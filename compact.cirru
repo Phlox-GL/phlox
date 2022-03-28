@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.26
+    :version |0.4.27
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -60,10 +60,10 @@
     |phlox.comp.drag-point $ {}
       :ns $ quote
         ns phlox.comp.drag-point $ :require
-          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-          [] phlox.check :refer $ [] lilac-event-map dev-check
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
-          [] phlox.complex :as complex
+          phlox.core :refer $ g hslx rect circle text container graphics create-list
+          phlox.check :refer $ lilac-event-map dev-check
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          phlox.complex :as complex
       :defs $ {}
         |comp-drag-point $ quote
           defn comp-drag-point (states props)
@@ -155,11 +155,11 @@
             any+ $ {} (:some? true)
     |phlox.render $ {}
       :ns $ quote
-        ns phlox.render $ :require ([] "\"pixi.js" :as PIXI)
-          [] phlox.util :refer $ [] use-number element? remove-nil-values index-items convert-line-style
-          [] phlox.util.lcs :refer $ [] find-minimal-ops lcs-state-0
-          [] phlox.render.draw :refer $ [] call-graphics-ops update-position update-pivot update-rotation update-alpha update-events draw-circle draw-rect init-events init-position init-pivot init-angle init-rotation init-alpha init-line-style
-          [] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-circle
+        ns phlox.render $ :require ("\"pixi.js" :as PIXI)
+          phlox.util :refer $ use-number element? remove-nil-values index-items convert-line-style
+          phlox.util.lcs :refer $ find-minimal-ops lcs-state-0
+          phlox.render.draw :refer $ call-graphics-ops update-position update-pivot update-rotation update-alpha update-events draw-circle draw-rect init-events init-position init-pivot init-angle init-rotation init-alpha init-line-style
+          phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-circle
       :defs $ {}
         |render-circle $ quote
           defn render-circle (element dispatch!)
@@ -477,7 +477,7 @@
     |phlox.app.comp.drafts $ {}
       :ns $ quote
         ns phlox.app.comp.drafts $ :require
-          [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx hclx rect circle text container graphics create-list
       :defs $ {}
         |comp-drafts $ quote
           defn comp-drafts (x)
@@ -556,6 +556,10 @@
                 :alpha 0.5
                 :on $ {}
                   :pointertap $ fn (e dispatch!) (println "\"clicked")
+              rect $ {}
+                :position $ [] 400 40
+                :size $ [] 20 20
+                :fill $ hclx 240 100 60
     |phlox.complex $ {}
       :ns $ quote (ns phlox.complex)
       :defs $ {}
@@ -1633,27 +1637,30 @@
                       d! cursor $ assoc state :pos pos
     |phlox.core $ {}
       :ns $ quote
-        ns phlox.core $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
-          [] phlox.render :refer $ [] render-element update-element update-children
-          [] phlox.util :refer $ [] index-items remove-nil-values detect-func-in-map?
-          [] "\"@quamolit/phlox-utils" :refer $ [] hslToRgb
-          [] phlox.check :refer $ [] dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+
-          [] phlox.keyboard :refer $ [] handle-keyboard-events
-          [] memof.alias :refer $ [] reset-calling-caches! tick-calling-loop!
+        ns phlox.core $ :require ("\"pixi.js" :as PIXI) (phlox.schema :as schema)
+          phlox.render :refer $ render-element update-element update-children
+          phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
+          "\"@quamolit/phlox-utils" :refer $ hsl-to-rgb hcl-to-hex
+          phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+
+          phlox.keyboard :refer $ handle-keyboard-events
+          memof.alias :refer $ reset-calling-caches! tick-calling-loop!
       :defs $ {}
         |defcomp $ quote
           defmacro defcomp (name params & body)
             quasiquote $ defn ~name ~params ~@body
         |*app $ quote (defatom *app nil)
+        |hclx $ quote
+          defn hclx (h c l)
+            .!string2hex PIXI/utils $ hcl-to-hex h c l
         |hslx $ quote
           defn hslx (h s l)
             let-sugar
-                  [] r g b
-                  to-calcit-data $ hslToRgb (/ h 360) (* 0.01 s) (* 0.01 l)
-                r0 $ .!rgb2hex PIXI/utils
-                  to-js-data $ [] r g b
-              , r0
+                rgb $ hsl-to-rgb (/ h 360) (* 0.01 s) (* 0.01 l)
+                r $ .-0 rgb
+                g $ .-1 rgb
+                b $ .-2 rgb
+              .!rgb2hex PIXI/utils $ js-array r g b
         |rect $ quote
           defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
         |text $ quote
@@ -1960,10 +1967,10 @@
     |phlox.render.draw $ {}
       :ns $ quote
         ns phlox.render.draw $ :require
-          [] phlox.util :refer $ [] use-number
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ list+ or+
-          [] phlox.check :refer $ [] dev-check dev-check-message lilac-point lilac-line-style lilac-color
-          [] phlox.math :refer $ [] angle->radian
+          phlox.util :refer $ use-number
+          lilac.core :refer $ record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ list+ or+
+          phlox.check :refer $ dev-check dev-check-message lilac-point lilac-line-style lilac-color
+          phlox.math :refer $ angle->radian
           phlox.render.draw :refer $ init-line-style
           "\"pixi.js" :as PIXI
       :defs $ {}
