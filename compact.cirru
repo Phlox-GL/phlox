@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.27
+    :version |0.4.28
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -145,6 +145,7 @@
               :radius $ optional+ (number+)
               :fill $ optional+ (number+)
               :color $ optional+ (number+)
+              :alpha $ optional+ (number+)
               :position $ tuple+
                 [] (number+) (number+)
               :hide-text? $ optional+ (boolean+)
@@ -617,7 +618,7 @@
     |phlox.app.container $ {}
       :ns $ quote
         ns phlox.app.container $ :require
-          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >>
+          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >> line-segments
           phlox.app.comp.drafts :refer $ comp-drafts
           phlox.app.comp.keyboard :refer $ comp-keyboard
           phlox.comp.button :refer $ comp-button
@@ -892,6 +893,18 @@
                       r $ * 0.4 idx
                       angle $ * 0.1 idx
                     polar-point angle r
+            line-segments $ {}
+              :style $ {} (:width 2)
+                :color $ hslx 40 100 60
+                :alpha 1
+              :position $ [] 500 100
+              :segments $ -> (range 10)
+                map $ fn (idx)
+                  []
+                    [] (+ 10 idx) 20
+                    []
+                      + (* 8 idx) 10
+                      , 80
         |comp-buttons $ quote
           defn comp-buttons () $ container
             {} $ :position ([] 100 100)
@@ -1036,6 +1049,21 @@
         ns phlox.check $ :require
           [] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
       :defs $ {}
+        |lilac-line-segments $ quote
+          def lilac-line-segments $ record+
+            {}
+              :on $ optional+ lilac-event-map
+              :position $ optional+ lilac-point
+              :pivot $ optional+ lilac-point
+              :alpha $ optional+ (number+)
+              :rotation $ optional+ (number+)
+              :angle $ optional+ (number+)
+              :style lilac-line-style
+              :segments $ list+
+                tuple+ ([] lilac-point lilac-point)
+                  {} $ :check-size? true
+              :on-keyboard $ optional+ lilac-event-map
+            {} $ :check-keys? true
         |lilac-color $ quote
           def lilac-color $ or+
             [] (number+) (string+)
@@ -1106,6 +1134,8 @@
               :fill $ optional+ lilac-color
               :radius $ optional+ (number+)
               :on-keyboard $ optional+ lilac-event-map
+              :filters $ optional+
+                list+ $ list+ (any+)
             {} $ :check-keys? true
         |lilac-text $ quote
           def lilac-text $ record+
@@ -1117,7 +1147,11 @@
               :rotation $ optional+ (number+)
               :angle $ optional+ (number+)
               :alpha $ optional+ (number+)
+              :align $ optional+
+                enum+ $ #{} :left :center :right
               :on-keyboard $ optional+ lilac-event-map
+              :filters $ optional+
+                list+ $ list+ (any+)
             {} $ :check-keys? true
         |lilac-graphics $ quote
           def lilac-graphics $ record+
@@ -1133,6 +1167,8 @@
                   [] (keyword+) (any+)
                 {} $ :allow-seq? true
               :on-keyboard $ optional+ lilac-event-map
+              :filters $ optional+
+                list+ $ list+ (any+)
             {} $ :check-keys? true
         |lilac-polyline $ quote
           def lilac-polyline $ record+
@@ -1143,7 +1179,7 @@
               :alpha $ optional+ (number+)
               :rotation $ optional+ (number+)
               :angle $ optional+ (number+)
-              :line-style lilac-line-style
+              :style lilac-line-style
               :points $ list+
                 tuple+ $ [] (number+) (number+)
               :on-keyboard $ optional+ lilac-event-map
@@ -1162,6 +1198,8 @@
               :pivot $ optional+ lilac-point
               :fill $ optional+ (number+)
               :on-keyboard $ optional+ lilac-event-map
+              :filters $ optional+
+                list+ $ list+ (any+)
             {} $ :check-keys? true
         |lilac-line-style $ quote
           def lilac-line-style $ record+
@@ -1641,14 +1679,28 @@
           phlox.render :refer $ render-element update-element update-children
           phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
           "\"@quamolit/phlox-utils" :refer $ hsl-to-rgb hcl-to-hex
-          phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+
+          phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+ any+
           phlox.keyboard :refer $ handle-keyboard-events
           memof.alias :refer $ reset-calling-caches! tick-calling-loop!
       :defs $ {}
         |defcomp $ quote
           defmacro defcomp (name params & body)
             quasiquote $ defn ~name ~params ~@body
+        |line-segments $ quote
+          defn line-segments (props & children) (dev-check props lilac-line-segments)
+            let
+                line-style $ :style props
+                segments $ :segments props
+              create-element :graphics
+                assoc props :ops $ concat
+                  [] $ g :line-style line-style
+                  -> segments $ mapcat
+                    fn (pair)
+                      []
+                        g :move-to $ nth pair 0
+                        g :line-to $ nth pair 1
+                , children
         |*app $ quote (defatom *app nil)
         |hclx $ quote
           defn hclx (h c l)
@@ -1736,6 +1788,8 @@
                 tuple+ $ [] (number+) (number+)
               :radius $ number+
               :anticlockwise? $ optional+ (boolean+)
+              :filters $ optional+
+                list+ $ list+ (any+)
             {} $ :check-keys? true
         |*renderer $ quote (defatom *renderer nil)
         |clear-phlox-caches! $ quote
