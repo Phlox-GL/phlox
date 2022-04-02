@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.28
+    :version |0.4.29
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -62,7 +62,7 @@
         ns phlox.comp.drag-point $ :require
           phlox.core :refer $ g hslx rect circle text container graphics create-list
           phlox.check :refer $ lilac-event-map dev-check
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           phlox.complex :as complex
       :defs $ {}
         |comp-drag-point $ quote
@@ -148,7 +148,7 @@
               :alpha $ optional+ (number+)
               :position $ tuple+
                 [] (number+) (number+)
-              :hide-text? $ optional+ (boolean+)
+              :hide-text? $ optional+ (bool+)
               :on-change $ fn+
             {} $ :check-keys? true
         |lilac-cursor $ quote
@@ -991,7 +991,7 @@
         ns phlox.comp.button $ :require
           [] phlox.core :refer $ []  g hslx rect circle text container graphics create-list
           [] phlox.util :refer $ [] measure-text-width!
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.check :refer $ [] lilac-event-map dev-check
       :defs $ {}
         |comp-button $ quote
@@ -1035,7 +1035,7 @@
                 [] (number+) (number+)
               :on lilac-event-map
               :on-pointertap $ fn+
-              :align-right? $ boolean+
+              :align-right? $ bool+
             {} (:all-optional? true) (:check-keys? true)
     |phlox.app.config $ {}
       :ns $ quote (ns phlox.app.config)
@@ -1047,7 +1047,7 @@
     |phlox.check $ {}
       :ns $ quote
         ns phlox.check $ :require
-          [] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
       :defs $ {}
         |lilac-line-segments $ quote
           def lilac-line-segments $ record+
@@ -1089,8 +1089,8 @@
           def lilac-text-style $ record+
             {}
               :align $ enum+ (#{} :left :center :right)
-              :break-words $ boolean+
-              :drop-shadow $ boolean+
+              :break-words $ bool+
+              :drop-shadow $ bool+
               :drop-shadow-alpha $ number+
                 {} (:min 0) (:max 1)
               :drop-shadow-angle $ number+
@@ -1114,10 +1114,10 @@
               :padding $ number+
               :stroke lilac-color
               :stroke-thickness $ number+
-              :trim $ boolean+
+              :trim $ bool+
               :text-baseline $ enum+ (#{} :alphabetic)
               :white-space $ enum+ (#{} :normal :pre :pre-line)
-              :word-wrap $ boolean+
+              :word-wrap $ bool+
               :word-wrap-width $ number+
             {} (:check-keys? true) (:all-optional? true)
         |lilac-rect $ quote
@@ -1217,7 +1217,7 @@
               :on-keyboard $ optional+ lilac-event-map
             {} (:check-keys? true) (:all-optional? true)
         |lilac-event-map $ quote
-          def lilac-event-map $ map+ (keyword+) (fn+)
+          def lilac-event-map $ dict+ (keyword+) (fn+)
         |dev-check-message $ quote
           defmacro dev-check-message (message data rule)
             if in-dev?
@@ -1231,7 +1231,7 @@
     |phlox.input $ {}
       :ns $ quote
         ns phlox.input $ :require
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.check :refer $ [] dev-check
           pointed-prompt.core :refer $ prompt-at!
       :defs $ {}
@@ -1240,8 +1240,8 @@
             {}
               :placeholder $ string+
               :initial $ string+
-              :style $ map+ (keyword+) (any+)
-              :textarea? $ boolean+
+              :style $ dict+ (keyword+) (any+)
+              :textarea? $ bool+
             {} (:all-optional? true) (:check-keys? true)
         |request-text! $ quote
           defn request-text! (e options cb) (dev-check options lilac-input)
@@ -1253,7 +1253,7 @@
         ns phlox.comp.slider $ :require
           [] phlox.core :refer $ [] g >> hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+ bool+
           phlox.math :refer $ vec-length bound-x
           phlox.complex :refer $ rebase
           phlox.complex :as complex
@@ -1267,7 +1267,7 @@
               :unit $ optional+ (number+)
               :fill $ optional+ (number+)
               :color $ optional+ (number+)
-              :round? $ optional+ (boolean+)
+              :round? $ optional+ (bool+)
               :max $ optional+ (number+)
               :min $ optional+ (number+)
               :position $ optional+
@@ -1397,7 +1397,7 @@
               :fill $ optional+ (number+)
               :color $ optional+ (number+)
               :title $ optional+ (string+)
-              :round? $ optional+ (boolean+)
+              :round? $ optional+ (bool+)
               :max $ optional+ (number+)
               :min $ optional+ (number+)
               :position $ optional+
@@ -1487,7 +1487,7 @@
         ns phlox.comp.switch $ :require
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
       :defs $ {}
         |comp-switch $ quote
           defn comp-switch (props) (dev-check props lilac-switch)
@@ -1526,7 +1526,7 @@
         |lilac-switch $ quote
           def lilac-switch $ record+
             {}
-              :value $ boolean+
+              :value $ bool+
               :position $ optional+ lilac-point
               :on-change $ fn+
               :title $ optional+ (string+)
@@ -1680,7 +1680,7 @@
           phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
           "\"@quamolit/phlox-utils" :refer $ hsl-to-rgb hcl-to-hex
           phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+ any+
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
           phlox.keyboard :refer $ handle-keyboard-events
           memof.alias :refer $ reset-calling-caches! tick-calling-loop!
       :defs $ {}
@@ -1787,7 +1787,7 @@
               :radian $ optional+
                 tuple+ $ [] (number+) (number+)
               :radius $ number+
-              :anticlockwise? $ optional+ (boolean+)
+              :anticlockwise? $ optional+ (bool+)
               :filters $ optional+
                 list+ $ list+ (any+)
             {} $ :check-keys? true
@@ -2022,7 +2022,7 @@
       :ns $ quote
         ns phlox.render.draw $ :require
           phlox.util :refer $ use-number
-          lilac.core :refer $ record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ list+ or+
+          lilac.core :refer $ record+ number+ string+ optional+ bool+ tuple+ dict+ fn+ keyword+ list+ or+
           phlox.check :refer $ dev-check dev-check-message lilac-point lilac-line-style lilac-color
           phlox.math :refer $ angle->radian
           phlox.render.draw :refer $ init-line-style
@@ -2195,7 +2195,7 @@
       :ns $ quote
         ns phlox.comp.arrow $ :require
           phlox.core :refer $ g hslx rect circle text container graphics create-list >>
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.check :refer $ [] lilac-event-map dev-check
           phlox.complex :as complex
           phlox.comp.drag-point :refer $ comp-drag-point
@@ -2368,7 +2368,7 @@
         ns phlox.comp.messages $ :require
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.comp.button :refer $ [] comp-button
       :defs $ {}
         |lilac-messages $ quote
@@ -2377,7 +2377,7 @@
               :color $ number+
               :fill $ number+
               :position lilac-point
-              :bottom? $ boolean+
+              :bottom? $ bool+
               :on-pointertap $ fn+
             {} (:check-keys? true) (:all-optional? true)
         |comp-messages $ quote
