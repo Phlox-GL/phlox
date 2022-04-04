@@ -1430,8 +1430,6 @@
                 on-change $ :on-change props
                 position $ either (:position props) ([] 0 0)
                 on-move $ :on-move props
-                spin-pivot $ either (:spin-pivot props)
-                  [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
               container
                 {} $ :position ([] 0 0)
                 circle $ {} (:radius radius) (:position position) (:fill fill) (:alpha alpha)
@@ -1440,9 +1438,8 @@
                       let
                           x $ -> e .-data .-global .-x
                           y $ -> e .-data .-global .-y
-                        reset! *prev-spin-point $ []
-                          - x $ first spin-pivot
-                          - y $ last spin-pivot
+                        reset! *spin-pivot $ [] x y
+                        reset! *prev-spin-point $ [] 0 0
                         d! cursor $ assoc state :dragging? true
                     :pointermove $ fn (e d!)
                       let
@@ -1451,8 +1448,8 @@
                         if (:dragging? state)
                           let
                               current-point $ []
-                                - x $ first spin-pivot
-                                - y $ last spin-pivot
+                                - x $ first @*spin-pivot
+                                - y $ last @*spin-pivot
                               prev-point @*prev-spin-point
                             if
                               < (vec-length current-point) (&* 0.5 radius)
@@ -1486,14 +1483,16 @@
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Menlo, monospace")
                   :align :center
                 container
-                  {} $ :position ([] 0 24)
+                  {} $ :position ([] -32 36)
                   comp-drag-point (>> states :move)
-                    {} (:position position) (:unit 1) (:radius 10)
+                    {} (:position position) (:unit 1) (:radius 12)
                       :fill $ hslx 0 90 60
                       :hide-text? true
-                      :alpha 0.5
+                      :alpha 0.3
                       :on-change $ fn (pos d!) (on-move pos d!)
         |*prev-spin-point $ quote (defatom *prev-spin-point nil)
+        |*spin-pivot $ quote
+          defatom *spin-pivot $ [] 0 0
     |phlox.comp.switch $ {}
       :ns $ quote
         ns phlox.comp.switch $ :require
@@ -1675,7 +1674,6 @@
                 comp-spin-slider (>> states :demo)
                   {}
                     :position $ :pos state
-                    :spin-pivot $ :pos state
                     :value $ :v1 state
                     :unit 1
                     :min 1
