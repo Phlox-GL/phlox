@@ -232,6 +232,11 @@
   dependencies:
     d3-color "^3.0.1"
 
+"@quamolit/touch-control@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@quamolit/touch-control/-/touch-control-0.0.6.tgz#5406df9ae3c1829574ccdbd2b78786d819ab8a70"
+  integrity sha512-2fdKRWvVgCZT/LL8SLGh7xi7Oi2mKgLAAPGvlUiwCvXZLQDQa4rgrDQ4dO/oRQUGiAE7tiQlct7DwzM34rtPRg==
+
 "@types/earcut@^2.1.0":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@types/earcut/-/earcut-2.1.1.tgz#573a0af609f17005c751f6f4ffec49cfe358ea51"
@@ -479,6 +484,11 @@ min-document@^2.19.0:
   integrity sha1-e9KC4/WELtKVu3SM3Z8f+iyCRoU=
   dependencies:
     dom-walk "^0.1.0"
+
+mobile-detect@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/mobile-detect/-/mobile-detect-1.4.5.tgz#da393c3c413ca1a9bcdd9ced653c38281c0fb6ad"
+  integrity sha512-yc0LhH6tItlvfLBugVUEtgawwFU2sIe+cSdmRJJCTMZ5GEJyLxNyC/NIOAOGk67Fa8GNpOttO3Xz/1bHpXFD/g==
 
 nanoid@^3.3.1, nanoid@^3.3.2:
   version "3.3.2"

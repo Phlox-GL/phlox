@@ -1,7 +1,7 @@
 
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
-    :modules $ [] |memof/ |lilac/ |pointed-prompt/
+    :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
     :version |0.4.29
   :entries $ {}
   :files $ {}
@@ -19,25 +19,28 @@
     |phlox.app.main $ {}
       :ns $ quote
         ns phlox.app.main $ :require ("\"pixi.js" :as PIXI)
-          phlox.core :refer $ render! clear-phlox-caches!
+          phlox.core :refer $ render! clear-phlox-caches! update-viewer!
           phlox.app.container :refer $ comp-container
           phlox.app.schema :as schema
-          phlox.app.config :refer $ dev?
+          phlox.app.config :refer $ dev? mobile?
           "\"nanoid" :refer $ nanoid
           phlox.app.updater :refer $ updater
           "\"fontfaceobserver-es" :as FontFaceObserver
           "\"./calcit.build-errors" :default build-errors
           "\"bottom-tip" :default hud!
+          touch-control.core :refer $ render-control! start-control-loop! replace-control-loop!
       :defs $ {}
         |render-app! $ quote
           defn render-app! (? arg)
             render! (comp-container @*store) dispatch! $ either arg ({})
         |main! $ quote
-          defn main! () (; js/console.log PIXI) (load-console-formatter!)
+          defn main! () (; js/console.log PIXI)
+            if dev? $ load-console-formatter!
             -> (new FontFaceObserver/default "\"Josefin Sans") (.!load)
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
-            set! js/window.onresize $ fn (e) (render-app!)
+            render-app!
+            when mobile? (render-control!) (start-control-loop! 8 on-control-event)
             println "\"App Started"
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -54,9 +57,15 @@
             do (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app! true
-              set! js/window.onresize $ fn (e) (render-app!)
+              when mobile? (replace-control-loop! 8 on-control-event) (render-control!)
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
+        |on-control-event $ quote
+          defn on-control-event (elapsed states delta)
+            let
+                move $ :left-move states
+                scales $ :right-move delta
+              update-viewer! move $ nth scales 1
     |phlox.comp.drag-point $ {}
       :ns $ quote
         ns phlox.comp.drag-point $ :require
@@ -1038,12 +1047,15 @@
               :align-right? $ bool+
             {} (:all-optional? true) (:check-keys? true)
     |phlox.app.config $ {}
-      :ns $ quote (ns phlox.app.config)
+      :ns $ quote
+        ns phlox.app.config $ :require ("\"mobile-detect" :default mobile-detect)
       :defs $ {}
         |dev? $ quote
           def dev? $ = "\"dev" (get-env "\"mode")
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main.css") (:cdn-url "\"http://cdn.tiye.me/phlox/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox")
+        |mobile? $ quote
+          def mobile? $ .!mobile (new mobile-detect js/window.navigator.userAgent)
     |phlox.check $ {}
       :ns $ quote
         ns phlox.check $ :require
@@ -1683,6 +1695,7 @@
           lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
           phlox.keyboard :refer $ handle-keyboard-events
           memof.alias :refer $ reset-calling-caches! tick-calling-loop!
+          phlox.complex :as complex
       :defs $ {}
         |defcomp $ quote
           defmacro defcomp (name params & body)
@@ -1733,6 +1746,10 @@
               :alpha $ optional+ (number+)
             {} $ :check-keys? true
         |*tree-element $ quote (defatom *tree-element nil)
+        |*viewer-config $ quote
+          defatom *viewer-config $ {}
+            :move $ [] 0 0
+            :scale 1
         |create-list $ quote
           defn create-list (tag props children)
             %{} schema/PhloxElement (:name tag) (:props props)
@@ -1779,6 +1796,19 @@
             {} (:p1 lilac-point) (:p2 lilac-point)
               :radius $ number+
             {} $ :exact-keys? true
+        |update-viewer! $ quote
+          defn update-viewer! (move scale-change)
+            when
+              or
+                not= ([] 0 0) move
+                not= 0 scale-change
+              swap! *viewer-config update :move $ fn (prev)
+                complex/add prev $ complex/times move ([] 0.05 0)
+              swap! *viewer-config update :scale $ fn (prev)
+                let
+                    next $ &+ prev (* 0.01 scale-change)
+                  &max 0.4 $ &min next 4
+              render-stage-for-viewer!
         |lilac-arc $ quote
           def lilac-arc $ record+
             {} (:center lilac-point)
@@ -1792,10 +1822,39 @@
                 list+ $ list+ (any+)
             {} $ :check-keys? true
         |*renderer $ quote (defatom *renderer nil)
+        |init-pixi-app! $ quote
+          defn init-pixi-app! (options)
+            let
+                pixi-app $ new PIXI/Application
+                  js-object (:antialias true) (:autoDensity true) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
+                    :backgroundColor $ either (:background-color options) (hslx 0 0 0)
+                    :interactive $ either (:interactive options) true
+                    :backgroundAlpha $ either (:background-alpha options) 1
+              .!stop $ .-ticker pixi-app
+              reset! *app pixi-app
+              -> js/document .-body $ .!appendChild (.-view pixi-app)
+              js/window.addEventListener "\"resize" $ fn (event)
+                -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
+                render-stage-for-viewer!
+              , pixi-app
         |clear-phlox-caches! $ quote
           defn clear-phlox-caches! () $ reset-calling-caches!
         |circle $ quote
           defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
+        |render-stage-for-viewer! $ quote
+          defn render-stage-for-viewer! ()
+            let
+                scale $ :scale @*viewer-config
+                move $ :move @*viewer-config
+              -> @*app .-stage .-position .-x $ set!
+                - (* 0.5 js/window.innerWidth)
+                  * scale $ nth move 0
+              -> @*app .-stage .-position .-y $ set!
+                + (* 0.5 js/window.innerHeight)
+                  * scale $ nth move 1
+              -> @*app .-stage .-scale $ .!set scale scale
+            -> @*app .-renderer $ .!render (.-stage @*app)
+            println "\"calling rerender"
         |g $ quote
           defn g (op ? arg)
             let
@@ -1816,27 +1875,7 @@
               [] op data
         |render! $ quote
           defn render! (expanded-app dispatch! options)
-            when (nil? @*app)
-              let
-                  pixi-app $ new PIXI/Application
-                    js-object
-                      :backgroundColor $ either (:background-color options) (hslx 0 0 0)
-                      :antialias true
-                      :autoDensity true
-                      :resolution 2
-                      :width js/window.innerWidth
-                      :height js/window.innerHeight
-                      :interactive $ either (:interactive options) true
-                      :backgroundAlpha $ either (:background-alpha options) 1
-                .!stop $ .-ticker pixi-app
-                reset! *app pixi-app
-                -> js/document .-body $ .!appendChild (.-view pixi-app)
-                .!addEventListener js/window "\"resize" $ fn (event)
-                  -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
-                  -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
-                  -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
-                  .!render (.-renderer @*app) (.-stage @*app)
-              aset js/window "\"_phloxTree" @*app
+            when (nil? @*app) (init-pixi-app! options) (aset js/window "\"_phloxTree" @*app)
             let
                 wrap-dispatch $ fn (op data)
                   if (list? op)
@@ -1847,9 +1886,7 @@
                 do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                 rerender-app! expanded-app wrap-dispatch options
               reset! *tree-element expanded-app
-            -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
-            -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
-            -> @*app .-renderer $ .!render (.-stage @*app)
+            render-stage-for-viewer!
             tick-calling-loop!
     |phlox.math $ {}
       :ns $ quote (ns phlox.math)
