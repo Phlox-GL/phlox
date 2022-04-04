@@ -17949,15 +17949,7 @@
                               |r $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1641732211087)
                                 :data $ {}
                                   |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text |:position)
-                                  |j $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1642431633473)
-                                    :data $ {}
-                                      |T $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1641732211087)
-                                        :data $ {}
-                                          |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text |[])
-                                          |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text |4)
-                                          |r $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text |4)
-                                      |D $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1642431635642) (:text |complex/add)
-                                      |L $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1642431636035) (:text |position)
+                                  |b $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649060039160) (:text |position)
                               |v $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1641732211087)
                                 :data $ {}
                                   |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text |:style)
@@ -17975,7 +17967,7 @@
                                       |v $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1641732211087)
                                         :data $ {}
                                           |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text |:font-family)
-                                          |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641732211087) (:text "|\"Menlo, monospace")
+                                          |j $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649060021396) (:text "|\"Source code pro, Menlo, Roboto Mono,, monospace")
                               |x $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1641741225413)
                                 :data $ {}
                                   |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1641741225413) (:text |:align)
@@ -29531,7 +29523,7 @@
           :type :expr
           :at 1586601241785
           :by |rJG4IHzWf
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:version |0.4.29)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:version |0.4.30)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
     :init-fn |phlox.app.main/main!
   :entries $ {}

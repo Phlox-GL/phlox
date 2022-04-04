@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
-    :version |0.4.29
+    :version |0.4.30
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -1479,8 +1479,8 @@
                       if (number? v)
                         .!toFixed v $ either (:fraction props) 1
                         , "\"-"
-                  :position $ complex/add position ([] 4 4)
-                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Menlo, monospace")
+                  :position position
+                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Source code pro, Menlo, Roboto Mono,, monospace")
                   :align :center
                 container
                   {} $ :position ([] -32 36)
