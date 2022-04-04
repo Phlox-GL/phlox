@@ -148,7 +148,7 @@
                   |T $ {}
                     :data $ {}
                       |5 $ {} (:text |new) (:type :leaf) (:at 1612518371822) (:by |rJG4IHzWf)
-                      |D $ {} (:text |FontFaceObserver/default) (:type :leaf) (:at 1612537470545) (:by |rJG4IHzWf)
+                      |D $ {} (:text |FontFaceObserver) (:type :leaf) (:at 1649074427569) (:by |rJG4IHzWf)
                       |L $ {} (:text "|\"Josefin Sans") (:type :leaf) (:at 1583685465541) (:by |rJG4IHzWf)
                     :type :expr
                     :at 1583685458471
@@ -546,7 +546,7 @@
                 |yr $ {}
                   :data $ {}
                     |n $ {} (:text "|\"fontfaceobserver-es") (:type :leaf) (:at 1612538257268) (:by |rJG4IHzWf)
-                    |r $ {} (:text |:as) (:type :leaf) (:at 1583685442473) (:by |rJG4IHzWf)
+                    |r $ {} (:text |:default) (:type :leaf) (:at 1649074431624) (:by |rJG4IHzWf)
                     |v $ {} (:text |FontFaceObserver) (:type :leaf) (:at 1583685444335) (:by |rJG4IHzWf)
                   :type :expr
                   :at 1583685438044
@@ -22172,10 +22172,6 @@
                         :data $ {}
                           |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649050107402) (:text |.-stage)
                           |b $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649050107402) (:text |@*app)
-              |s $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1649050865330)
-                :data $ {}
-                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649050866115) (:text |println)
-                  |b $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649050869116) (:text "|\"calling rerender")
           |g $ {}
             :data $ {}
               |T $ {} (:text |defn) (:type :leaf) (:at 1581849827473) (:by |rJG4IHzWf)

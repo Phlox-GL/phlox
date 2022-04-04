@@ -25,7 +25,7 @@
           phlox.app.config :refer $ dev? mobile?
           "\"nanoid" :refer $ nanoid
           phlox.app.updater :refer $ updater
-          "\"fontfaceobserver-es" :as FontFaceObserver
+          "\"fontfaceobserver-es" :default FontFaceObserver
           "\"./calcit.build-errors" :default build-errors
           "\"bottom-tip" :default hud!
           touch-control.core :refer $ render-control! start-control-loop! replace-control-loop!
@@ -36,7 +36,7 @@
         |main! $ quote
           defn main! () (; js/console.log PIXI)
             if dev? $ load-console-formatter!
-            -> (new FontFaceObserver/default "\"Josefin Sans") (.!load)
+            -> (new FontFaceObserver "\"Josefin Sans") (.!load)
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
             render-app!
@@ -1852,7 +1852,6 @@
                   * scale $ nth move 1
               -> @*app .-stage .-scale $ .!set scale scale
             -> @*app .-renderer $ .!render (.-stage @*app)
-            println "\"calling rerender"
         |g $ quote
           defn g (op ? arg)
             let
