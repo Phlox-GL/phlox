@@ -1,8 +1,8 @@
 
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
-    :modules $ [] |memof/ |lilac/ |pointed-prompt/
-    :version |0.4.28
+    :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
+    :version |0.4.30
   :entries $ {}
   :files $ {}
     |phlox.cursor $ {}
@@ -19,25 +19,28 @@
     |phlox.app.main $ {}
       :ns $ quote
         ns phlox.app.main $ :require ("\"pixi.js" :as PIXI)
-          phlox.core :refer $ render! clear-phlox-caches!
+          phlox.core :refer $ render! clear-phlox-caches! update-viewer!
           phlox.app.container :refer $ comp-container
           phlox.app.schema :as schema
-          phlox.app.config :refer $ dev?
+          phlox.app.config :refer $ dev? mobile?
           "\"nanoid" :refer $ nanoid
           phlox.app.updater :refer $ updater
-          "\"fontfaceobserver-es" :as FontFaceObserver
+          "\"fontfaceobserver-es" :default FontFaceObserver
           "\"./calcit.build-errors" :default build-errors
           "\"bottom-tip" :default hud!
+          touch-control.core :refer $ render-control! start-control-loop! replace-control-loop!
       :defs $ {}
         |render-app! $ quote
           defn render-app! (? arg)
             render! (comp-container @*store) dispatch! $ either arg ({})
         |main! $ quote
-          defn main! () (; js/console.log PIXI) (load-console-formatter!)
-            -> (new FontFaceObserver/default "\"Josefin Sans") (.!load)
+          defn main! () (; js/console.log PIXI)
+            if dev? $ load-console-formatter!
+            -> (new FontFaceObserver "\"Josefin Sans") (.!load)
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
-            set! js/window.onresize $ fn (e) (render-app!)
+            render-app!
+            when mobile? (render-control!) (start-control-loop! 8 on-control-event)
             println "\"App Started"
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -54,15 +57,21 @@
             do (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app! true
-              set! js/window.onresize $ fn (e) (render-app!)
+              when mobile? (replace-control-loop! 8 on-control-event) (render-control!)
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
+        |on-control-event $ quote
+          defn on-control-event (elapsed states delta)
+            let
+                move $ :left-move states
+                scales $ :right-move delta
+              update-viewer! move $ nth scales 1
     |phlox.comp.drag-point $ {}
       :ns $ quote
         ns phlox.comp.drag-point $ :require
           phlox.core :refer $ g hslx rect circle text container graphics create-list
           phlox.check :refer $ lilac-event-map dev-check
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           phlox.complex :as complex
       :defs $ {}
         |comp-drag-point $ quote
@@ -148,7 +157,7 @@
               :alpha $ optional+ (number+)
               :position $ tuple+
                 [] (number+) (number+)
-              :hide-text? $ optional+ (boolean+)
+              :hide-text? $ optional+ (bool+)
               :on-change $ fn+
             {} $ :check-keys? true
         |lilac-cursor $ quote
@@ -991,7 +1000,7 @@
         ns phlox.comp.button $ :require
           [] phlox.core :refer $ []  g hslx rect circle text container graphics create-list
           [] phlox.util :refer $ [] measure-text-width!
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.check :refer $ [] lilac-event-map dev-check
       :defs $ {}
         |comp-button $ quote
@@ -1035,19 +1044,22 @@
                 [] (number+) (number+)
               :on lilac-event-map
               :on-pointertap $ fn+
-              :align-right? $ boolean+
+              :align-right? $ bool+
             {} (:all-optional? true) (:check-keys? true)
     |phlox.app.config $ {}
-      :ns $ quote (ns phlox.app.config)
+      :ns $ quote
+        ns phlox.app.config $ :require ("\"mobile-detect" :default mobile-detect)
       :defs $ {}
         |dev? $ quote
           def dev? $ = "\"dev" (get-env "\"mode")
         |site $ quote
           def site $ {} (:dev-ui "\"http://localhost:8100/main.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main.css") (:cdn-url "\"http://cdn.tiye.me/phlox/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox")
+        |mobile? $ quote
+          def mobile? $ .!mobile (new mobile-detect js/window.navigator.userAgent)
     |phlox.check $ {}
       :ns $ quote
         ns phlox.check $ :require
-          [] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
       :defs $ {}
         |lilac-line-segments $ quote
           def lilac-line-segments $ record+
@@ -1089,8 +1101,8 @@
           def lilac-text-style $ record+
             {}
               :align $ enum+ (#{} :left :center :right)
-              :break-words $ boolean+
-              :drop-shadow $ boolean+
+              :break-words $ bool+
+              :drop-shadow $ bool+
               :drop-shadow-alpha $ number+
                 {} (:min 0) (:max 1)
               :drop-shadow-angle $ number+
@@ -1114,10 +1126,10 @@
               :padding $ number+
               :stroke lilac-color
               :stroke-thickness $ number+
-              :trim $ boolean+
+              :trim $ bool+
               :text-baseline $ enum+ (#{} :alphabetic)
               :white-space $ enum+ (#{} :normal :pre :pre-line)
-              :word-wrap $ boolean+
+              :word-wrap $ bool+
               :word-wrap-width $ number+
             {} (:check-keys? true) (:all-optional? true)
         |lilac-rect $ quote
@@ -1217,7 +1229,7 @@
               :on-keyboard $ optional+ lilac-event-map
             {} (:check-keys? true) (:all-optional? true)
         |lilac-event-map $ quote
-          def lilac-event-map $ map+ (keyword+) (fn+)
+          def lilac-event-map $ dict+ (keyword+) (fn+)
         |dev-check-message $ quote
           defmacro dev-check-message (message data rule)
             if in-dev?
@@ -1231,7 +1243,7 @@
     |phlox.input $ {}
       :ns $ quote
         ns phlox.input $ :require
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.check :refer $ [] dev-check
           pointed-prompt.core :refer $ prompt-at!
       :defs $ {}
@@ -1240,8 +1252,8 @@
             {}
               :placeholder $ string+
               :initial $ string+
-              :style $ map+ (keyword+) (any+)
-              :textarea? $ boolean+
+              :style $ dict+ (keyword+) (any+)
+              :textarea? $ bool+
             {} (:all-optional? true) (:check-keys? true)
         |request-text! $ quote
           defn request-text! (e options cb) (dev-check options lilac-input)
@@ -1253,7 +1265,7 @@
         ns phlox.comp.slider $ :require
           [] phlox.core :refer $ [] g >> hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+ bool+
           phlox.math :refer $ vec-length bound-x
           phlox.complex :refer $ rebase
           phlox.complex :as complex
@@ -1267,7 +1279,7 @@
               :unit $ optional+ (number+)
               :fill $ optional+ (number+)
               :color $ optional+ (number+)
-              :round? $ optional+ (boolean+)
+              :round? $ optional+ (bool+)
               :max $ optional+ (number+)
               :min $ optional+ (number+)
               :position $ optional+
@@ -1397,7 +1409,7 @@
               :fill $ optional+ (number+)
               :color $ optional+ (number+)
               :title $ optional+ (string+)
-              :round? $ optional+ (boolean+)
+              :round? $ optional+ (bool+)
               :max $ optional+ (number+)
               :min $ optional+ (number+)
               :position $ optional+
@@ -1418,8 +1430,6 @@
                 on-change $ :on-change props
                 position $ either (:position props) ([] 0 0)
                 on-move $ :on-move props
-                spin-pivot $ either (:spin-pivot props)
-                  [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
               container
                 {} $ :position ([] 0 0)
                 circle $ {} (:radius radius) (:position position) (:fill fill) (:alpha alpha)
@@ -1428,9 +1438,8 @@
                       let
                           x $ -> e .-data .-global .-x
                           y $ -> e .-data .-global .-y
-                        reset! *prev-spin-point $ []
-                          - x $ first spin-pivot
-                          - y $ last spin-pivot
+                        reset! *spin-pivot $ [] x y
+                        reset! *prev-spin-point $ [] 0 0
                         d! cursor $ assoc state :dragging? true
                     :pointermove $ fn (e d!)
                       let
@@ -1439,8 +1448,8 @@
                         if (:dragging? state)
                           let
                               current-point $ []
-                                - x $ first spin-pivot
-                                - y $ last spin-pivot
+                                - x $ first @*spin-pivot
+                                - y $ last @*spin-pivot
                               prev-point @*prev-spin-point
                             if
                               < (vec-length current-point) (&* 0.5 radius)
@@ -1470,24 +1479,26 @@
                       if (number? v)
                         .!toFixed v $ either (:fraction props) 1
                         , "\"-"
-                  :position $ complex/add position ([] 4 4)
-                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Menlo, monospace")
+                  :position position
+                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Source code pro, Menlo, Roboto Mono,, monospace")
                   :align :center
                 container
-                  {} $ :position ([] 0 24)
+                  {} $ :position ([] -32 36)
                   comp-drag-point (>> states :move)
-                    {} (:position position) (:unit 1) (:radius 10)
+                    {} (:position position) (:unit 1) (:radius 12)
                       :fill $ hslx 0 90 60
                       :hide-text? true
-                      :alpha 0.5
+                      :alpha 0.3
                       :on-change $ fn (pos d!) (on-move pos d!)
         |*prev-spin-point $ quote (defatom *prev-spin-point nil)
+        |*spin-pivot $ quote
+          defatom *spin-pivot $ [] 0 0
     |phlox.comp.switch $ {}
       :ns $ quote
         ns phlox.comp.switch $ :require
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
       :defs $ {}
         |comp-switch $ quote
           defn comp-switch (props) (dev-check props lilac-switch)
@@ -1526,7 +1537,7 @@
         |lilac-switch $ quote
           def lilac-switch $ record+
             {}
-              :value $ boolean+
+              :value $ bool+
               :position $ optional+ lilac-point
               :on-change $ fn+
               :title $ optional+ (string+)
@@ -1663,7 +1674,6 @@
                 comp-spin-slider (>> states :demo)
                   {}
                     :position $ :pos state
-                    :spin-pivot $ :pos state
                     :value $ :v1 state
                     :unit 1
                     :min 1
@@ -1680,9 +1690,10 @@
           phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
           "\"@quamolit/phlox-utils" :refer $ hsl-to-rgb hcl-to-hex
           phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ map+ fn+ keyword+ boolean+ list+ or+ any+
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
           phlox.keyboard :refer $ handle-keyboard-events
           memof.alias :refer $ reset-calling-caches! tick-calling-loop!
+          phlox.complex :as complex
       :defs $ {}
         |defcomp $ quote
           defmacro defcomp (name params & body)
@@ -1733,6 +1744,10 @@
               :alpha $ optional+ (number+)
             {} $ :check-keys? true
         |*tree-element $ quote (defatom *tree-element nil)
+        |*viewer-config $ quote
+          defatom *viewer-config $ {}
+            :move $ [] 0 0
+            :scale 1
         |create-list $ quote
           defn create-list (tag props children)
             %{} schema/PhloxElement (:name tag) (:props props)
@@ -1779,6 +1794,19 @@
             {} (:p1 lilac-point) (:p2 lilac-point)
               :radius $ number+
             {} $ :exact-keys? true
+        |update-viewer! $ quote
+          defn update-viewer! (move scale-change)
+            when
+              or
+                not= ([] 0 0) move
+                not= 0 scale-change
+              swap! *viewer-config update :move $ fn (prev)
+                complex/add prev $ complex/times move ([] 0.05 0)
+              swap! *viewer-config update :scale $ fn (prev)
+                let
+                    next $ &+ prev (* 0.01 scale-change)
+                  &max 0.4 $ &min next 4
+              render-stage-for-viewer!
         |lilac-arc $ quote
           def lilac-arc $ record+
             {} (:center lilac-point)
@@ -1787,15 +1815,43 @@
               :radian $ optional+
                 tuple+ $ [] (number+) (number+)
               :radius $ number+
-              :anticlockwise? $ optional+ (boolean+)
+              :anticlockwise? $ optional+ (bool+)
               :filters $ optional+
                 list+ $ list+ (any+)
             {} $ :check-keys? true
         |*renderer $ quote (defatom *renderer nil)
+        |init-pixi-app! $ quote
+          defn init-pixi-app! (options)
+            let
+                pixi-app $ new PIXI/Application
+                  js-object (:antialias true) (:autoDensity true) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
+                    :backgroundColor $ either (:background-color options) (hslx 0 0 0)
+                    :interactive $ either (:interactive options) true
+                    :backgroundAlpha $ either (:background-alpha options) 1
+              .!stop $ .-ticker pixi-app
+              reset! *app pixi-app
+              -> js/document .-body $ .!appendChild (.-view pixi-app)
+              js/window.addEventListener "\"resize" $ fn (event)
+                -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
+                render-stage-for-viewer!
+              , pixi-app
         |clear-phlox-caches! $ quote
           defn clear-phlox-caches! () $ reset-calling-caches!
         |circle $ quote
           defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
+        |render-stage-for-viewer! $ quote
+          defn render-stage-for-viewer! ()
+            let
+                scale $ :scale @*viewer-config
+                move $ :move @*viewer-config
+              -> @*app .-stage .-position .-x $ set!
+                - (* 0.5 js/window.innerWidth)
+                  * scale $ nth move 0
+              -> @*app .-stage .-position .-y $ set!
+                + (* 0.5 js/window.innerHeight)
+                  * scale $ nth move 1
+              -> @*app .-stage .-scale $ .!set scale scale
+            -> @*app .-renderer $ .!render (.-stage @*app)
         |g $ quote
           defn g (op ? arg)
             let
@@ -1816,27 +1872,7 @@
               [] op data
         |render! $ quote
           defn render! (expanded-app dispatch! options)
-            when (nil? @*app)
-              let
-                  pixi-app $ new PIXI/Application
-                    js-object
-                      :backgroundColor $ either (:background-color options) (hslx 0 0 0)
-                      :antialias true
-                      :autoDensity true
-                      :resolution 2
-                      :width js/window.innerWidth
-                      :height js/window.innerHeight
-                      :interactive $ either (:interactive options) true
-                      :backgroundAlpha $ either (:background-alpha options) 1
-                .!stop $ .-ticker pixi-app
-                reset! *app pixi-app
-                -> js/document .-body $ .!appendChild (.-view pixi-app)
-                .!addEventListener js/window "\"resize" $ fn (event)
-                  -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
-                  -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
-                  -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
-                  .!render (.-renderer @*app) (.-stage @*app)
-              aset js/window "\"_phloxTree" @*app
+            when (nil? @*app) (init-pixi-app! options) (aset js/window "\"_phloxTree" @*app)
             let
                 wrap-dispatch $ fn (op data)
                   if (list? op)
@@ -1847,9 +1883,7 @@
                 do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                 rerender-app! expanded-app wrap-dispatch options
               reset! *tree-element expanded-app
-            -> @*app .-stage .-position .-x $ set! (* 0.5 js/window.innerWidth)
-            -> @*app .-stage .-position .-y $ set! (* 0.5 js/window.innerHeight)
-            -> @*app .-renderer $ .!render (.-stage @*app)
+            render-stage-for-viewer!
             tick-calling-loop!
     |phlox.math $ {}
       :ns $ quote (ns phlox.math)
@@ -2022,7 +2056,7 @@
       :ns $ quote
         ns phlox.render.draw $ :require
           phlox.util :refer $ use-number
-          lilac.core :refer $ record+ number+ string+ optional+ boolean+ tuple+ map+ fn+ keyword+ list+ or+
+          lilac.core :refer $ record+ number+ string+ optional+ bool+ tuple+ dict+ fn+ keyword+ list+ or+
           phlox.check :refer $ dev-check dev-check-message lilac-point lilac-line-style lilac-color
           phlox.math :refer $ angle->radian
           phlox.render.draw :refer $ init-line-style
@@ -2195,7 +2229,7 @@
       :ns $ quote
         ns phlox.comp.arrow $ :require
           phlox.core :refer $ g hslx rect circle text container graphics create-list >>
-          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.check :refer $ [] lilac-event-map dev-check
           phlox.complex :as complex
           phlox.comp.drag-point :refer $ comp-drag-point
@@ -2368,7 +2402,7 @@
         ns phlox.comp.messages $ :require
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
-          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ map+ fn+ any+ keyword+ boolean+ list+ or+ is+
+          [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           [] phlox.comp.button :refer $ [] comp-button
       :defs $ {}
         |lilac-messages $ quote
@@ -2377,7 +2411,7 @@
               :color $ number+
               :fill $ number+
               :position lilac-point
-              :bottom? $ boolean+
+              :bottom? $ bool+
               :on-pointertap $ fn+
             {} (:check-keys? true) (:all-optional? true)
         |comp-messages $ quote
