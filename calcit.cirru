@@ -21195,6 +21195,11 @@
             :type :expr
             :at 1581848831755
             :by |rJG4IHzWf
+          |*dispatch-fn $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1649235740893)
+            :data $ {}
+              |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235742254) (:text |defatom)
+              |b $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235740893) (:text |*dispatch-fn)
+              |h $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235745147) (:text |nil)
           |lilac-bezier-to $ {}
             :data $ {}
               |T $ {} (:text |def) (:type :leaf) (:at 1584552992652) (:by |rJG4IHzWf)
@@ -22350,7 +22355,7 @@
                                     :by |rJG4IHzWf
                                   |r $ {}
                                     :data $ {}
-                                      |T $ {} (:text |dispatch!) (:type :leaf) (:at 1622564104675) (:by |rJG4IHzWf)
+                                      |T $ {} (:text |@*dispatch-fn) (:type :leaf) (:at 1649235754631) (:by |rJG4IHzWf)
                                       |j $ {} (:text |:states) (:type :leaf) (:at 1622564104675) (:by |rJG4IHzWf)
                                       |r $ {}
                                         :data $ {}
@@ -22365,7 +22370,7 @@
                                     :by |rJG4IHzWf
                                   |v $ {}
                                     :data $ {}
-                                      |T $ {} (:text |dispatch!) (:type :leaf) (:at 1622564104675) (:by |rJG4IHzWf)
+                                      |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235756811) (:text |@*dispatch-fn)
                                       |j $ {} (:text |op) (:type :leaf) (:at 1622564104675) (:by |rJG4IHzWf)
                                       |r $ {} (:text |data) (:type :leaf) (:at 1622564104675) (:by |rJG4IHzWf)
                                     :type :expr
@@ -22492,6 +22497,11 @@
                 :type :expr
                 :at 1573356763625
                 :by |rJG4IHzWf
+              |w1 $ {} (:type :expr) (:by |rJG4IHzWf) (:at 1649235728671)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235733431) (:text |*dispatch-fn)
+                  |D $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235736332) (:text |reset!)
+                  |b $ {} (:type :leaf) (:by |rJG4IHzWf) (:at 1649235739938) (:text |dispatch!)
             :type :expr
             :at 1573356405089
             :by |rJG4IHzWf
@@ -29464,7 +29474,7 @@
           :type :expr
           :at 1586601241785
           :by |rJG4IHzWf
-  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:version |0.4.31)
+  :configs $ {} (:reload-fn |phlox.app.main/reload!) (:port 6001) (:version |0.4.32)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
     :init-fn |phlox.app.main/main!
   :entries $ {}
