@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
-    :version |0.4.31
+    :version |0.4.32
   :entries $ {}
   :files $ {}
     |phlox.config $ {}
@@ -1760,6 +1760,7 @@
             {} $ :exact-keys? true
         |container $ quote
           defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
+        |*dispatch-fn $ quote (defatom *dispatch-fn nil)
         |lilac-bezier-to $ quote
           def lilac-bezier-to $ record+
             {} (:p1 lilac-point) (:p2 lilac-point) (:to-p lilac-point)
@@ -1875,11 +1876,12 @@
         |render! $ quote
           defn render! (expanded-app dispatch! options)
             when (nil? @*app) (init-pixi-app! options) (aset js/window "\"_phloxTree" @*app)
+            reset! *dispatch-fn dispatch!
             let
                 wrap-dispatch $ fn (op data)
                   if (list? op)
-                    dispatch! :states $ [] op data
-                    dispatch! op data
+                    @*dispatch-fn :states $ [] op data
+                    @*dispatch-fn op data
               ; js/console.log "\"render!" expanded-app
               if (nil? @*tree-element)
                 do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
