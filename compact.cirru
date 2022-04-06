@@ -2,9 +2,17 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
-    :version |0.4.30
+    :version |0.4.31
   :entries $ {}
   :files $ {}
+    |phlox.config $ {}
+      :ns $ quote
+        ns phlox.config $ :require ("\"mobile-detect" :default mobile-detect)
+      :defs $ {}
+        |dev? $ quote
+          def dev? $ = "\"dev" (get-env "\"mode")
+        |mobile? $ quote
+          def mobile? $ .!mobile (new mobile-detect js/window.navigator.userAgent)
     |phlox.cursor $ {}
       :ns $ quote (ns phlox.cursor)
       :defs $ {}
@@ -19,10 +27,10 @@
     |phlox.app.main $ {}
       :ns $ quote
         ns phlox.app.main $ :require ("\"pixi.js" :as PIXI)
-          phlox.core :refer $ render! clear-phlox-caches! update-viewer!
+          phlox.core :refer $ render! clear-phlox-caches! on-control-event
           phlox.app.container :refer $ comp-container
           phlox.app.schema :as schema
-          phlox.app.config :refer $ dev? mobile?
+          phlox.config :refer $ dev? mobile?
           "\"nanoid" :refer $ nanoid
           phlox.app.updater :refer $ updater
           "\"fontfaceobserver-es" :default FontFaceObserver
@@ -54,18 +62,12 @@
               reset! *store $ updater @*store op op-data op-id op-time
         |reload! $ quote
           defn reload! () $ if (nil? build-errors)
-            do (println "\"Code updated.") (clear-phlox-caches!) (remove-watch *store :change)
+            do (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
-              render-app! true
+              render-app!
               when mobile? (replace-control-loop! 8 on-control-event) (render-control!)
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
-        |on-control-event $ quote
-          defn on-control-event (elapsed states delta)
-            let
-                move $ :left-move states
-                scales $ :right-move delta
-              update-viewer! move $ nth scales 1
     |phlox.comp.drag-point $ {}
       :ns $ quote
         ns phlox.comp.drag-point $ :require
@@ -170,6 +172,7 @@
           phlox.util.lcs :refer $ find-minimal-ops lcs-state-0
           phlox.render.draw :refer $ call-graphics-ops update-position update-pivot update-rotation update-alpha update-events draw-circle draw-rect init-events init-position init-pivot init-angle init-rotation init-alpha init-line-style
           phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-circle
+          phlox.config :refer $ dev?
       :defs $ {}
         |render-circle $ quote
           defn render-circle (element dispatch!)
@@ -244,7 +247,6 @@
               update-alpha target (:alpha props) (:alpha props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
               update-filters target (:filters props) (:filters props')
-        |in-dev? $ quote (def in-dev? false)
         |update-element $ quote
           defn update-element (element old-element parent-element idx dispatch! options)
             cond
@@ -357,7 +359,7 @@
               , target
         |update-children $ quote
           defn update-children (children-dict old-children-dict parent-container dispatch! options)
-            when in-dev? $ assert "\"children should not contain nil element"
+            when dev? $ assert "\"children should not contain nil element"
               and
                 every? (map children-dict last) some?
                 every? (map old-children-dict last) some?
@@ -375,7 +377,7 @@
                     case-default (first op)
                       do $ println "\"Unknown op:" op
                       :remains $ do
-                        when in-dev? $ assert
+                        when dev? $ assert
                           = (last op)
                             first $ first xs
                             first $ first ys
@@ -386,7 +388,7 @@
                           , parent-container idx dispatch! options
                         recur (inc idx) (rest ops) (rest xs) (rest ys)
                       :add $ do
-                        when in-dev? $ assert "\"check key"
+                        when dev? $ assert "\"check key"
                           = (last op)
                             first $ first xs
                         .!addChildAt parent-container
@@ -396,7 +398,7 @@
                           , idx
                         recur (inc idx) (rest ops) (rest xs) ys
                       :remove $ do
-                        when in-dev? $ assert "\"check key"
+                        when dev? $ assert "\"check key"
                           = (last op)
                             first $ first ys
                         .!removeChildAt parent-container idx
@@ -1046,20 +1048,11 @@
               :on-pointertap $ fn+
               :align-right? $ bool+
             {} (:all-optional? true) (:check-keys? true)
-    |phlox.app.config $ {}
-      :ns $ quote
-        ns phlox.app.config $ :require ("\"mobile-detect" :default mobile-detect)
-      :defs $ {}
-        |dev? $ quote
-          def dev? $ = "\"dev" (get-env "\"mode")
-        |site $ quote
-          def site $ {} (:dev-ui "\"http://localhost:8100/main.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main.css") (:cdn-url "\"http://cdn.tiye.me/phlox/") (:title "\"Phlox") (:icon "\"http://cdn.tiye.me/logo/quamolit.png") (:storage-key "\"phlox")
-        |mobile? $ quote
-          def mobile? $ .!mobile (new mobile-detect js/window.navigator.userAgent)
     |phlox.check $ {}
       :ns $ quote
         ns phlox.check $ :require
-          [] lilac.core :refer $ [] validate-lilac record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
+          lilac.core :refer $ validate-lilac record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
+          phlox.config :refer $ dev?
       :defs $ {}
         |lilac-line-segments $ quote
           def lilac-line-segments $ record+
@@ -1081,7 +1074,7 @@
             [] (number+) (string+)
         |dev-check $ quote
           defmacro dev-check (data rule)
-            if in-dev?
+            if dev?
               &let
                 result $ gensym "\"result"
                 quasiquote $ &let
@@ -1095,8 +1088,6 @@
           def lilac-point $ tuple+
             [] (number+) (number+)
             {} $ :check-size? true
-        |in-dev? $ quote
-          def in-dev? $ = "\"dev" (get-env "\"mode")
         |lilac-text-style $ quote
           def lilac-text-style $ record+
             {}
@@ -1232,7 +1223,7 @@
           def lilac-event-map $ dict+ (keyword+) (fn+)
         |dev-check-message $ quote
           defmacro dev-check-message (message data rule)
-            if in-dev?
+            if dev?
               &let
                 result $ gensym "\"result"
                 quasiquote $ &let
@@ -1733,6 +1724,17 @@
           defn create-element (tag props children)
             %{} schema/PhloxElement (:name tag) (:props props)
               :children $ remove-nil-values (index-items children)
+        |on-control-event $ quote
+          defn on-control-event (elapsed states delta)
+            let
+                move $ :left-move states
+                scales $ :right-move delta
+              update-viewer!
+                map move $ fn (x)
+                  &/
+                    * x (js/Math.abs x) 0.02
+                    :scale @*viewer-config
+                nth scales 1
         |mount-app! $ quote
           defn mount-app! (app dispatch!)
             let
@@ -1805,7 +1807,7 @@
               swap! *viewer-config update :scale $ fn (prev)
                 let
                     next $ &+ prev (* 0.01 scale-change)
-                  &max 0.4 $ &min next 4
+                  &max 0.2 $ &min next 8
               render-stage-for-viewer!
         |lilac-arc $ quote
           def lilac-arc $ record+
