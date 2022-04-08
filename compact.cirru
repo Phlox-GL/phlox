@@ -48,7 +48,8 @@
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
             render-app!
-            when mobile? (render-control!) (start-control-loop! 8 on-control-event)
+            render-control!
+            start-control-loop! 8 on-control-event
             println "\"App Started"
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -65,7 +66,7 @@
             do (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app!
-              when mobile? (replace-control-loop! 8 on-control-event) (render-control!)
+              replace-control-loop! 8 on-control-event
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
     |phlox.comp.drag-point $ {}
