@@ -2,7 +2,7 @@
 {} (:package |phlox)
   :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
-    :version |0.4.32
+    :version |0.4.33
   :entries $ {}
   :files $ {}
     |phlox.config $ {}
@@ -48,7 +48,8 @@
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
             render-app!
-            when mobile? (render-control!) (start-control-loop! 8 on-control-event)
+            render-control!
+            start-control-loop! 8 on-control-event
             println "\"App Started"
         |*store $ quote (defatom *store schema/store)
         |dispatch! $ quote
@@ -65,7 +66,7 @@
             do (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app!
-              when mobile? (replace-control-loop! 8 on-control-event) (render-control!)
+              replace-control-loop! 8 on-control-event
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
     |phlox.comp.drag-point $ {}
@@ -1010,7 +1011,7 @@
             let
                 button-text $ either (:text props) "\"BUTTON"
                 size $ either (:font-size props) 14
-                font-family $ either (:font-family props) "\"Josefin Sans"
+                font-family $ either (:font-family props) "\"Josefin Sans, sans-serif"
                 fill $ either (:fill props) (hslx 0 0 20)
                 color $ either (:color props) (hslx 0 0 100)
                 position $ :position props
@@ -1471,7 +1472,7 @@
                         .!toFixed v $ either (:fraction props) 1
                         , "\"-"
                   :position position
-                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Source code pro, Menlo, Roboto Mono,, monospace")
+                  :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Source code pro, Menlo, Roboto Mono, monospace")
                   :align :center
                 container
                   {} $ :position ([] -32 36)
@@ -1834,6 +1835,7 @@
               .!stop $ .-ticker pixi-app
               reset! *app pixi-app
               -> js/document .-body $ .!appendChild (.-view pixi-app)
+              -> pixi-app .-renderer .-plugins .-accessibility (.!destroy) 
               js/window.addEventListener "\"resize" $ fn (event)
                 -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
                 render-stage-for-viewer!
@@ -2086,13 +2088,12 @@
         |init-line-style $ quote
           defn init-line-style (target line-style)
             when (some? line-style)
-              .!lineStyle target $ to-js-data
-                {}
-                  :width $ use-number (:width line-style)
-                  :color $ use-number (:color line-style)
-                  :alpha $ either (:alpha line-style) 1
-                  :join $ read-line-join (:join line-style)
-                  :cap $ read-line-cap (:cap line-style)
+              .!lineStyle target $ js-object
+                :width $ use-number (:width line-style)
+                :color $ use-number (:color line-style)
+                :alpha $ either (:alpha line-style) 1
+                :join $ read-line-join (:join line-style)
+                :cap $ read-line-cap (:cap line-style)
         |init-events $ quote
           defn init-events (target events dispatch!)
             when (some? events) (aset target "\"interactive" true) (aset target "\"buttonMode" true)

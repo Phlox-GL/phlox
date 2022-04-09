@@ -1,9 +1,9 @@
 {
-  "version": "0.4.32",
+  "version": "0.4.33",
   "dependencies": {
-    "@calcit/procs": "^0.5.28",
+    "@calcit/procs": "^0.5.29",
     "@quamolit/phlox-utils": "^0.0.2",
-    "@quamolit/touch-control": "^0.0.6",
+    "@quamolit/touch-control": "^0.0.8",
     "fontfaceobserver-es": "^3.3.3",
     "mobile-detect": "^1.4.5",
     "nanoid": "^3.3.2",
