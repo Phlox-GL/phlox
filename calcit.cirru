@@ -11322,10 +11322,6 @@
                                   |T $ {} (:at 1650261201213) (:by |rJG4IHzWf) (:text |reset!) (:type :leaf)
                                   |b $ {} (:at 1650261201213) (:by |rJG4IHzWf) (:text |*drag-moving-cache) (:type :leaf)
                                   |h $ {} (:at 1650261290165) (:by |rJG4IHzWf) (:text |current) (:type :leaf)
-                              |f $ {} (:at 1650261726650) (:by |rJG4IHzWf) (:type :expr)
-                                :data $ {}
-                                  |T $ {} (:at 1650261727775) (:by |rJG4IHzWf) (:text |println) (:type :leaf)
-                                  |b $ {} (:at 1650261733704) (:by |rJG4IHzWf) (:text |@*viewer-config) (:type :leaf)
                               |h $ {} (:at 1650260936225) (:by |rJG4IHzWf) (:type :expr)
                                 :data $ {}
                                   |T $ {} (:at 1650260936225) (:by |rJG4IHzWf) (:text |swap!) (:type :leaf)

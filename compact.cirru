@@ -1545,7 +1545,6 @@
                     current $ [] (.-clientX event) (.-clientY event)
                     delta $ complex/minus current prev
                   reset! *drag-moving-cache current
-                  println @*viewer-config
                   swap! *viewer-config update :move $ fn (prev)
                     complex/minus prev $ complex/times (complex-conjugate delta)
                       []
