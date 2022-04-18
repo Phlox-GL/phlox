@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.33)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.34)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1477,6 +1477,7 @@
       :defs $ {}
         |*app $ quote (defatom *app nil)
         |*dispatch-fn $ quote (defatom *dispatch-fn nil)
+        |*drag-moving-cache $ quote (defatom *drag-moving-cache nil)
         |*events-element $ quote (defatom *events-element nil)
         |*renderer $ quote (defatom *renderer nil)
         |*tree-element $ quote (defatom *tree-element nil)
@@ -1494,6 +1495,8 @@
           defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
         |clear-phlox-caches! $ quote
           defn clear-phlox-caches! () $ reset-calling-caches!
+        |complex-conjugate $ quote
+          defn complex-conjugate (pair) (update pair 1 negate)
         |container $ quote
           defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
         |create-element $ quote
@@ -1527,6 +1530,27 @@
               [] op data
         |graphics $ quote
           defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
+        |handle-drag-moving $ quote
+          defn handle-drag-moving (el)
+            .!addEventListener el "\"mousedown" $ fn (event)
+              reset! *drag-moving-cache $ [] (.-clientX event) (.-clientY event)
+            .!addEventListener el "\"mouseup" $ fn (event) (reset! *drag-moving-cache nil)
+            .!addEventListener el "\"mousemove" $ fn (event)
+              if
+                and
+                  or (.-metaKey event) (.-ctrlKey event)
+                  some? @*drag-moving-cache
+                let
+                    prev @*drag-moving-cache
+                    current $ [] (.-clientX event) (.-clientY event)
+                    delta $ complex/minus current prev
+                  reset! *drag-moving-cache current
+                  swap! *viewer-config update :move $ fn (prev)
+                    complex/minus prev $ complex/times (complex-conjugate delta)
+                      []
+                        / 1 $ :scale @*viewer-config
+                        , 0
+                  render-stage-for-viewer!
         |hclx $ quote
           defn hclx (h c l)
             .!string2hex PIXI/utils $ hcl-to-hex h c l
@@ -1548,7 +1572,10 @@
                     :backgroundAlpha $ either (:background-alpha options) 1
               .!stop $ .-ticker pixi-app
               reset! *app pixi-app
-              -> js/document .-body $ .!appendChild (.-view pixi-app)
+              let
+                  el $ .-view pixi-app
+                -> js/document .-body $ .!appendChild el
+                handle-drag-moving el
               -> pixi-app .-renderer .-plugins .-accessibility (.!destroy) 
               js/window.addEventListener "\"resize" $ fn (event)
                 -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
