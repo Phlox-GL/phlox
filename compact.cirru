@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.34)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.35)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -295,8 +295,7 @@
                 cursor $ []
                 states $ :states store
               container
-                {} $ :position
-                  [] (* -0.5 js/window.innerWidth) (* -0.5 js/window.innerHeight)
+                {} $ :position ([] 0 0)
                 create-list :container ({})
                   -> tabs $ map-indexed
                     fn (idx info)
@@ -326,6 +325,10 @@
                   :spin-slider $ comp-spin-slider-demo (>> states :spin-slider)
                   :arrows $ comp-arrows-demo (>> states :arrows)
                   :shadow $ comp-shadow-demo
+                circle $ {}
+                  :position $ [] 0 0
+                  :radius 10
+                  :fill 0xffffff
         |comp-curves $ quote
           defn comp-curves () $ container ({})
             graphics $ {}
@@ -646,15 +649,14 @@
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
             render-app!
-            render-control!
-            start-control-loop! 8 on-control-event
+            when mobile? (render-control!) (start-control-loop! 8 on-control-event)
             println "\"App Started"
         |reload! $ quote
           defn reload! () $ if (nil? build-errors)
             do (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app!
-              replace-control-loop! 8 on-control-event
+              when mobile? $ replace-control-loop! 8 on-control-event
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
         |render-app! $ quote
@@ -1420,6 +1422,8 @@
                   , p1
                 ([] x y) p2
               [] (+ a x) (+ b y)
+        |conjugate $ quote
+          defn conjugate (pair) (update pair 1 negate)
         |divide-by $ quote
           defn divide-by (point x)
             []
@@ -1455,6 +1459,9 @@
             []
               * inverted $ + (* x a) (* y b)
               * inverted $ - (* y a) (* x b)
+        |scale $ quote
+          defn scale (pair v)
+            map pair $ fn (x) (* v x)
         |times $ quote
           defn times (v1 v2)
             let-sugar
@@ -1480,11 +1487,11 @@
         |*drag-moving-cache $ quote (defatom *drag-moving-cache nil)
         |*events-element $ quote (defatom *events-element nil)
         |*renderer $ quote (defatom *renderer nil)
-        |*tree-element $ quote (defatom *tree-element nil)
-        |*viewer-config $ quote
-          defatom *viewer-config $ {}
+        |*stage-config $ quote
+          defatom *stage-config $ {}
             :move $ [] 0 0
             :scale 1
+        |*tree-element $ quote (defatom *tree-element nil)
         |>> $ quote
           defn >> (states k)
             let
@@ -1495,8 +1502,6 @@
           defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
         |clear-phlox-caches! $ quote
           defn clear-phlox-caches! () $ reset-calling-caches!
-        |complex-conjugate $ quote
-          defn complex-conjugate (pair) (update pair 1 negate)
         |container $ quote
           defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
         |create-element $ quote
@@ -1545,12 +1550,30 @@
                     current $ [] (.-clientX event) (.-clientY event)
                     delta $ complex/minus current prev
                   reset! *drag-moving-cache current
-                  swap! *viewer-config update :move $ fn (prev)
-                    complex/minus prev $ complex/times (complex-conjugate delta)
-                      []
-                        / 1 $ :scale @*viewer-config
-                        , 0
+                  swap! *stage-config update :move $ fn (prev) (complex/add prev delta)
                   render-stage-for-viewer!
+            .!addEventListener el "\"wheel" $ fn (event)
+              if
+                or (.-metaKey event) (.-ctrlKey event)
+                let
+                    dy $ * 0.001 (.-deltaY event)
+                    scale $ :scale @*stage-config
+                    pointer $ complex/minus
+                      [] (.-clientX event) (.-clientY event)
+                      [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
+                  when
+                    not
+                      and (<= scale 0.1)
+                        < (.-deltaY event) 0
+                      and (>= scale 4)
+                        > (.-deltaY event) 0
+                    swap! *stage-config update :move $ fn (pos)
+                      let
+                          shift $ complex/minus pointer pos
+                        complex/minus pos $ complex/times shift
+                          [] (/ dy scale) 0
+                    swap! *stage-config update :scale $ fn (x) (+ x dy)
+                    render-stage-for-viewer!
         |hclx $ quote
           defn hclx (h c l)
             .!string2hex PIXI/utils $ hcl-to-hex h c l
@@ -1635,11 +1658,9 @@
             let
                 move $ :left-move states
                 scales $ :right-move delta
-              update-viewer!
+              update-stage-config!
                 map move $ fn (x)
-                  &/
-                    * x (js/Math.abs x) 0.02
-                    :scale @*viewer-config
+                  * x (js/Math.abs x) 0.02
                 nth scales 1
         |polyline $ quote
           defn polyline (props & children) (dev-check props lilac-polyline)
@@ -1674,14 +1695,12 @@
         |render-stage-for-viewer! $ quote
           defn render-stage-for-viewer! ()
             let
-                scale $ :scale @*viewer-config
-                move $ :move @*viewer-config
+                scale $ :scale @*stage-config
+                move $ :move @*stage-config
               -> @*app .-stage .-position .-x $ set!
-                - (* 0.5 js/window.innerWidth)
-                  * scale $ nth move 0
+                + (* 0.5 js/window.innerWidth) (nth move 0)
               -> @*app .-stage .-position .-y $ set!
-                + (* 0.5 js/window.innerHeight)
-                  * scale $ nth move 1
+                + (* 0.5 js/window.innerHeight) (nth move 1)
               -> @*app .-stage .-scale $ .!set scale scale
             -> @*app .-renderer $ .!render (.-stage @*app)
         |rerender-app! $ quote
@@ -1693,19 +1712,25 @@
               , dispatch! options
         |text $ quote
           defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
-        |update-viewer! $ quote
-          defn update-viewer! (move scale-change)
-            when
-              or
-                not= ([] 0 0) move
-                not= 0 scale-change
-              swap! *viewer-config update :move $ fn (prev)
-                complex/add prev $ complex/times move ([] 0.05 0)
-              swap! *viewer-config update :scale $ fn (prev)
-                let
-                    next $ &+ prev (* 0.01 scale-change)
-                  &max 0.2 $ &min next 8
-              render-stage-for-viewer!
+        |update-stage-config! $ quote
+          defn update-stage-config! (move scale-change)
+            let
+                scale0 $ :scale @*stage-config
+              when
+                and
+                  or
+                    not= ([] 0 0) move
+                    not= 0 scale-change
+                  not $ and (> scale-change 0) (>= scale0 8)
+                swap! *stage-config update :move $ fn (prev)
+                  complex/add
+                    complex/minus prev $ complex/scale (complex/conjugate move) 0.05
+                    complex/scale prev $ / (* 0.01 scale-change) scale0
+                swap! *stage-config update :scale $ fn (prev)
+                  let
+                      next $ &+ prev (* 0.01 scale-change)
+                    &max 0.2 $ &min next 8
+                render-stage-for-viewer!
       :ns $ quote
         ns phlox.core $ :require ("\"pixi.js" :as PIXI) (phlox.schema :as schema)
           phlox.render :refer $ render-element update-element update-children
