@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.35)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.36)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1501,7 +1501,7 @@
         |circle $ quote
           defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
         |clear-phlox-caches! $ quote
-          defn clear-phlox-caches! () $ reset-calling-caches!
+          defn clear-phlox-caches! () (reset-calling-caches!) (reset-memof1-caches!)
         |container $ quote
           defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
         |create-element $ quote
@@ -1740,6 +1740,7 @@
           lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
           phlox.keyboard :refer $ handle-keyboard-events
           memof.alias :refer $ reset-calling-caches! tick-calling-loop!
+          memof.once :refer $ reset-memof1-caches!
           phlox.complex :as complex
     |phlox.cursor $ {}
       :defs $ {}

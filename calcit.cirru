@@ -1,6 +1,6 @@
 
 {}
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.35)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.36)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :ir $ {} (:package |phlox)
@@ -11012,6 +11012,9 @@
               |v $ {} (:at 1593275674959) (:by |rJG4IHzWf) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1612613065546) (:by |rJG4IHzWf) (:text |reset-calling-caches!) (:type :leaf)
+              |w $ {} (:at 1650733495364) (:by |rJG4IHzWf) (:type :expr)
+                :data $ {}
+                  |T $ {} (:at 1650733495364) (:by |rJG4IHzWf) (:text |reset-memof1-caches!) (:type :leaf)
           |container $ {} (:at 1581848831755) (:by |rJG4IHzWf) (:type :expr)
             :data $ {}
               |T $ {} (:at 1581848831755) (:by |rJG4IHzWf) (:text |defn) (:type :leaf)
@@ -12776,6 +12779,13 @@
                       :data $ {}
                         |j $ {} (:at 1612613081102) (:by |rJG4IHzWf) (:text |reset-calling-caches!) (:type :leaf)
                         |r $ {} (:at 1612613102289) (:by |rJG4IHzWf) (:text |tick-calling-loop!) (:type :leaf)
+                |yx $ {} (:at 1650733481302) (:by |rJG4IHzWf) (:type :expr)
+                  :data $ {}
+                    |T $ {} (:at 1650733484578) (:by |rJG4IHzWf) (:text |memof.once) (:type :leaf)
+                    |b $ {} (:at 1650733485413) (:by |rJG4IHzWf) (:text |:refer) (:type :leaf)
+                    |h $ {} (:at 1650733487782) (:by |rJG4IHzWf) (:type :expr)
+                      :data $ {}
+                        |T $ {} (:at 1650733492518) (:by |rJG4IHzWf) (:text |reset-memof1-caches!) (:type :leaf)
                 |z $ {} (:at 1649050659574) (:by |rJG4IHzWf) (:type :expr)
                   :data $ {}
                     |T $ {} (:at 1649050665207) (:by |rJG4IHzWf) (:text |phlox.complex) (:type :leaf)
