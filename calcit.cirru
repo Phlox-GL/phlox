@@ -1,6 +1,6 @@
 
 {}
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.36)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.37)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :ir $ {} (:package |phlox)
@@ -11330,6 +11330,10 @@
                                     :data $ {}
                                       |T $ {} (:at 1650260524537) (:by |rJG4IHzWf) (:text |.-ctrlKey) (:type :leaf)
                                       |b $ {} (:at 1650260509917) (:by |rJG4IHzWf) (:text |event) (:type :leaf)
+                                  |h $ {} (:at 1650260501860) (:by |rJG4IHzWf) (:type :expr)
+                                    :data $ {}
+                                      |T $ {} (:at 1650819287881) (:by |rJG4IHzWf) (:text |.-shiftKey) (:type :leaf)
+                                      |b $ {} (:at 1650260509917) (:by |rJG4IHzWf) (:text |event) (:type :leaf)
                               |b $ {} (:at 1650261122825) (:by |rJG4IHzWf) (:type :expr)
                                 :data $ {}
                                   |T $ {} (:at 1650261124794) (:by |rJG4IHzWf) (:text |some?) (:type :leaf)
@@ -11415,6 +11419,10 @@
                                 :data $ {}
                                   |T $ {} (:at 1650338085031) (:by |rJG4IHzWf) (:text |.-ctrlKey) (:type :leaf)
                                   |b $ {} (:at 1650338080710) (:by |rJG4IHzWf) (:text |event) (:type :leaf)
+                              |h $ {} (:at 1650819324277) (:by |rJG4IHzWf) (:type :expr)
+                                :data $ {}
+                                  |T $ {} (:at 1650819324277) (:by |rJG4IHzWf) (:text |.-shiftKey) (:type :leaf)
+                                  |b $ {} (:at 1650819324277) (:by |rJG4IHzWf) (:text |event) (:type :leaf)
                           |T $ {} (:at 1650336967386) (:by |rJG4IHzWf) (:type :expr)
                             :data $ {}
                               |T $ {} (:at 1650337023557) (:by |rJG4IHzWf) (:text |let) (:type :leaf)

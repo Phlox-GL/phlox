@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.36)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.37)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1543,7 +1543,7 @@
             .!addEventListener el "\"mousemove" $ fn (event)
               if
                 and
-                  or (.-metaKey event) (.-ctrlKey event)
+                  or (.-metaKey event) (.-ctrlKey event) (.-shiftKey event)
                   some? @*drag-moving-cache
                 let
                     prev @*drag-moving-cache
@@ -1554,7 +1554,7 @@
                   render-stage-for-viewer!
             .!addEventListener el "\"wheel" $ fn (event)
               if
-                or (.-metaKey event) (.-ctrlKey event)
+                or (.-metaKey event) (.-ctrlKey event) (.-shiftKey event)
                 let
                     dy $ * 0.001 (.-deltaY event)
                     scale $ :scale @*stage-config
