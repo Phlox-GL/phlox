@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.37)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.38)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -649,14 +649,14 @@
               .!then $ fn (event) (render-app!)
             add-watch *store :change $ fn (store prev) (render-app!)
             render-app!
-            when mobile? (render-control!) (start-control-loop! 8 on-control-event)
+            when true (render-control!) (start-control-loop! 8 on-control-event)
             println "\"App Started"
         |reload! $ quote
           defn reload! () $ if (nil? build-errors)
             do (clear-phlox-caches!) (remove-watch *store :change)
               add-watch *store :change $ fn (store prev) (render-app!)
               render-app!
-              when mobile? $ replace-control-loop! 8 on-control-event
+              when true $ replace-control-loop! 8 on-control-event
               hud! "\"ok~" "\"OK"
             hud! "\"error" build-errors
         |render-app! $ quote
@@ -1655,13 +1655,16 @@
               .!addChild (.-stage @*app) element-tree
         |on-control-event $ quote
           defn on-control-event (elapsed states delta)
-            let
-                move $ :left-move states
-                scales $ :right-move delta
-              update-stage-config!
-                map move $ fn (x)
-                  * x (js/Math.abs x) 0.02
-                nth scales 1
+            if
+              and $ :left-b? states
+              reset-stage-config!
+              let
+                  move $ :left-move states
+                  scales $ :right-move delta
+                update-stage-config!
+                  map move $ fn (x)
+                    * x (js/Math.abs x) 0.02
+                  nth scales 1
         |polyline $ quote
           defn polyline (props & children) (dev-check props lilac-polyline)
             let
@@ -1710,6 +1713,33 @@
               [] $ [] 0 @*tree-element
               .-stage @*app
               , dispatch! options
+        |reset-stage-config! $ quote
+          defn reset-stage-config! () $ let
+              move0 $ :move @*stage-config
+              scale0 $ :scale @*stage-config
+            when
+              or
+                not= ([] 0 0) move0
+                not= 1 scale0
+              if
+                not= ([] 0 0) move0
+                swap! *stage-config update :move $ fn (prev)
+                  &let
+                    l $ vec-length prev
+                    if (< l 4) ([] 0 0)
+                      &let
+                        move-back $ complex/times prev
+                          [] (&/ -4 l) 0
+                        complex/add prev move-back
+              if (not= scale0 1)
+                swap! *stage-config update :scale $ fn (prev)
+                  let
+                      delta $ - scale0 1
+                    if
+                      > 0.01 $ js/Math.abs delta
+                      , 1 $ + prev
+                        if (> delta 0) -0.01 0.01
+              render-stage-for-viewer!
         |text $ quote
           defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
         |update-stage-config! $ quote
@@ -1742,6 +1772,7 @@
           memof.alias :refer $ reset-calling-caches! tick-calling-loop!
           memof.once :refer $ reset-memof1-caches!
           phlox.complex :as complex
+          phlox.math :refer $ vec-length
     |phlox.cursor $ {}
       :defs $ {}
         |update-states $ quote
