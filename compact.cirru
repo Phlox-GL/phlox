@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.38)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.39)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -325,6 +325,7 @@
                   :spin-slider $ comp-spin-slider-demo (>> states :spin-slider)
                   :arrows $ comp-arrows-demo (>> states :arrows)
                   :shadow $ comp-shadow-demo
+                  :mesh $ comp-mesh-demo (>> states :mesh)
                 circle $ {}
                   :position $ [] 0 0
                   :radius 10
@@ -435,6 +436,31 @@
                         :fill $ hslx 200 80 80
                         :on $ {}
                           :pointerover $ fn (e d!) (println "\"hover:" x y)
+        |comp-mesh-demo $ quote
+          defn comp-mesh-demo (states)
+            let
+                cursor $ :cursor states
+                state $ or (:data states)
+                  {} $ :x 0
+              container ({})
+                comp-button $ {} (:text "\"Tick")
+                  :position $ [] 200 0
+                  :on-pointertap $ fn (e d!)
+                    d! cursor $ update state :x inc
+                mesh $ {} (:scale 1)
+                  :position $ [] 300 200
+                  :geometry $ {}
+                    :attributes $ []
+                      {} (:id "\"aVertexPosition") (:size 2)
+                        :buffer $ [] -100 -100 100 -100 100 100 -100 100
+                      {} (:id "\"aUvs") (:size 2)
+                        :buffer $ [] 0 0 1 0 1 1 0 1
+                    :index $ [] 0 1 2 0 3 2
+                  :shader $ {}
+                    :vertex-source $ inline-file "\"demo.vert"
+                    :fragment-source $ inline-file "\"demo.frag"
+                  :uniforms $ js-object (:uSampler2 sample-texture)
+                    :time $ :x state
         |comp-messages-demo $ quote
           defn comp-messages-demo (states)
             let
@@ -610,11 +636,16 @@
                     :position $ [] 6 4
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
+        |inline-file $ quote
+          defmacro inline-file (name)
+            read-file $ str "\"assets/" name
+        |sample-texture $ quote
+          def sample-texture $ .!from PIXI/Texture "\"https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/1a2af589827261.5e022908ed0b1.jpg"
         |tabs $ quote
-          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows") ([] :shadow "\"Shadow")
+          def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows") ([] :shadow "\"Shadow") ([] :mesh "\"Mesh")
       :ns $ quote
         ns phlox.app.container $ :require
-          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >> line-segments
+          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >> line-segments mesh
           phlox.app.comp.drafts :refer $ comp-drafts
           phlox.app.comp.keyboard :refer $ comp-keyboard
           phlox.comp.button :refer $ comp-button
@@ -630,6 +661,7 @@
           phlox.complex :refer $ polar-point
           phlox.util :refer $ canvas-center!
           "\"@pixi/filter-drop-shadow" :refer $ DropShadowFilter
+          "\"pixi.js" :as PIXI
     |phlox.app.main $ {}
       :defs $ {}
         |*store $ quote (defatom *store schema/store)
@@ -677,7 +709,7 @@
     |phlox.app.schema $ {}
       :defs $ {}
         |store $ quote
-          def store $ {} (:tab :drafts) (:x 0) (:keyboard-on? false) (:counted 0)
+          def store $ {} (:tab :mesh) (:x 0) (:keyboard-on? false) (:counted 0)
             :states $ {}
             :cursor $ []
       :ns $ quote (ns phlox.app.schema)
@@ -1630,6 +1662,36 @@
           def lilac-bezier-to $ record+
             {} (:p1 lilac-point) (:p2 lilac-point) (:to-p lilac-point)
             {} $ :exact-keys? true
+        |lilac-mesh $ quote
+          def lilac-mesh $ record+
+            {}
+              :on $ optional+ lilac-event-map
+              :position lilac-point
+              :radius $ number+
+              :fill $ optional+ (number+)
+              :alpha $ optional+ (number+)
+              :rotation $ optional+ (number+)
+              :angle $ optional+ (number+)
+              :pivot $ optional+ lilac-point
+              :fill $ optional+ (number+)
+              :on-keyboard $ optional+ lilac-event-map
+              :filters $ optional+
+                list+ $ list+ (any+)
+              :geometry $ record+
+                {}
+                  :attributes $ list+
+                    record+ $ {}
+                      :id $ string+
+                      :buffer $ list+ (number+)
+                      :size $ number+
+                  :index $ list+ (number+)
+              :shader $ record+
+                {}
+                  :vertex-source $ string+
+                  :fragment-source $ string+
+              :uniforms $ any+
+              :draw-mode $ optional+ (number+)
+            {} $ :check-keys? true
         |lilac-quodratic-to $ quote
           def lilac-quodratic-to $ record+
             {} (:p1 lilac-point) (:to-p lilac-point)
@@ -1648,6 +1710,8 @@
                         g :move-to $ nth pair 0
                         g :line-to $ nth pair 1
                 , children
+        |mesh $ quote
+          defn mesh (props & children) (dev-check props lilac-mesh) (create-element :mesh props children)
         |mount-app! $ quote
           defn mount-app! (app dispatch!)
             let
@@ -1873,6 +1937,20 @@
                       new ctor $ to-js-data (nth ft 1)
                     js/console.warn "\"Unknown filter:" ft
                 set! (.-filters target) filters-arr
+        |init-geometry $ quote
+          defn init-geometry (data)
+            let
+                geo $ new PIXI/Geometry
+                attrs $ :attributes data
+              &doseq (attr attrs)
+                .!addAttribute geo (:id attr)
+                  to-js-data $ :buffer attr
+                  :size attr
+              .!addIndex geo $ to-js-data (:index data)
+              , geo
+        |init-shader $ quote
+          defn init-shader (data uniforms)
+            .!from PIXI/Shader (:vertex-source data) (:fragment-source data) uniforms
         |render-children $ quote
           defn render-children (target children dispatch!)
             &doseq (child-pair children)
@@ -1925,6 +2003,7 @@
                 :circle $ render-circle element dispatch!
                 :rect $ render-rect element dispatch!
                 :text $ render-text element dispatch!
+                :mesh $ render-mesh element dispatch!
               do $ js/console.error "\"Unknown element:" element
         |render-graphics $ quote
           defn render-graphics (element dispatch!)
@@ -1943,6 +2022,26 @@
               init-events target events dispatch!
               init-filters target $ :filters props
               render-children target (:children element) dispatch!
+              , target
+        |render-mesh $ quote
+          defn render-mesh (element dispatch!)
+            let
+                props $ :props element
+                geo $ init-geometry (:geometry props)
+                shader $ init-shader (:shader props) (:uniforms props)
+                draw-mode $ or (:draw-mode props) js/undefined
+                target $ new PIXI/Mesh geo shader nil draw-mode
+              init-position target $ :position props
+              init-pivot target $ :pivot props
+              init-angle target $ :angle props
+              init-rotation target $ :rotation props
+              init-alpha target $ :alpha props
+              if
+                = :center $ :align props
+                .!set (.-anchor target) 0.5
+              init-filters target $ :filters props
+              render-children target (:children element) dispatch!
+              js/console.log target
               , target
         |render-rect $ quote
           defn render-rect (element dispatch!)
@@ -1965,12 +2064,10 @@
         |render-text $ quote
           defn render-text (element dispatch!)
             let
-                style $ :style (:props element)
-                text-style $ new PIXI/TextStyle (convert-line-style style)
-                target $ new PIXI/Text
-                  :text $ :props element
-                  , text-style
                 props $ :props element
+                style $ :style props
+                text-style $ new PIXI/TextStyle (convert-line-style style)
+                target $ new PIXI/Text (:text props) text-style
               init-position target $ :position props
               init-pivot target $ :pivot props
               init-angle target $ :angle props
@@ -2084,6 +2181,7 @@
                       :rect $ update-rect element old-element target dispatch!
                       :text $ update-text element old-element target
                       :graphics $ update-graphics element old-element target dispatch!
+                      :mesh $ update-mesh element old-element target dispatch!
                   update-children (:children element) (:children old-element) (.!getChildAt parent-element idx) dispatch! options
               (not= (:name element) (:name old-element))
                 do (.!removeChildAt parent-element idx)
@@ -2096,6 +2194,10 @@
                 map (.to-list filters) last
                 map (.to-list filters0) last
               init-filters target filters
+        |update-geometry $ quote
+          defn update-geometry (target geo geo')
+            when (not= geo geo')
+              -> target .-geometry $ set! (init-geometry geo)
         |update-graphics $ quote
           defn update-graphics (element old-element target dispatch!)
             let
@@ -2104,6 +2206,30 @@
                 ops $ :ops props
                 ops' $ :ops props'
               when (not= ops ops') (.!clear target) (call-graphics-ops target ops)
+              update-position target (:position props) (:position props')
+              update-rotation target (:rotation props) (:rotation props')
+              update-angle target (:angle props) (:angle props')
+              update-pivot target (:pivot props) (:pivot props')
+              update-alpha target (:alpha props) (:alpha props')
+              update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
+              update-filters target (:filters props) (:filters props')
+        |update-mesh $ quote
+          defn update-mesh (element old-element target dispatch!)
+            let
+                props $ :props element
+                props' $ :props old-element
+                ops $ :ops props
+                ops' $ :ops props'
+              update-geometry target (:geometry props) (:geometry props')
+              update-shader target (:shader props) (:shader props') (:uniforms props)
+              let
+                  pointer $ -> target .-shader .-uniforms
+                -> (:uniforms props) js/Object.entries $ .!forEach
+                  fn (arr ? a b)
+                    if
+                      not $ identical? (.-1 arr)
+                        aget pointer $ .-0 arr
+                      aset pointer (.-0 arr) (.-1 arr)
               update-position target (:position props) (:position props')
               update-rotation target (:rotation props) (:rotation props')
               update-angle target (:angle props) (:angle props')
@@ -2138,6 +2264,10 @@
               update-alpha target (:alpha props) (:alpha props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
               update-filters target (:filters props) (:filters props')
+        |update-shader $ quote
+          defn update-shader (target shader shader' uniforms)
+            when (not= shader shader')
+              -> target .-shader $ set! (init-shader shader uniforms)
         |update-text $ quote
           defn update-text (element old-element target)
             let
