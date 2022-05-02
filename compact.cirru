@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.39)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.40)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -441,26 +441,60 @@
             let
                 cursor $ :cursor states
                 state $ or (:data states)
-                  {} $ :x 0
+                  {} (:x 0)
+                    :base $ [] 109 129
+                    :offset $ [] -123 -3
+                    :zoom 0.26
               container ({})
                 comp-button $ {} (:text "\"Tick")
-                  :position $ [] 200 0
+                  :position $ [] 200 -40
                   :on-pointertap $ fn (e d!)
                     d! cursor $ update state :x inc
-                mesh $ {} (:scale 1)
-                  :position $ [] 300 200
-                  :geometry $ {}
-                    :attributes $ []
-                      {} (:id "\"aVertexPosition") (:size 2)
-                        :buffer $ [] -100 -100 100 -100 100 100 -100 100
-                      {} (:id "\"aUvs") (:size 2)
-                        :buffer $ [] 0 0 1 0 1 1 0 1
-                    :index $ [] 0 1 2 0 3 2
-                  :shader $ {}
-                    :vertex-source $ inline-file "\"demo.vert"
-                    :fragment-source $ inline-file "\"demo.frag"
-                  :uniforms $ js-object (:uSampler2 sample-texture)
-                    :time $ :x state
+                container
+                  {} $ :position ([] 600 400)
+                  mesh $ {} (:scale 1)
+                    :position $ [] 0 0
+                    :geometry $ {}
+                      :attributes $ []
+                        {} (:id "\"aVertexPosition") (:size 2)
+                          :buffer $ [] -400 -400 400 -400 400 400 -400 400
+                        {} (:id "\"aUvs") (:size 2)
+                          :buffer $ [] 0 0 1 0 1 1 0 1
+                      :index $ [] 0 1 2 0 3 2
+                    :shader $ {}
+                      :vertex-source $ inline-file "\"demo.vert"
+                      :fragment-source $ inline-file "\"demo.frag"
+                    :draw-mode :triangles
+                    :uniforms $ js-object (:uSampler2 sample-texture)
+                      :time $ :x state
+                      ; :base $ :base state
+                      :baseX $ first (:base state)
+                      :baseY $ last (:base state)
+                      :zoom $ :zoom state
+                      :offsetX $ * 1
+                        first $ :offset state
+                      :offsetY $ * 1
+                        last $ :offset state
+                  comp-drag-point (>> states :base)
+                    {} (:radius 6) (:hide-text? true)
+                      :position $ wo-log (:base state)
+                      :fill $ hslx 200 100 50
+                      :on-change $ fn (position d!)
+                        d! cursor $ assoc state :base position
+                  comp-drag-point (>> states :offset)
+                    {} (:radius 6)
+                      :fill $ hslx 0 100 50
+                      :hide-text? true
+                      :position $ wo-log (:offset state)
+                      :on-change $ fn (position d!)
+                        d! cursor $ assoc state :offset position
+                comp-slider-point (>> states :zoom)
+                  {}
+                    :value $ :zoom state
+                    :min 0.01
+                    :position $ [] 300 -40
+                    :on-change $ fn (value d!)
+                      d! cursor $ assoc state :zoom value
         |comp-messages-demo $ quote
           defn comp-messages-demo (states)
             let
@@ -651,6 +685,7 @@
           phlox.comp.button :refer $ comp-button
           phlox.comp.drag-point :refer $ comp-drag-point
           phlox.comp.switch :refer $ comp-switch
+          phlox.comp.slider :refer $ comp-slider-point
           phlox.app.comp.slider-demo :refer $ comp-slider-demo comp-slider-point-demo comp-spin-slider-demo
           phlox.input :refer $ request-text!
           phlox.comp.messages :refer $ comp-messages
@@ -1684,13 +1719,16 @@
                       :id $ string+
                       :buffer $ list+ (number+)
                       :size $ number+
-                  :index $ list+ (number+)
+                  :index $ list+
+                    number+ $ {} (:min 0)
               :shader $ record+
                 {}
                   :vertex-source $ string+
                   :fragment-source $ string+
               :uniforms $ any+
-              :draw-mode $ optional+ (number+)
+              :draw-mode $ optional+
+                or (keyword+)
+                  number+ $ {} (:min 0) (:max 6)
             {} $ :check-keys? true
         |lilac-quodratic-to $ quote
           def lilac-quodratic-to $ record+
@@ -1948,9 +1986,33 @@
                   :size attr
               .!addIndex geo $ to-js-data (:index data)
               , geo
+        |init-scale $ quote
+          defn init-scale (target scale)
+            when (some? scale)
+              cond
+                  list? scale
+                  do
+                    -> target .-scale .-x $ set!
+                      if (list? scale) (first scale)
+                    -> target .-scale .-y $ set!
+                      if (list? scale) (last scale) 1
+                (number? scale)
+                  do
+                    -> target .-scale .-x $ set! scale
+                    -> target .-scale .-y $ set! scale
+                (nil? scale)
+                  do
+                    -> target .-scale .-x $ set! 1
+                    -> target .-scale .-y $ set! 1
+                true $ js/console.error "\"unknown scale" scale
         |init-shader $ quote
           defn init-shader (data uniforms)
             .!from PIXI/Shader (:vertex-source data) (:fragment-source data) uniforms
+        |read-draw-mode-alias $ quote
+          defn read-draw-mode-alias (draw-mode)
+            if (keyword? draw-mode)
+              case-default draw-mode (js/console.warn "\"Unknown draw mode:" draw-mode) (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
+              , draw-mode
         |render-children $ quote
           defn render-children (target children dispatch!)
             &doseq (child-pair children)
@@ -1970,6 +2032,7 @@
               draw-circle target $ :radius props
               init-events target events dispatch!
               init-position target $ :position props
+              init-scale target $ :scale props
               init-rotation target $ :rotation props
               init-pivot target $ :pivot props
               init-angle target $ :angle props
@@ -1984,6 +2047,7 @@
                 props $ :props element
               render-children target (:children element) dispatch!
               init-position target $ :position props
+              init-scale target $ :scale props
               init-rotation target $ :rotation props
               init-angle target $ :angle props
               init-pivot target $ :pivot props
@@ -2018,6 +2082,7 @@
               init-angle target $ :angle props
               init-pivot target $ :pivot props
               init-position target $ :position props
+              init-scale target $ :scale props
               init-alpha target $ :alpha props
               init-events target events dispatch!
               init-filters target $ :filters props
@@ -2029,9 +2094,12 @@
                 props $ :props element
                 geo $ init-geometry (:geometry props)
                 shader $ init-shader (:shader props) (:uniforms props)
-                draw-mode $ or (:draw-mode props) js/undefined
+                draw-mode $ or
+                  read-draw-mode-alias $ :draw-mode props
+                  , js/undefined
                 target $ new PIXI/Mesh geo shader nil draw-mode
               init-position target $ :position props
+              init-scale target $ :scale props
               init-pivot target $ :pivot props
               init-angle target $ :angle props
               init-rotation target $ :rotation props
@@ -2041,7 +2109,7 @@
                 .!set (.-anchor target) 0.5
               init-filters target $ :filters props
               render-children target (:children element) dispatch!
-              js/console.log target
+              ; js/console.log target
               , target
         |render-rect $ quote
           defn render-rect (element dispatch!)
@@ -2053,6 +2121,7 @@
               init-line-style target $ :line-style props
               draw-rect target (:size props) (:radius props)
               init-position target $ :position props
+              init-scale target $ :scale props
               init-pivot target $ :pivot props
               init-rotation target $ :rotation props
               init-angle target $ :angle props
@@ -2069,6 +2138,7 @@
                 text-style $ new PIXI/TextStyle (convert-line-style style)
                 target $ new PIXI/Text (:text props) text-style
               init-position target $ :position props
+              init-scale target $ :scale props
               init-pivot target $ :pivot props
               init-angle target $ :angle props
               init-rotation target $ :rotation props
@@ -2148,6 +2218,7 @@
                 init-line-style target line-style
                 draw-circle target $ :radius props
               update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
               update-alpha target (:alpha props) (:alpha props')
               update-angle target (:angle props) (:angle props')
               update-rotation target (:rotation props) (:rotation props')
@@ -2160,11 +2231,16 @@
                 props $ :props element
                 props' $ :props old-element
               update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
               update-pivot target (:pivot props) (:pivot props')
               update-angle target (:angle props) (:angle props')
               update-rotation target (:rotation props) (:rotation props')
               update-alpha target (:alpha props) (:alpha props')
               update-filters target (:filters props) (:filters props')
+        |update-draw-mode $ quote
+          defn update-draw-mode (target draw-mode draw-mode')
+            when (not= draw-mode draw-mode')
+              set! (.-drawMode target) (read-draw-mode-alias draw-mode)
         |update-element $ quote
           defn update-element (element old-element parent-element idx dispatch! options)
             cond
@@ -2207,6 +2283,7 @@
                 ops' $ :ops props'
               when (not= ops ops') (.!clear target) (call-graphics-ops target ops)
               update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
               update-rotation target (:rotation props) (:rotation props')
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
@@ -2222,6 +2299,7 @@
                 ops' $ :ops props'
               update-geometry target (:geometry props) (:geometry props')
               update-shader target (:shader props) (:shader props') (:uniforms props)
+              update-draw-mode target (:draw-mode props) (:draw-mode props')
               let
                   pointer $ -> target .-shader .-uniforms
                 -> (:uniforms props) js/Object.entries $ .!forEach
@@ -2231,6 +2309,7 @@
                         aget pointer $ .-0 arr
                       aset pointer (.-0 arr) (.-1 arr)
               update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
               update-rotation target (:rotation props) (:rotation props')
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
@@ -2258,12 +2337,30 @@
                 init-line-style target line-style
                 draw-rect target size $ :radius props
               update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
               update-rotation target (:rotation props) (:rotation props')
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
               update-alpha target (:alpha props) (:alpha props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
               update-filters target (:filters props) (:filters props')
+        |update-scale $ quote
+          defn update-scale (target scale scale')
+            when (not= scale scale')
+              cond
+                  list? scale
+                  do
+                    set! (-> target .-scale .-x) (first scale)
+                    set! (-> target .-scale .-y) (last scale)
+                (number? scale)
+                  do
+                    set! (-> target .-scale .-x) scale
+                    set! (-> target .-scale .-y) scale
+                (nil? scale)
+                  do
+                    set! (-> target .-scale .-x) 1
+                    set! (-> target .-scale .-y) 1
+                true $ js/console.error "\"unknown scale:" scale
         |update-shader $ quote
           defn update-shader (target shader shader' uniforms)
             when (not= shader shader')
@@ -2283,6 +2380,7 @@
                     new-style $ new PIXI/TextStyle (convert-line-style text-style)
                   set! (.-style target) new-style
               update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
               update-rotation target (:rotation props) (:rotation props')
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
