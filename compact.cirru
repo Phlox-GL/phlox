@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.40)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.41)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1656,11 +1656,13 @@
           defn init-pixi-app! (options)
             let
                 pixi-app $ new PIXI/Application
-                  js-object (:antialias true) (:autoDensity true) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
+                  js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
                     :backgroundColor $ either (:background-color options) (hslx 0 0 0)
                     :interactive $ either (:interactive options) true
                     :backgroundAlpha $ either (:background-alpha options) 1
               .!stop $ .-ticker pixi-app
+              -> PIXI/Ticker .-shared $ .!stop
+              -> PIXI/Ticker .-system $ .!stop
               reset! *app pixi-app
               let
                   el $ .-view pixi-app

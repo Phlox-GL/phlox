@@ -1,6 +1,6 @@
 
 {}
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.40)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.41)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :ir $ {} (:package |phlox)
@@ -12221,6 +12221,10 @@
                                     :data $ {}
                                       |T $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:text |:autoDensity) (:type :leaf)
                                       |b $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:text |true) (:type :leaf)
+                                  |m $ {} (:at 1651572343530) (:by |rJG4IHzWf) (:type :expr)
+                                    :data $ {}
+                                      |T $ {} (:at 1651572345886) (:by |rJG4IHzWf) (:text |:autoStart) (:type :leaf)
+                                      |b $ {} (:at 1651572347527) (:by |rJG4IHzWf) (:text |false) (:type :leaf)
                                   |o $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:type :expr)
                                     :data $ {}
                                       |T $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:text |:resolution) (:type :leaf)
@@ -12278,6 +12282,22 @@
                         :data $ {}
                           |T $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:text |.-ticker) (:type :leaf)
                           |b $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:text |pixi-app) (:type :leaf)
+                  |j $ {} (:at 1651572167941) (:by |rJG4IHzWf) (:type :expr)
+                    :data $ {}
+                      |T $ {} (:at 1651572168948) (:by |rJG4IHzWf) (:text |->) (:type :leaf)
+                      |b $ {} (:at 1651572213876) (:by |rJG4IHzWf) (:text |PIXI/Ticker) (:type :leaf)
+                      |l $ {} (:at 1651572180993) (:by |rJG4IHzWf) (:text |.-shared) (:type :leaf)
+                      |o $ {} (:at 1651572181886) (:by |rJG4IHzWf) (:type :expr)
+                        :data $ {}
+                          |T $ {} (:at 1651572183369) (:by |rJG4IHzWf) (:text |.!stop) (:type :leaf)
+                  |k $ {} (:at 1651572167941) (:by |rJG4IHzWf) (:type :expr)
+                    :data $ {}
+                      |T $ {} (:at 1651572168948) (:by |rJG4IHzWf) (:text |->) (:type :leaf)
+                      |b $ {} (:at 1651572217802) (:by |rJG4IHzWf) (:text |PIXI/Ticker) (:type :leaf)
+                      |l $ {} (:at 1651572187718) (:by |rJG4IHzWf) (:text |.-system) (:type :leaf)
+                      |o $ {} (:at 1651572181886) (:by |rJG4IHzWf) (:type :expr)
+                        :data $ {}
+                          |T $ {} (:at 1651572183369) (:by |rJG4IHzWf) (:text |.!stop) (:type :leaf)
                   |l $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:type :expr)
                     :data $ {}
                       |T $ {} (:at 1649049662473) (:by |rJG4IHzWf) (:text |reset!) (:type :leaf)
