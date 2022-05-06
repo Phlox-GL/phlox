@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.41)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.42)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -294,16 +294,11 @@
             let
                 cursor $ []
                 states $ :states store
-              container
+              group
                 {} $ :position ([] 0 0)
-                create-list :container ({})
-                  -> tabs $ map-indexed
-                    fn (idx info)
-                      let-sugar
-                            [] tab title
-                            , info
-                        [] idx $ comp-tab-entry tab title idx
-                          = tab $ :tab store
+                comp-tabs tabs (:tab store)
+                  {} $ :position ([] 10 10)
+                  fn (t d!) (d! :tab t)
                 case-default (:tab store)
                   text $ {} (:text "\"Unknown")
                     :style $ {}
@@ -609,23 +604,6 @@
                   :title "\"Custom title"
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
-        |comp-tab-entry $ quote
-          defn comp-tab-entry (tab-value tab-title idx selected?)
-            container
-              {} $ :position
-                [] 10 $ + 10 (* idx 36)
-              rect $ {}
-                :position $ [] 0 0
-                :size $ [] 100 30
-                :fill $ if selected? (hslx 180 50 50) (hslx 180 50 30)
-                :on $ {}
-                  :pointertap $ fn (event dispatch!) (dispatch! :tab tab-value)
-              text $ {} (:text tab-title)
-                :style $ {}
-                  :fill $ hslx 200 90 100
-                  :font-size 20
-                  :font-family "\"Josefin Sans"
-                :position $ [] 10 2
         |comp-text-input $ quote
           defn comp-text-input (states)
             let
@@ -679,7 +657,7 @@
           def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows") ([] :shadow "\"Shadow") ([] :mesh "\"Mesh")
       :ns $ quote
         ns phlox.app.container $ :require
-          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >> line-segments mesh
+          phlox.core :refer $ g hslx rect circle text container graphics create-list polyline >> line-segments mesh group
           phlox.app.comp.drafts :refer $ comp-drafts
           phlox.app.comp.keyboard :refer $ comp-keyboard
           phlox.comp.button :refer $ comp-button
@@ -697,6 +675,7 @@
           phlox.util :refer $ canvas-center!
           "\"@pixi/filter-drop-shadow" :refer $ DropShadowFilter
           "\"pixi.js" :as PIXI
+          phlox.comp.tabs :refer $ comp-tabs
     |phlox.app.main $ {}
       :defs $ {}
         |*store $ quote (defatom *store schema/store)
@@ -1480,6 +1459,41 @@
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
           [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
           [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
+    |phlox.comp.tabs $ {}
+      :defs $ {}
+        |comp-tabs $ quote
+          defn comp-tabs (tabs selected options on-select)
+            let
+                step $ or (:step options) 36
+                position $ or (:position options) ([] 0 0)
+                font-family $ or (:font-family options) "\"Josefin Sans, sans-serif"
+              create-list :container ({})
+                -> tabs $ map-indexed
+                  fn (idx info)
+                    let-sugar
+                          [] tab title
+                          , info
+                      [] idx $ container
+                        {} $ :position
+                          complex/add position $ [] 0 (* idx step)
+                        rect $ {}
+                          :position $ [] 0 0
+                          :size $ [] 100 30
+                          :fill $ if (= selected tab) (hslx 180 50 50) (hslx 180 50 30)
+                          :on $ {}
+                            :pointertap $ fn (event d!) (on-select tab d!)
+                        text $ {} (:text title)
+                          :style $ {}
+                            :fill $ hslx 200 90 100
+                            :font-size 20
+                            :font-family font-family
+                          :position $ [] 10 2
+      :ns $ quote
+        ns phlox.comp.tabs $ :require
+          phlox.core :refer $ [] g hslx rect circle text container graphics create-list
+          phlox.check :refer $ [] lilac-event-map dev-check lilac-point
+          lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
+          phlox.complex :as complex
     |phlox.complex $ {}
       :defs $ {}
         |add $ quote
@@ -1602,6 +1616,9 @@
               [] op data
         |graphics $ quote
           defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
+        |group $ quote
+          defn group (props & children) (dev-check props lilac-container)
+            noted "\"which is an alias of container" $ create-element :container props children
         |handle-drag-moving $ quote
           defn handle-drag-moving (el)
             .!addEventListener el "\"mousedown" $ fn (event)
