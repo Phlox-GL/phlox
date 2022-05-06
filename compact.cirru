@@ -2259,7 +2259,10 @@
         |update-draw-mode $ quote
           defn update-draw-mode (target draw-mode draw-mode')
             when (not= draw-mode draw-mode')
-              set! (.-drawMode target) (read-draw-mode-alias draw-mode)
+              let
+                  m $ read-draw-mode-alias draw-mode
+                if (nil? m) (eprintln "\"updating draw-mode to nil")
+                set! (.-drawMode target) m
         |update-element $ quote
           defn update-element (element old-element parent-element idx dispatch! options)
             cond
@@ -2270,7 +2273,7 @@
                   let
                       target $ .!getChildAt parent-element idx
                     case-default (:name element)
-                      do $ println "\"not implement yet for updating:" (:name element)
+                      do $ eprintln "\"not implement yet for updating:" (:name element)
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
                       :rect $ update-rect element old-element target dispatch!
