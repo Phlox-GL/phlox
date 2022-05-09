@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.43)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.44)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -87,9 +87,14 @@
                 :position $ [] 400 40
                 :size $ [] 20 20
                 :fill $ hclx 240 100 60
+              image $ {} (:url "\"https://cdn.tiye.me/logo/quamolit.png")
+                :size $ [] 100 100
+                :position $ [] 400 -100
+                :on $ {}
+                  :pointertap $ fn (e d!) (println "\"click on image")
       :ns $ quote
         ns phlox.app.comp.drafts $ :require
-          [] phlox.core :refer $ [] g hslx hclx rect circle text container graphics create-list
+          [] phlox.core :refer $ [] g hslx hclx rect circle text container graphics create-list image
     |phlox.app.comp.keyboard $ {}
       :defs $ {}
         |comp-keyboard $ quote
@@ -1671,6 +1676,8 @@
                 g $ .-1 rgb
                 b $ .-2 rgb
               .!rgb2hex PIXI/utils $ js-array r g b
+        |image $ quote
+          defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
         |init-pixi-app! $ quote
           defn init-pixi-app! (options)
             let
@@ -1718,6 +1725,21 @@
           def lilac-bezier-to $ record+
             {} (:p1 lilac-point) (:p2 lilac-point) (:to-p lilac-point)
             {} $ :exact-keys? true
+        |lilac-image $ quote
+          def lilac-image $ record+
+            {}
+              :url $ string+
+              :size $ options+ lilac-point
+              :on $ optional+ lilac-event-map
+              :position $ optional+ lilac-point
+              :pivot $ optional+ lilac-point
+              :alpha $ optional+ (number+)
+              :rotation $ optional+ (number+)
+              :angle $ optional+ (number+)
+              :on-keyboard $ optional+ lilac-event-map
+              :filters $ optional+
+                list+ $ list+ (any+)
+            {} $ :check-keys? true
         |lilac-mesh $ quote
           def lilac-mesh $ record+
             {}
@@ -1979,6 +2001,12 @@
       :ns $ quote (ns phlox.math)
     |phlox.render $ {}
       :defs $ {}
+        |init-box-size $ quote
+          defn init-box-size (target size)
+            if (some? size)
+              do
+                set! (.-width target) (nth size 0)
+                set! (.-height target) (nth size 1)
         |init-fill $ quote
           defn init-fill (target color) (.!endFill target)
             if (some? color) (.!beginFill target color)
@@ -2089,6 +2117,7 @@
                 :rect $ render-rect element dispatch!
                 :text $ render-text element dispatch!
                 :mesh $ render-mesh element dispatch!
+                :image $ render-image element dispatch!
               do $ js/console.error "\"Unknown element:" element
         |render-graphics $ quote
           defn render-graphics (element dispatch!)
@@ -2105,6 +2134,23 @@
               init-position target $ :position props
               init-scale target $ :scale props
               init-alpha target $ :alpha props
+              init-events target events dispatch!
+              init-filters target $ :filters props
+              render-children target (:children element) dispatch!
+              , target
+        |render-image $ quote
+          defn render-image (element dispatch!)
+            let
+                props $ :props element
+                target $ .!from PIXI/Sprite (:url props)
+                events $ :on props
+              init-position target $ :position props
+              init-scale target $ :scale props
+              init-pivot target $ :pivot props
+              init-rotation target $ :rotation props
+              init-angle target $ :angle props
+              init-alpha target $ :alpha props
+              init-box-size target $ :size props
               init-events target events dispatch!
               init-filters target $ :filters props
               render-children target (:children element) dispatch!
@@ -2176,6 +2222,16 @@
           defn update-angle (target v v0)
             when (not= v v0)
               set! (.-angle target) v
+        |update-box-size $ quote
+          defn update-box-size (target size size')
+            if (not= size size')
+              if (some? size)
+                do
+                  set! (.-width target) (nth size 0)
+                  set! (.-height target) (nth size 1)
+                do
+                  set! (.-width target) js/undefined
+                  set! (.-height target) js/undefined
         |update-children $ quote
           defn update-children (children-dict old-children-dict parent-container dispatch! options)
             when dev? $ assert "\"children should not contain nil element"
@@ -2284,6 +2340,7 @@
                       :text $ update-text element old-element target
                       :graphics $ update-graphics element old-element target dispatch!
                       :mesh $ update-mesh element old-element target dispatch!
+                      :image $ update-image element old-element target dispatch!
                   update-children (:children element) (:children old-element) (.!getChildAt parent-element idx) dispatch! options
               (not= (:name element) (:name old-element))
                 do (.!removeChildAt parent-element idx)
@@ -2314,6 +2371,27 @@
               update-angle target (:angle props) (:angle props')
               update-pivot target (:pivot props) (:pivot props')
               update-alpha target (:alpha props) (:alpha props')
+              update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
+              update-filters target (:filters props) (:filters props')
+        |update-image $ quote
+          defn update-image (element old-element target dispatch!)
+            let
+                props $ :props element
+                props' $ :props old-element
+                position $ :position props
+                position' $ :position props'
+                size $ :size props
+                size' $ :size props'
+              when
+                not= (:url props) (:url props')
+                js/console.warn "\"image url changes are not handling in updates"
+              update-position target (:position props) (:position props')
+              update-scale target (:scale props) (:scale props')
+              update-rotation target (:rotation props) (:rotation props')
+              update-angle target (:angle props) (:angle props')
+              update-pivot target (:pivot props) (:pivot props')
+              update-alpha target (:alpha props) (:alpha props')
+              update-box-size target (:size props) (:size props')
               update-events target (-> element :props :on) (-> old-element :props :on) dispatch!
               update-filters target (:filters props) (:filters props')
         |update-mesh $ quote
