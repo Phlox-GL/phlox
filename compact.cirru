@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.42)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.43)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -470,6 +470,8 @@
                         first $ :offset state
                       :offsetY $ * 1
                         last $ :offset state
+                    ; :on $ {}
+                      :pointertap $ fn (e d!) (println "\"clicked")
                   comp-drag-point (>> states :base)
                     {} (:radius 6) (:hide-text? true)
                       :position $ wo-log (:base state)
@@ -2117,12 +2119,14 @@
                   read-draw-mode-alias $ :draw-mode props
                   , js/undefined
                 target $ new PIXI/Mesh geo shader nil draw-mode
+                events $ :on props
               init-position target $ :position props
               init-scale target $ :scale props
               init-pivot target $ :pivot props
               init-angle target $ :angle props
               init-rotation target $ :rotation props
               init-alpha target $ :alpha props
+              init-events target events dispatch!
               if
                 = :center $ :align props
                 .!set (.-anchor target) 0.5
@@ -2486,7 +2490,9 @@
               set! (.-angle target) v
         |init-events $ quote
           defn init-events (target events dispatch!)
-            when (some? events) (aset target "\"interactive" true) (aset target "\"buttonMode" true)
+            when (some? events)
+              set! (.-interactive target) true
+              set! (.-buttonMode target) true
               &doseq
                 pair $ to-pairs events
                 let[] (k listener) pair $ .!on target (turn-string k)
@@ -2503,8 +2509,8 @@
         |init-pivot $ quote
           defn init-pivot (target pivot)
             when (some? pivot)
-              aset (-> target .-pivot) "\"x" $ first pivot
-              aset (-> target .-pivot) "\"y" $ last pivot
+              -> target .-pivot .-x $ set! (first pivot)
+              -> target .-pivot .-y $ set! (last pivot)
         |init-position $ quote
           defn init-position (target point)
             when (some? point)
@@ -2514,7 +2520,8 @@
                 if (list? point) (last point) 0
         |init-rotation $ quote
           defn init-rotation (target v)
-            when (some? v) (aset target "\"rotation" v)
+            when (some? v)
+              set! (.-rotation target) v
         |read-line-cap $ quote
           defn read-line-cap (x)
             case-default x (println "\"unknown line-cap:" x) (nil nil)
