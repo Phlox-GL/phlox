@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.44)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.45)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1486,7 +1486,7 @@
                         rect $ {}
                           :position $ [] 0 0
                           :size $ [] 100 30
-                          :fill $ if (= selected tab) (hslx 180 50 50) (hslx 180 50 30)
+                          :fill $ if (= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
                           :on $ {}
                             :pointertap $ fn (event d!) (on-select tab d!)
                         text $ {} (:text title)
@@ -1497,8 +1497,8 @@
                           :position $ [] 10 2
       :ns $ quote
         ns phlox.comp.tabs $ :require
-          phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-          phlox.check :refer $ [] lilac-event-map dev-check lilac-point
+          phlox.core :refer $ g hslx hsluvx rect circle text container graphics create-list
+          phlox.check :refer $ lilac-event-map dev-check lilac-point
           lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
           phlox.complex :as complex
     |phlox.complex $ {}
@@ -1668,6 +1668,11 @@
         |hclx $ quote
           defn hclx (h c l)
             .!string2hex PIXI/utils $ hcl-to-hex h c l
+        |hsluvx $ quote
+          defn hsluvx (h c l)
+            let
+                rgb-arr $ hsluvToRgb (js-array h c l)
+              .!rgb2hex PIXI/utils $ js-array (.-0 rgb-arr) (.-1 rgb-arr) (.-1 rgb-arr)
         |hslx $ quote
           defn hslx (h s l)
             let-sugar
@@ -1918,6 +1923,7 @@
           memof.once :refer $ reset-memof1-caches!
           phlox.complex :as complex
           phlox.math :refer $ vec-length
+          "\"hsluv" :refer $ hsluvToRgb
     |phlox.cursor $ {}
       :defs $ {}
         |update-states $ quote
@@ -2863,11 +2869,6 @@
       :defs $ {}
         |font-code $ quote (def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace")
         |font-normal $ quote (def font-normal "|Hind, Helvatica, Arial, sans-serif")
-        |hsl $ quote
-          defn hsl (h s l ? arg)
-            let
-                a $ either arg 1
-              str "\"hsl(" h "\"," s "\"%," l "\"%," a "\")"
         |layout-column $ quote
           def layout-column $ {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
         |layout-expand $ quote
