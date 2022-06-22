@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.45)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.46)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -251,12 +251,13 @@
                     :value $ :v1 state
                     :unit 1
                     :min 1
-                    :fill $ hslx 50 90 44
+                    ; :fill $ hslx 50 90 44
                     :fraction 1
                     :on-change $ fn (v d!)
                       d! cursor $ assoc state :v1 v
                     :on-move $ fn (pos d!)
                       d! cursor $ assoc state :pos pos
+                    :label "\"dgemo"
       :ns $ quote
         ns phlox.app.comp.slider-demo $ :require
           [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
@@ -1308,17 +1309,20 @@
                 state $ either (:data states)
                   {} $ :dragging? false
                 unit $ either (:unit props) 1
-                radius $ either (:radius props) 48
+                radius $ either (:radius props) 44
                 color $ either (:color props) (hslx 0 0 100)
-                fill $ either (:fill props) (hslx 180 80 40)
-                font-size $ either (:font-size props) (&* radius 0.5)
+                fill $ either (:fill props) (hslx 0 0 0)
+                font-size $ either (:font-size props) (&* radius 0.44)
                 alpha $ either (:alpha props) 1
                 on-change $ :on-change props
                 position $ either (:position props) ([] 0 0)
                 on-move $ :on-move props
+                border-color $ or (:border-color props) (hslx 240 80 80)
+                border-width $ or (:border-width props) 4
               container
                 {} $ :position ([] 0 0)
                 circle $ {} (:radius radius) (:position position) (:fill fill) (:alpha alpha)
+                  :line-style $ {} (:color border-color) (:width border-width) (:alpha 1)
                   :on $ {}
                     :pointerdown $ fn (e d!)
                       let
@@ -1365,17 +1369,22 @@
                       if (number? v)
                         .!toFixed v $ either (:fraction props) 1
                         , "\"-"
-                  :position position
+                  :position $ complex/add position ([] 0 -10)
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "\"Source code pro, Menlo, Roboto Mono, monospace")
                   :align :center
                 container
-                  {} $ :position ([] -32 36)
+                  {} $ :position ([] -0 30)
                   comp-drag-point (>> states :move)
-                    {} (:position position) (:unit 1) (:radius 12)
-                      :fill $ hslx 0 90 60
+                    {} (:position position) (:unit 1) (:radius 8)
+                      :fill $ hslx 0 90 50
                       :hide-text? true
-                      :alpha 0.3
+                      :alpha 0.5
                       :on-change $ fn (pos d!) (on-move pos d!)
+                  if-let
+                    label $ :label props
+                    text $ {} (:text label) (:alpha 0.8) (:align :center)
+                      :position $ complex/add position ([] 0 -20)
+                      :style $ {} (:fill color) (:font-size 13) (:font-family "\"Josefin Sans, sans-serif")
         |lilac-cursor $ quote
           def lilac-cursor $ list+
             any+ $ {} (:some? true)
