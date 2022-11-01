@@ -1680,8 +1680,12 @@
         |hsluvx $ quote
           defn hsluvx (h c l)
             let
-                rgb-arr $ hsluvToRgb (js-array h c l)
-              .!rgb2hex PIXI/utils $ js-array (.-0 rgb-arr) (.-1 rgb-arr) (.-1 rgb-arr)
+                conv $ new Hsluv
+              set! (.-hsluv_h conv) h
+              set! (.-hsluv_s conv) c
+              set! (.-hsluv_l conv) l
+              .!hsluvToRgb conv
+              .!rgb2hex PIXI/utils $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
         |hslx $ quote
           defn hslx (h s l)
             let-sugar
@@ -1932,7 +1936,7 @@
           memof.once :refer $ reset-memof1-caches!
           phlox.complex :as complex
           phlox.math :refer $ vec-length
-          "\"hsluv" :refer $ hsluvToRgb
+          "\"hsluv" :refer $ Hsluv
     |phlox.cursor $ {}
       :defs $ {}
         |update-states $ quote
