@@ -1,18 +1,18 @@
 {
   "version": "0.4.46",
   "dependencies": {
-    "@calcit/procs": "^0.6.11-a1",
+    "@calcit/procs": "^0.6.17",
     "@quamolit/phlox-utils": "^0.0.2",
     "@quamolit/touch-control": "^0.0.11",
     "fontfaceobserver-es": "^3.3.3",
     "hsluv": "^1.0.0",
     "mobile-detect": "^1.4.5",
     "nanoid": "^4.0.0",
-    "pixi.js": "7.0.2"
+    "pixi.js": "6.5.8"
   },
   "devDependencies": {
-    "@pixi/filter-drop-shadow": "^5.0.0",
+    "@pixi/filter-drop-shadow": "^4.2.0",
     "bottom-tip": "^0.1.3",
-    "vite": "^3.2.2"
+    "vite": "^4.0.2"
   }
 }

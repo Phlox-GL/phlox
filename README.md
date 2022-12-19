@@ -55,6 +55,8 @@ Phlox supports a naive global event system for listening to keyboard events from
   :up $ fn (e dispatch!)
 ```
 
+> Notice that Phlox depends on PIXI `6.5.x`. In `7.x` the event system is refactored and breaks Phlox.
+
 ### Spec
 
 Add a container:
