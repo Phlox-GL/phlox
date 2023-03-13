@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.46)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.47)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1068,7 +1068,7 @@
                             {} (:dragging? true)
                               :x0 $ [] x y
                               :p0 position
-                      :pointermove $ fn (e d!)
+                      :globalpointermove $ fn (e d!)
                         when (:dragging? state)
                           let
                               x $ -> e .-data .-global .-x
@@ -1216,7 +1216,7 @@
                         let
                             x1 $ -> e .-data .-global .-x
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
-                      :pointermove $ fn (e d!)
+                      :globalpointermove $ fn (e d!)
                         when (:dragging? state)
                           let
                               x2 $ -> e .-data .-global .-x
@@ -1277,7 +1277,7 @@
                         let
                             x1 $ -> e .-data .-global .-x
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
-                      :pointermove $ fn (e d!)
+                      :globalpointermove $ fn (e d!)
                         when (:dragging? state)
                           let
                               x2 $ -> e .-data .-global .-x
@@ -1331,7 +1331,7 @@
                         reset! *spin-pivot $ [] x y
                         reset! *prev-spin-point $ [] 0 0
                         d! cursor $ assoc state :dragging? true
-                    :pointermove $ fn (e d!)
+                    :globalpointermove $ fn (e d!)
                       let
                           x $ -> e .-data .-global .-x
                           y $ -> e .-data .-global .-y
@@ -1652,28 +1652,30 @@
                   reset! *drag-moving-cache current
                   swap! *stage-config update :move $ fn (prev) (complex/add prev delta)
                   render-stage-for-viewer!
-            .!addEventListener el "\"wheel" $ fn (event)
-              if
-                or (.-metaKey event) (.-ctrlKey event) (.-shiftKey event)
-                let
-                    dy $ * 0.001 (.-deltaY event)
-                    scale $ :scale @*stage-config
-                    pointer $ complex/minus
-                      [] (.-clientX event) (.-clientY event)
-                      [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
-                  when
-                    not
-                      and (<= scale 0.1)
-                        < (.-deltaY event) 0
-                      and (>= scale 4)
-                        > (.-deltaY event) 0
-                    swap! *stage-config update :move $ fn (pos)
-                      let
-                          shift $ complex/minus pointer pos
-                        complex/minus pos $ complex/times shift
-                          [] (/ dy scale) 0
-                    swap! *stage-config update :scale $ fn (x) (+ x dy)
-                    render-stage-for-viewer!
+            .!addEventListener el "\"wheel"
+              fn (event)
+                if
+                  or (.-metaKey event) (.-ctrlKey event) (.-shiftKey event)
+                  let
+                      dy $ * 0.001 (.-deltaY event)
+                      scale $ :scale @*stage-config
+                      pointer $ complex/minus
+                        [] (.-clientX event) (.-clientY event)
+                        [] (* 0.5 js/window.innerWidth) (* 0.5 js/window.innerHeight)
+                    when
+                      not
+                        and (<= scale 0.1)
+                          < (.-deltaY event) 0
+                        and (>= scale 4)
+                          > (.-deltaY event) 0
+                      swap! *stage-config update :move $ fn (pos)
+                        let
+                            shift $ complex/minus pointer pos
+                          complex/minus pos $ complex/times shift
+                            [] (/ dy scale) 0
+                      swap! *stage-config update :scale $ fn (x) (+ x dy)
+                      render-stage-for-viewer!
+              js-object $ :passive true
         |hclx $ quote
           defn hclx (h c l)
             .!string2hex PIXI/utils $ hcl-to-hex h c l
@@ -1836,7 +1838,7 @@
               create-element :graphics
                 assoc props :ops $ concat
                   [] (g :line-style line-style)
-                    g :move-to $ first points
+                    g :move-to $ nth points 0
                   -> points rest $ map
                     fn (p) (g :line-to p)
                 , children
@@ -2621,7 +2623,8 @@
               set! (.-rotation target) v
         |read-line-cap $ quote
           defn read-line-cap (x)
-            case-default x (println "\"unknown line-cap:" x) (nil nil)
+            case-default x (println "\"unknown line-cap:" x)
+              nil $ .-BUTT PIXI/LINE_CAP
               :butt $ .-BUTT PIXI/LINE_CAP
               :round $ .-ROUND PIXI/LINE_CAP
               :square $ .-SQUARE PIXI/LINE_CAP
@@ -2629,9 +2632,9 @@
           defn read-line-join (x)
             case-default x
               do $ println "\"unknown line-join value:" x
-              nil nil
+              nil $ .-MITER PIXI/LINE_JOIN
               :bevel $ .-BEVEL PIXI/LINE_JOIN
-              :milter $ .-MILTER PIXI/LINE_JOIN
+              :miter $ .-MITER PIXI/LINE_JOIN
               :round $ .-ROUND PIXI/LINE_JOIN
         |update-alpha $ quote
           defn update-alpha (target alpha alpha0)
