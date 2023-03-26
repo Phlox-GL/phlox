@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.47)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.48)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1678,7 +1678,8 @@
               js-object $ :passive true
         |hclx $ quote
           defn hclx (h c l)
-            .!string2hex PIXI/utils $ hcl-to-hex h c l
+            .!toNumber $ new Color
+              w-js-log $ hcl-to-hex h c l
         |hsluvx $ quote
           defn hsluvx (h c l)
             let
@@ -1687,15 +1688,12 @@
               set! (.-hsluv_s conv) c
               set! (.-hsluv_l conv) l
               .!hsluvToRgb conv
-              .!rgb2hex PIXI/utils $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
+              .!toNumber $ new Color
+                js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
         |hslx $ quote
           defn hslx (h s l)
-            let-sugar
-                rgb $ hsl-to-rgb (/ h 360) (* 0.01 s) (* 0.01 l)
-                r $ .-0 rgb
-                g $ .-1 rgb
-                b $ .-2 rgb
-              .!rgb2hex PIXI/utils $ js-array r g b
+            .!toNumber $ new Color
+              js-object (:h h) (:s s) (:l l) (:a 1)
         |image $ quote
           defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
         |init-pixi-app! $ quote
@@ -1930,7 +1928,7 @@
         ns phlox.core $ :require ("\"pixi.js" :as PIXI) (phlox.schema :as schema)
           phlox.render :refer $ render-element update-element update-children
           phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
-          "\"@quamolit/phlox-utils" :refer $ hsl-to-rgb hcl-to-hex
+          "\"@quamolit/phlox-utils" :refer $ hcl-to-hex
           phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments
           lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
           phlox.keyboard :refer $ handle-keyboard-events
@@ -1939,6 +1937,7 @@
           phlox.complex :as complex
           phlox.math :refer $ vec-length
           "\"hsluv" :refer $ Hsluv
+          "\"pixi.js" :refer $ Color
     |phlox.cursor $ {}
       :defs $ {}
         |update-states $ quote
@@ -2590,7 +2589,7 @@
         |init-events $ quote
           defn init-events (target events dispatch!)
             when (some? events)
-              set! (.-interactive target) true
+              set! (.-eventMode target) "\"dynamic"
               set! (.-buttonMode target) true
               &doseq
                 pair $ to-pairs events
@@ -2654,10 +2653,10 @@
             if (some? events)
               do
                 set! (.-buttonMode target) true
-                set! (.-interactive target) true
+                set! (.-eventMode target) "\"dynamic"
               do
                 set! (.-buttonMode target) false
-                set! (.-interactive target) false
+                set! (.-eventMode target) "\"none"
         |update-pivot $ quote
           defn update-pivot (target pivot pivot0)
             when (not= pivot pivot0)
