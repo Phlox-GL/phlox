@@ -12,7 +12,7 @@ jobs:
     # runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - uses: actions/setup-node@v3
       with:
         node-version: 18
@@ -20,15 +20,15 @@ jobs:
 
     - uses: supplypike/setup-bin@v3
       with:
-        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.6.24/cr'
+        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.6.26/cr'
         name: 'cr'
-        version: '0.6.24'
+        version: '0.6.26'
 
     - uses: supplypike/setup-bin@v3
       with:
-        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.6.24/caps'
+        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.6.26/caps'
         name: 'caps'
-        version: '0.6.24'
+        version: '0.6.26'
 
     - name: "compiles to js"
       run: >
