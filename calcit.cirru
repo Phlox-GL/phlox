@@ -1,6 +1,6 @@
 
 {}
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.49)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.4.50)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :ir $ {} (:package |phlox)
@@ -12467,15 +12467,12 @@
                     :data $ {}
                       |D $ {} (:at 1679825451930) (:by |rJG4IHzWf) (:text |new) (:type :leaf)
                       |L $ {} (:at 1679825452745) (:by |rJG4IHzWf) (:text |Color) (:type :leaf)
-                      |T $ {} (:at 1679825479462) (:by |rJG4IHzWf) (:type :expr)
+                      |T $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:type :expr)
                         :data $ {}
-                          |D $ {} (:at 1679825481269) (:by |rJG4IHzWf) (:text |w-js-log) (:type :leaf)
-                          |T $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:type :expr)
-                            :data $ {}
-                              |T $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |hcl-to-hex) (:type :leaf)
-                              |b $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |h) (:type :leaf)
-                              |h $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |c) (:type :leaf)
-                              |l $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |l) (:type :leaf)
+                          |T $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |hcl-to-hex) (:type :leaf)
+                          |b $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |h) (:type :leaf)
+                          |h $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |c) (:type :leaf)
+                          |l $ {} (:at 1648140585680) (:by |rJG4IHzWf) (:text |l) (:type :leaf)
           |hsluvx $ {} (:at 1653367330407) (:by |rJG4IHzWf) (:type :expr)
             :data $ {}
               |T $ {} (:at 1653367330407) (:by |rJG4IHzWf) (:text |defn) (:type :leaf)

@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.49)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.50)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1678,8 +1678,7 @@
               js-object $ :passive true
         |hclx $ quote
           defn hclx (h c l)
-            .!toNumber $ new Color
-              w-js-log $ hcl-to-hex h c l
+            .!toNumber $ new Color (hcl-to-hex h c l)
         |hsluvx $ quote
           defn hsluvx (h c l)
             let

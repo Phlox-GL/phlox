@@ -1,5 +1,5 @@
 {
-  "version": "0.4.49",
+  "version": "0.4.50",
   "dependencies": {
     "@calcit/procs": "^0.7.0-a5",
     "@quamolit/phlox-utils": "^0.0.2",
