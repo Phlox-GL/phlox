@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.48)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.4.50)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -1678,8 +1678,7 @@
               js-object $ :passive true
         |hclx $ quote
           defn hclx (h c l)
-            .!toNumber $ new Color
-              w-js-log $ hcl-to-hex h c l
+            .!toNumber $ new Color (hcl-to-hex h c l)
         |hsluvx $ quote
           defn hsluvx (h c l)
             let
@@ -2079,7 +2078,7 @@
             .!from PIXI/Shader (:vertex-source data) (:fragment-source data) uniforms
         |read-draw-mode-alias $ quote
           defn read-draw-mode-alias (draw-mode)
-            if (keyword? draw-mode)
+            if (tag? draw-mode)
               case-default draw-mode (js/console.warn "\"Unknown draw mode:" draw-mode) (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
               , draw-mode
         |render-children $ quote
@@ -2744,13 +2743,13 @@
                       , pair
                     key-name $ camel-case
                       cond
-                          keyword? k
+                          tag? k
                           turn-string k
                         (string? k) k
                         true $ str k
                   [] key-name $ case-default k
                     cond
-                        keyword? v
+                        tag? v
                         turn-string v
                       (string? v) v
                       (number? v) v
