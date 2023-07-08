@@ -1,7 +1,7 @@
 {
-  "version": "0.4.50",
+  "version": "0.5.0",
   "dependencies": {
-    "@calcit/procs": "^0.7.0-a5",
+    "@calcit/procs": "^0.7.5",
     "@quamolit/phlox-utils": "^0.0.2",
     "@triadica/touch-control": "^0.0.3",
     "fontfaceobserver-es": "^3.3.3",
@@ -13,6 +13,6 @@
   "devDependencies": {
     "@pixi/filter-drop-shadow": "^5.2.0",
     "bottom-tip": "^0.1.5",
-    "vite": "^4.3.9"
+    "vite": "^4.4.2"
   }
 }
