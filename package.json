@@ -1,7 +1,7 @@
 {
-  "version": "0.6.0",
+  "version": "0.7.0",
   "dependencies": {
-    "@calcit/procs": "^0.8.0-a2",
+    "@calcit/procs": "^0.8.0-a3",
     "@quamolit/phlox-utils": "^0.0.2",
     "@triadica/touch-control": "^0.0.3",
     "fontfaceobserver-es": "^3.3.3",

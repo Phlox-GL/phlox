@@ -1,10 +1,10 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.6.0)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.7.0)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
-    |phlox.app.comp.drafts $ {}
+    |phlox.app.comp.drafts $ %{} :FileEntry
       :defs $ {}
         |comp-drafts $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1574353969014) (:by |rJG4IHzWf)
@@ -224,7 +224,7 @@
                                       |x $ %{} :Leaf (:at 1574353973772) (:by |rJG4IHzWf) (:text "|\"pivot")
                                       |y $ %{} :Expr (:at 1574353973772) (:by |rJG4IHzWf)
                                         :data $ {}
-                                          |T $ %{} :Leaf (:at 1574353973772) (:by |rJG4IHzWf) (:text |pr-str)
+                                          |T $ %{} :Leaf (:at 1693284671856) (:by |rJG4IHzWf) (:text |to-lispy-string)
                                           |j $ %{} :Expr (:at 1574353973772) (:by |rJG4IHzWf)
                                             :data $ {}
                                               |T $ %{} :Leaf (:at 1574353973772) (:by |rJG4IHzWf) (:text |{})
@@ -675,7 +675,7 @@
                         |yb $ %{} :Leaf (:at 1574181633700) (:by |rJG4IHzWf) (:text |graphics)
                         |yj $ %{} :Leaf (:at 1574007057783) (:by |rJG4IHzWf) (:text |create-list)
                         |z $ %{} :Leaf (:at 1652069107682) (:by |rJG4IHzWf) (:text |image)
-    |phlox.app.comp.keyboard $ {}
+    |phlox.app.comp.keyboard $ %{} :FileEntry
       :defs $ {}
         |comp-keyboard $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1583033687554) (:by |rJG4IHzWf)
@@ -914,7 +914,7 @@
                         |yT $ %{} :Leaf (:at 1573974254119) (:by |rJG4IHzWf) (:text |container)
                         |yb $ %{} :Leaf (:at 1574181633700) (:by |rJG4IHzWf) (:text |graphics)
                         |yj $ %{} :Leaf (:at 1574007057783) (:by |rJG4IHzWf) (:text |create-list)
-    |phlox.app.comp.slider-demo $ {}
+    |phlox.app.comp.slider-demo $ %{} :FileEntry
       :defs $ {}
         |comp-slider-demo $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1583036332993) (:by |rJG4IHzWf)
@@ -1888,7 +1888,7 @@
                         |j $ %{} :Leaf (:at 1583557031527) (:by |rJG4IHzWf) (:text |comp-slider)
                         |r $ %{} :Leaf (:at 1587054672287) (:by |rJG4IHzWf) (:text |comp-slider-point)
                         |v $ %{} :Leaf (:at 1641731405535) (:by |rJG4IHzWf) (:text |comp-spin-slider)
-    |phlox.app.container $ {}
+    |phlox.app.container $ %{} :FileEntry
       :defs $ {}
         |comp-arrows-demo $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1642003218285) (:by |rJG4IHzWf)
@@ -5086,7 +5086,7 @@
                     |h $ %{} :Expr (:at 1651860507554) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1651860510103) (:by |rJG4IHzWf) (:text |comp-tabs)
-    |phlox.app.main $ {}
+    |phlox.app.main $ %{} :FileEntry
       :defs $ {}
         |*store $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1573662553239) (:by |rJG4IHzWf)
@@ -5393,7 +5393,7 @@
                         |T $ %{} :Leaf (:at 1649048886201) (:by |rJG4IHzWf) (:text |render-control!)
                         |b $ %{} :Leaf (:at 1649048893304) (:by |rJG4IHzWf) (:text |start-control-loop!)
                         |h $ %{} :Leaf (:at 1649048896044) (:by |rJG4IHzWf) (:text |replace-control-loop!)
-    |phlox.app.schema $ {}
+    |phlox.app.schema $ %{} :FileEntry
       :defs $ {}
         |store $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1499755354983) (:by nil)
@@ -5436,7 +5436,7 @@
           :data $ {}
             |T $ %{} :Leaf (:at 1499755354983) (:by |root) (:text |ns)
             |j $ %{} :Leaf (:at 1499755354983) (:by |root) (:text |phlox.app.schema)
-    |phlox.app.updater $ {}
+    |phlox.app.updater $ %{} :FileEntry
       :defs $ {}
         |updater $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1499755354983) (:by nil)
@@ -5566,7 +5566,7 @@
                       :data $ {}
                         |T $ %{} :Leaf (:at 1585489357121) (:by |rJG4IHzWf) (:text |[])
                         |j $ %{} :Leaf (:at 1585489357121) (:by |rJG4IHzWf) (:text |update-states)
-    |phlox.check $ {}
+    |phlox.check $ %{} :FileEntry
       :defs $ {}
         |dev-check $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1612513623839) (:by |rJG4IHzWf)
@@ -6786,8 +6786,7 @@
                     |h $ %{} :Expr (:at 1649144497794) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1649144498504) (:by |rJG4IHzWf) (:text |dev?)
-    |phlox.comp.arrow $ {}
-      :configs $ {}
+    |phlox.comp.arrow $ %{} :FileEntry
       :defs $ {}
         |comp-arrow $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1642002911703) (:by |rJG4IHzWf)
@@ -7179,7 +7178,7 @@
                     |r $ %{} :Expr (:at 1642003951733) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1642003953254) (:by |rJG4IHzWf) (:text |vec-length)
-    |phlox.comp.button $ {}
+    |phlox.comp.button $ %{} :FileEntry
       :defs $ {}
         |comp-button $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1583034073677) (:by |rJG4IHzWf)
@@ -7565,7 +7564,7 @@
                         |T $ %{} :Leaf (:at 1583035366828) (:by |rJG4IHzWf) (:text |[])
                         |j $ %{} :Leaf (:at 1583035367194) (:by |rJG4IHzWf) (:text |lilac-event-map)
                         |r $ %{} :Leaf (:at 1583035488523) (:by |rJG4IHzWf) (:text |dev-check)
-    |phlox.comp.drag-point $ {}
+    |phlox.comp.drag-point $ %{} :FileEntry
       :defs $ {}
         |comp-drag-point $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1583040418706) (:by |rJG4IHzWf)
@@ -8289,7 +8288,7 @@
                     |j $ %{} :Leaf (:at 1593533465463) (:by |rJG4IHzWf) (:text |phlox.complex)
                     |r $ %{} :Leaf (:at 1593533466295) (:by |rJG4IHzWf) (:text |:as)
                     |v $ %{} :Leaf (:at 1593533469213) (:by |rJG4IHzWf) (:text |complex)
-    |phlox.comp.messages $ {}
+    |phlox.comp.messages $ %{} :FileEntry
       :defs $ {}
         |comp-messages $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1586601267517) (:by |rJG4IHzWf)
@@ -8675,7 +8674,7 @@
                       :data $ {}
                         |T $ %{} :Leaf (:at 1586601330061) (:by |rJG4IHzWf) (:text |[])
                         |j $ %{} :Leaf (:at 1586601334085) (:by |rJG4IHzWf) (:text |comp-button)
-    |phlox.comp.slider $ {}
+    |phlox.comp.slider $ %{} :FileEntry
       :defs $ {}
         |*prev-spin-point $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1641734631148) (:by |rJG4IHzWf)
@@ -10729,7 +10728,7 @@
                     |r $ %{} :Expr (:at 1642431266070) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1642431266287) (:by |rJG4IHzWf) (:text |comp-drag-point)
-    |phlox.comp.switch $ {}
+    |phlox.comp.switch $ %{} :FileEntry
       :defs $ {}
         |comp-switch $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1583553338270) (:by |rJG4IHzWf)
@@ -11097,8 +11096,7 @@
                         |yyT $ %{} :Leaf (:at 1583553442789) (:by |rJG4IHzWf) (:text |list+)
                         |yyj $ %{} :Leaf (:at 1583553442789) (:by |rJG4IHzWf) (:text |or+)
                         |yyr $ %{} :Leaf (:at 1583553442789) (:by |rJG4IHzWf) (:text |is+)
-    |phlox.comp.tabs $ {}
-      :configs $ {}
+    |phlox.comp.tabs $ %{} :FileEntry
       :defs $ {}
         |comp-tabs $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1651860283104) (:by |rJG4IHzWf)
@@ -11377,7 +11375,7 @@
                     |T $ %{} :Leaf (:at 1651860651832) (:by |rJG4IHzWf) (:text |phlox.complex)
                     |b $ %{} :Leaf (:at 1651860653622) (:by |rJG4IHzWf) (:text |:as)
                     |h $ %{} :Leaf (:at 1651860654646) (:by |rJG4IHzWf) (:text |complex)
-    |phlox.complex $ {}
+    |phlox.complex $ %{} :FileEntry
       :defs $ {}
         |add $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1612514054369) (:by |rJG4IHzWf)
@@ -11759,7 +11757,7 @@
           :data $ {}
             |T $ %{} :Leaf (:at 1591720373551) (:by |rJG4IHzWf) (:text |ns)
             |j $ %{} :Leaf (:at 1591720373551) (:by |rJG4IHzWf) (:text |phlox.complex)
-    |phlox.config $ {}
+    |phlox.config $ %{} :FileEntry
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1544873875614) (:by |rJG4IHzWf)
@@ -11801,7 +11799,7 @@
                     |T $ %{} :Leaf (:at 1649051449549) (:by |rJG4IHzWf) (:text "|\"mobile-detect")
                     |b $ %{} :Leaf (:at 1649051454200) (:by |rJG4IHzWf) (:text |:default)
                     |h $ %{} :Leaf (:at 1649051450747) (:by |rJG4IHzWf) (:text |mobile-detect)
-    |phlox.core $ {}
+    |phlox.core $ %{} :FileEntry
       :defs $ {}
         |*app $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1573356725764) (:by |rJG4IHzWf)
@@ -14441,7 +14439,7 @@
                     |h $ %{} :Expr (:at 1679824363377) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1679824364853) (:by |rJG4IHzWf) (:text |Color)
-    |phlox.cursor $ {}
+    |phlox.cursor $ %{} :FileEntry
       :defs $ {}
         |update-states $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1585489285936) (:by |rJG4IHzWf)
@@ -14475,7 +14473,7 @@
           :data $ {}
             |T $ %{} :Leaf (:at 1585489280464) (:by |rJG4IHzWf) (:text |ns)
             |j $ %{} :Leaf (:at 1585489280464) (:by |rJG4IHzWf) (:text |phlox.cursor)
-    |phlox.input $ {}
+    |phlox.input $ %{} :FileEntry
       :defs $ {}
         |lilac-input $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1587288257675) (:by |rJG4IHzWf)
@@ -14612,7 +14610,7 @@
                     |r $ %{} :Expr (:at 1623767245315) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1623767248672) (:by |rJG4IHzWf) (:text |prompt-at!)
-    |phlox.keyboard $ {}
+    |phlox.keyboard $ %{} :FileEntry
       :defs $ {}
         |get-value $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1582911950313) (:by |rJG4IHzWf)
@@ -14868,7 +14866,7 @@
                       :data $ {}
                         |T $ %{} :Leaf (:at 1615462875615) (:by |rJG4IHzWf) (:text |[])
                         |j $ %{} :Leaf (:at 1615462876689) (:by |rJG4IHzWf) (:text |element?)
-    |phlox.math $ {}
+    |phlox.math $ %{} :FileEntry
       :defs $ {}
         |angle->radian $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1585587496640) (:by |rJG4IHzWf)
@@ -14957,7 +14955,7 @@
           :data $ {}
             |T $ %{} :Leaf (:at 1583042373254) (:by |rJG4IHzWf) (:text |ns)
             |j $ %{} :Leaf (:at 1583042373254) (:by |rJG4IHzWf) (:text |phlox.math)
-    |phlox.render $ {}
+    |phlox.render $ %{} :FileEntry
       :defs $ {}
         |init-box-size $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1652069398607) (:by |rJG4IHzWf)
@@ -18848,7 +18846,7 @@
                     |h $ %{} :Expr (:at 1649144425209) (:by |rJG4IHzWf)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1649144426207) (:by |rJG4IHzWf) (:text |dev?)
-    |phlox.render.draw $ {}
+    |phlox.render.draw $ %{} :FileEntry
       :defs $ {}
         |call-graphics-ops $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1574181858125) (:by |rJG4IHzWf)
@@ -20096,8 +20094,7 @@
                     |j $ %{} :Leaf (:at 1620205743072) (:by |rJG4IHzWf) (:text "|\"pixi.js")
                     |r $ %{} :Leaf (:at 1620205743072) (:by |rJG4IHzWf) (:text |:as)
                     |v $ %{} :Leaf (:at 1620205743072) (:by |rJG4IHzWf) (:text |PIXI)
-    |phlox.schema $ {}
-      :configs $ {}
+    |phlox.schema $ %{} :FileEntry
       :defs $ {}
         |PhloxElement $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1615451132805) (:by |rJG4IHzWf)
@@ -20112,7 +20109,7 @@
           :data $ {}
             |T $ %{} :Leaf (:at 1615451125236) (:by |rJG4IHzWf) (:text |ns)
             |j $ %{} :Leaf (:at 1615451125236) (:by |rJG4IHzWf) (:text |phlox.schema)
-    |phlox.test $ {}
+    |phlox.test $ %{} :FileEntry
       :defs $ {}
         |test-lcs $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1573489055065) (:by |rJG4IHzWf)
@@ -20430,7 +20427,7 @@
                         |T $ %{} :Leaf (:at 1573489129306) (:by |rJG4IHzWf) (:text |[])
                         |j $ %{} :Leaf (:at 1573489132947) (:by |rJG4IHzWf) (:text |find-minimal-ops)
                         |r $ %{} :Leaf (:at 1573490836194) (:by |rJG4IHzWf) (:text |lcs-state-0)
-    |phlox.util $ {}
+    |phlox.util $ %{} :FileEntry
       :defs $ {}
         |*ctx-instance $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1583034522796) (:by |rJG4IHzWf)
@@ -20939,7 +20936,7 @@
                     |j $ %{} :Leaf (:at 1615451174231) (:by |rJG4IHzWf) (:text |phlox.schema)
                     |r $ %{} :Leaf (:at 1615451177524) (:by |rJG4IHzWf) (:text |:as)
                     |v $ %{} :Leaf (:at 1615451178415) (:by |rJG4IHzWf) (:text |schema)
-    |phlox.util.lcs $ {}
+    |phlox.util.lcs $ %{} :FileEntry
       :defs $ {}
         |find-minimal-ops $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1573489108046) (:by |rJG4IHzWf)
@@ -21404,8 +21401,7 @@
           :data $ {}
             |T $ %{} :Leaf (:at 1573489092344) (:by |rJG4IHzWf) (:text |ns)
             |j $ %{} :Leaf (:at 1573489092344) (:by |rJG4IHzWf) (:text |phlox.util.lcs)
-    |phlox.util.styles $ {}
-      :configs $ {}
+    |phlox.util.styles $ %{} :FileEntry
       :defs $ {}
         |font-code $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1622533537554) (:by |rJG4IHzWf)
