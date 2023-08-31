@@ -1,10 +1,10 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.6.0)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.0)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
-    |phlox.app.comp.drafts $ {}
+    |phlox.app.comp.drafts $ %{} :FileEntry
       :defs $ {}
         |comp-drafts $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -38,7 +38,7 @@
                     :text $ str "\"Text demo:"
                       + 1 $ * 0.1 x
                       , &newline "\"pivot"
-                        pr-str $ {} (:x 100) (:y 100)
+                        to-lispy-string $ {} (:x 100) (:y 100)
                     :style $ {} (:font-family "\"Menlo") (:font-size 12)
                       :fill $ hslx 200 80 90
                       :align :center
@@ -97,7 +97,7 @@
         :code $ quote
           ns phlox.app.comp.drafts $ :require
             [] phlox.core :refer $ [] g hslx hclx rect circle text container graphics create-list image
-    |phlox.app.comp.keyboard $ {}
+    |phlox.app.comp.keyboard $ %{} :FileEntry
       :defs $ {}
         |comp-keyboard $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -131,7 +131,7 @@
         :code $ quote
           ns phlox.app.comp.keyboard $ :require
             [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-    |phlox.app.comp.slider-demo $ {}
+    |phlox.app.comp.slider-demo $ %{} :FileEntry
       :defs $ {}
         |comp-slider-demo $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -270,7 +270,7 @@
           ns phlox.app.comp.slider-demo $ :require
             [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
             [] phlox.comp.slider :refer $ [] comp-slider comp-slider-point comp-spin-slider
-    |phlox.app.container $ {}
+    |phlox.app.container $ %{} :FileEntry
       :defs $ {}
         |comp-arrows-demo $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -708,7 +708,7 @@
             "\"@pixi/filter-drop-shadow" :refer $ DropShadowFilter
             "\"pixi.js" :as PIXI
             phlox.comp.tabs :refer $ comp-tabs
-    |phlox.app.main $ {}
+    |phlox.app.main $ %{} :FileEntry
       :defs $ {}
         |*store $ %{} :CodeEntry (:doc |)
           :code $ quote (defatom *store schema/store)
@@ -758,7 +758,7 @@
             "\"./calcit.build-errors" :default build-errors
             "\"bottom-tip" :default hud!
             touch-control.core :refer $ render-control! start-control-loop! replace-control-loop!
-    |phlox.app.schema $ {}
+    |phlox.app.schema $ %{} :FileEntry
       :defs $ {}
         |store $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -767,7 +767,7 @@
               :cursor $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns phlox.app.schema)
-    |phlox.app.updater $ {}
+    |phlox.app.updater $ %{} :FileEntry
       :defs $ {}
         |updater $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -786,7 +786,7 @@
         :code $ quote
           ns phlox.app.updater $ :require
             [] phlox.cursor :refer $ [] update-states
-    |phlox.check $ {}
+    |phlox.check $ %{} :FileEntry
       :defs $ {}
         |dev-check $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -984,7 +984,7 @@
           ns phlox.check $ :require
             lilac.core :refer $ validate-lilac record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             phlox.config :refer $ dev?
-    |phlox.comp.arrow $ {}
+    |phlox.comp.arrow $ %{} :FileEntry
       :defs $ {}
         |comp-arrow $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1033,7 +1033,7 @@
             phlox.complex :as complex
             phlox.comp.drag-point :refer $ comp-drag-point
             phlox.math :refer $ vec-length
-    |phlox.comp.button $ {}
+    |phlox.comp.button $ %{} :FileEntry
       :defs $ {}
         |comp-button $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1087,7 +1087,7 @@
             [] phlox.util :refer $ [] measure-text-width!
             [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             [] phlox.check :refer $ [] lilac-event-map dev-check
-    |phlox.comp.drag-point $ {}
+    |phlox.comp.drag-point $ %{} :FileEntry
       :defs $ {}
         |comp-drag-point $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1188,7 +1188,7 @@
             phlox.check :refer $ lilac-event-map dev-check
             lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             phlox.complex :as complex
-    |phlox.comp.messages $ {}
+    |phlox.comp.messages $ %{} :FileEntry
       :defs $ {}
         |comp-messages $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1247,7 +1247,7 @@
             [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
             [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             [] phlox.comp.button :refer $ [] comp-button
-    |phlox.comp.slider $ {}
+    |phlox.comp.slider $ %{} :FileEntry
       :defs $ {}
         |*prev-spin-point $ %{} :CodeEntry (:doc |)
           :code $ quote (defatom *prev-spin-point nil)
@@ -1497,7 +1497,7 @@
             phlox.complex :refer $ rebase
             phlox.complex :as complex
             phlox.comp.drag-point :refer $ comp-drag-point
-    |phlox.comp.switch $ {}
+    |phlox.comp.switch $ %{} :FileEntry
       :defs $ {}
         |comp-switch $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1549,7 +1549,7 @@
             [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
             [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
             [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
-    |phlox.comp.tabs $ {}
+    |phlox.comp.tabs $ %{} :FileEntry
       :defs $ {}
         |comp-tabs $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1586,7 +1586,7 @@
             phlox.check :refer $ lilac-event-map dev-check lilac-point
             lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             phlox.complex :as complex
-    |phlox.complex $ {}
+    |phlox.complex $ %{} :FileEntry
       :defs $ {}
         |add $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1655,7 +1655,7 @@
                   + (* a y) (* b x)
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns phlox.complex)
-    |phlox.config $ {}
+    |phlox.config $ %{} :FileEntry
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -1666,7 +1666,7 @@
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns phlox.config $ :require ("\"mobile-detect" :default mobile-detect)
-    |phlox.core $ {}
+    |phlox.core $ %{} :FileEntry
       :defs $ {}
         |*app $ %{} :CodeEntry (:doc |)
           :code $ quote (defatom *app nil)
@@ -2071,7 +2071,7 @@
             phlox.math :refer $ vec-length
             "\"hsluv" :refer $ Hsluv
             "\"pixi.js" :refer $ Color
-    |phlox.cursor $ {}
+    |phlox.cursor $ %{} :FileEntry
       :defs $ {}
         |update-states $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2081,7 +2081,7 @@
                 , data
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns phlox.cursor)
-    |phlox.input $ {}
+    |phlox.input $ %{} :FileEntry
       :defs $ {}
         |lilac-input $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2104,7 +2104,7 @@
             [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             [] phlox.check :refer $ [] dev-check
             pointed-prompt.core :refer $ prompt-at!
-    |phlox.keyboard $ {}
+    |phlox.keyboard $ %{} :FileEntry
       :defs $ {}
         |get-value $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2144,7 +2144,7 @@
         :code $ quote
           ns phlox.keyboard $ :require
             [] phlox.util :refer $ [] element?
-    |phlox.math $ {}
+    |phlox.math $ %{} :FileEntry
       :defs $ {}
         |angle->radian $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2164,7 +2164,7 @@
                 &+ (&* x x) (&* y y)
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns phlox.math)
-    |phlox.render $ {}
+    |phlox.render $ %{} :FileEntry
       :defs $ {}
         |init-box-size $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2701,7 +2701,7 @@
             phlox.render.draw :refer $ call-graphics-ops update-position update-pivot update-rotation update-alpha update-events draw-circle draw-rect init-events init-position init-pivot init-angle init-rotation init-alpha init-line-style
             phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-circle
             phlox.config :refer $ dev?
-    |phlox.render.draw $ {}
+    |phlox.render.draw $ %{} :FileEntry
       :defs $ {}
         |call-graphics-ops $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2879,13 +2879,13 @@
             phlox.math :refer $ angle->radian
             phlox.render.draw :refer $ init-line-style
             "\"pixi.js" :as PIXI
-    |phlox.schema $ {}
+    |phlox.schema $ %{} :FileEntry
       :defs $ {}
         |PhloxElement $ %{} :CodeEntry (:doc |)
           :code $ quote (defrecord PhloxElement :name :props :children)
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns phlox.schema)
-    |phlox.test $ {}
+    |phlox.test $ %{} :FileEntry
       :defs $ {}
         |test-lcs $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2925,7 +2925,7 @@
           ns phlox.test $ :require
             [] cljs.test :refer $ [] deftest is testing run-tests
             [] phlox.util.lcs :refer $ [] find-minimal-ops lcs-state-0
-    |phlox.util $ {}
+    |phlox.util $ %{} :FileEntry
       :defs $ {}
         |*ctx-instance $ %{} :CodeEntry (:doc |)
           :code $ quote (defatom *ctx-instance nil)
@@ -3019,7 +3019,7 @@
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns phlox.util $ :require ([] "\"pixi.js" :as PIXI) ([] phlox.schema :as schema)
-    |phlox.util.lcs $ {}
+    |phlox.util.lcs $ %{} :FileEntry
       :defs $ {}
         |find-minimal-ops $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -3095,7 +3095,7 @@
               :step 0
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns phlox.util.lcs)
-    |phlox.util.styles $ {}
+    |phlox.util.styles $ %{} :FileEntry
       :defs $ {}
         |font-code $ %{} :CodeEntry (:doc |)
           :code $ quote (def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace")
