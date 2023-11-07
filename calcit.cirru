@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.7.0)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:port 6001) (:reload-fn |phlox.app.main/reload!) (:version |0.7.1)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -2260,7 +2260,7 @@
                               |T $ %{} :Leaf (:at 1580826383277) (:by |rJG4IHzWf) (:text |:grids)
                               |j $ %{} :Expr (:at 1574508975407) (:by |rJG4IHzWf)
                                 :data $ {}
-                                  |D $ %{} :Leaf (:at 1612613230946) (:by |rJG4IHzWf) (:text |memof-call)
+                                  |D $ %{} :Leaf (:at 1699372188562) (:by |rJG4IHzWf) (:text |memof1-call)
                                   |T $ %{} :Leaf (:at 1580826387895) (:by |rJG4IHzWf) (:text |comp-grids)
                           |o $ %{} :Expr (:at 1574508973468) (:by |rJG4IHzWf)
                             :data $ {}
@@ -5034,11 +5034,11 @@
                         |T $ %{} :Leaf (:at 1643605629549) (:by |rJG4IHzWf) (:text |nanoid)
                 |yyj $ %{} :Expr (:at 1612613233615) (:by |rJG4IHzWf)
                   :data $ {}
-                    |j $ %{} :Leaf (:at 1612613236216) (:by |rJG4IHzWf) (:text |memof.alias)
+                    |j $ %{} :Leaf (:at 1699372167745) (:by |rJG4IHzWf) (:text |memof.once)
                     |r $ %{} :Leaf (:at 1612613237132) (:by |rJG4IHzWf) (:text |:refer)
                     |v $ %{} :Expr (:at 1612613237369) (:by |rJG4IHzWf)
                       :data $ {}
-                        |j $ %{} :Leaf (:at 1612613239222) (:by |rJG4IHzWf) (:text |memof-call)
+                        |j $ %{} :Leaf (:at 1699372185101) (:by |rJG4IHzWf) (:text |memof1-call)
                 |yyr $ %{} :Expr (:at 1622533866006) (:by |rJG4IHzWf)
                   :data $ {}
                     |T $ %{} :Leaf (:at 1622533873266) (:by |rJG4IHzWf) (:text |phlox.util.styles)
@@ -11936,9 +11936,6 @@
               |j $ %{} :Leaf (:at 1593275665094) (:by |rJG4IHzWf) (:text |clear-phlox-caches!)
               |r $ %{} :Expr (:at 1593275665094) (:by |rJG4IHzWf)
                 :data $ {}
-              |v $ %{} :Expr (:at 1593275674959) (:by |rJG4IHzWf)
-                :data $ {}
-                  |T $ %{} :Leaf (:at 1612613065546) (:by |rJG4IHzWf) (:text |reset-calling-caches!)
               |w $ %{} :Expr (:at 1650733495364) (:by |rJG4IHzWf)
                 :data $ {}
                   |T $ %{} :Leaf (:at 1650733495364) (:by |rJG4IHzWf) (:text |reset-memof1-caches!)
@@ -13831,9 +13828,6 @@
               |wZ $ %{} :Expr (:at 1649050081204) (:by |rJG4IHzWf)
                 :data $ {}
                   |T $ %{} :Leaf (:at 1649050087931) (:by |rJG4IHzWf) (:text |render-stage-for-viewer!)
-              |xD $ %{} :Expr (:at 1593275725956) (:by |rJG4IHzWf)
-                :data $ {}
-                  |T $ %{} :Leaf (:at 1612613098432) (:by |rJG4IHzWf) (:text |tick-calling-loop!)
         |render-stage-for-viewer! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1649050092352) (:by |rJG4IHzWf)
             :data $ {}
@@ -14398,14 +14392,6 @@
                     |v $ %{} :Expr (:at 1582909987837) (:by |rJG4IHzWf)
                       :data $ {}
                         |j $ %{} :Leaf (:at 1582909987837) (:by |rJG4IHzWf) (:text |handle-keyboard-events)
-                |yv $ %{} :Expr (:at 1593275251759) (:by |rJG4IHzWf)
-                  :data $ {}
-                    |j $ %{} :Leaf (:at 1612613076888) (:by |rJG4IHzWf) (:text |memof.alias)
-                    |r $ %{} :Leaf (:at 1612613078273) (:by |rJG4IHzWf) (:text |:refer)
-                    |v $ %{} :Expr (:at 1612613080444) (:by |rJG4IHzWf)
-                      :data $ {}
-                        |j $ %{} :Leaf (:at 1612613081102) (:by |rJG4IHzWf) (:text |reset-calling-caches!)
-                        |r $ %{} :Leaf (:at 1612613102289) (:by |rJG4IHzWf) (:text |tick-calling-loop!)
                 |yx $ %{} :Expr (:at 1650733481302) (:by |rJG4IHzWf)
                   :data $ {}
                     |T $ %{} :Leaf (:at 1650733484578) (:by |rJG4IHzWf) (:text |memof.once)

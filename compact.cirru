@@ -1,6 +1,6 @@
 
 {} (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.0)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.1)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -323,7 +323,7 @@
                         :font-size 12
                         :font-family "\"Helvetica"
                     :drafts $ comp-drafts (:x store)
-                    :grids $ memof-call comp-grids
+                    :grids $ memof1-call comp-grids
                     :curves $ comp-curves
                     :gradients $ comp-gradients
                     :keyboard $ comp-keyboard (:keyboard-on? store) (:counted store)
@@ -700,7 +700,7 @@
             phlox.input :refer $ request-text!
             phlox.comp.messages :refer $ comp-messages
             "\"nanoid" :refer $ nanoid
-            memof.alias :refer $ memof-call
+            memof.once :refer $ memof1-call
             phlox.util.styles :refer $ font-code
             phlox.comp.arrow :refer $ comp-arrow
             phlox.complex :refer $ polar-point
@@ -1697,7 +1697,7 @@
             defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
         |clear-phlox-caches! $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn clear-phlox-caches! () (reset-calling-caches!) (reset-memof1-caches!)
+            defn clear-phlox-caches! () $ reset-memof1-caches!
         |container $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
@@ -1984,7 +1984,6 @@
                   rerender-app! expanded-app wrap-dispatch options
                 reset! *tree-element expanded-app
               render-stage-for-viewer!
-              tick-calling-loop!
         |render-stage-for-viewer! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn render-stage-for-viewer! ()
@@ -2065,7 +2064,6 @@
             phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments
             lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
             phlox.keyboard :refer $ handle-keyboard-events
-            memof.alias :refer $ reset-calling-caches! tick-calling-loop!
             memof.once :refer $ reset-memof1-caches!
             phlox.complex :as complex
             phlox.math :refer $ vec-length
