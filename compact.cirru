@@ -423,12 +423,12 @@
                 :position $ [] 120 160
                 :style $ {}
                   :fill $ [] (hslx 0 0 100) (hslx 0 0 40)
-                  :fill-gradient-type :v
+                  ; :fill-gradient-type :v
               text $ {} (:text "\"long long text")
                 :position $ [] 120 200
                 :style $ {}
                   :fill $ [] (hslx 0 0 100) (hslx 0 0 40)
-                  :fill-gradient-type :h
+                  ; :fill-gradient-type :h
               text $ {} (:text "\"long long text")
                 :position $ [] 120 120
                 :style $ {}
@@ -603,7 +603,7 @@
                   :fill $ hslx 200 100 50
                   :font-size 40
                   :font-family "\"Josefin Sans"
-                :filters $ []
+                ; :filters $ []
                   [] DropShadowFilter $ {}
                     :color $ hslx 10 90 100
                     :distance 2
@@ -724,13 +724,13 @@
                 reset! *store $ updater @*store op op-id op-time
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn main! () (; js/console.log PIXI)
+            defn main! () (hint-fn async) (; js/console.log PIXI)
               if dev? $ load-console-formatter!
-              -> (new FontFaceObserver "\"Josefin Sans") (.!load)
-                .!then $ fn (event) (render-app!)
+              js-await $ render-app!
               add-watch *store :change $ fn (store prev) (render-app!)
-              render-app!
               when true (render-control!) (start-control-loop! 8 on-control-event)
+              js-await $ -> (new FontFaceObserver "\"Josefin Sans") (.!load)
+              js-await $ render-app!
               println "\"App Started"
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -743,8 +743,9 @@
               hud! "\"error" build-errors
         |render-app! $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn render-app! (? arg)
-              render! (comp-container @*store) dispatch! $ either arg ({})
+            defn render-app! (? arg) (hint-fn async)
+              js-await $ render! (comp-container @*store) dispatch!
+                either arg $ {}
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns phlox.app.main $ :require ("\"pixi.js" :as PIXI)
@@ -762,7 +763,7 @@
       :defs $ {}
         |store $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def store $ {} (:tab :mesh) (:x 0) (:keyboard-on? false) (:counted 0)
+            def store $ {} (:tab :grids) (:x 0) (:keyboard-on? false) (:counted 0)
               :states $ {}
               :cursor $ []
       :ns $ %{} :CodeEntry (:doc |)
@@ -1808,22 +1809,24 @@
             defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
         |init-pixi-app! $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn init-pixi-app! (options)
+            defn init-pixi-app! (options) (hint-fn async)
               let
                   pixi-app $ new PIXI/Application
-                    js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
-                      :backgroundColor $ either (:background-color options) (hslx 0 0 0)
-                      :interactive $ either (:interactive options) true
-                      :backgroundAlpha $ either (:background-alpha options) 1
-                .!stop $ .-ticker pixi-app
-                -> PIXI/Ticker .-shared $ .!stop
-                -> PIXI/Ticker .-system $ .!stop
+                js-await $ .!init pixi-app
+                  js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
+                    :backgroundColor $ either (:background-color options) (hslx 0 0 0)
+                    :interactive $ either (:interactive options) true
+                    :backgroundAlpha $ either (:background-alpha options) 1
+                ; .!stop $ .-ticker pixi-app
+                ; -> PIXI/Ticker .-shared $ .!stop
+                ; -> PIXI/Ticker .-system $ .!stop
                 reset! *app pixi-app
+                js/console.info "\"reset PIXI App"
                 let
-                    el $ .-view pixi-app
+                    el $ .-canvas pixi-app
                   -> js/document .-body $ .!appendChild el
                   handle-drag-moving el
-                -> pixi-app .-renderer .-plugins .-accessibility (.!destroy) 
+                ; -> pixi-app .-renderer .-plugins .-accessibility (.!destroy) 
                 js/window.addEventListener "\"resize" $ fn (event)
                   -> pixi-app .-renderer $ .!resize js/window.innerWidth js/window.innerHeight
                   render-stage-for-viewer!
@@ -1935,8 +1938,11 @@
           :code $ quote
             defn mount-app! (app dispatch!)
               let
-                  element-tree $ render-element app dispatch!
-                .!addChild (.-stage @*app) element-tree
+                  element-tree $ w-js-log (render-element app dispatch!)
+                .!addChild
+                  w-js-log $ .-stage @*app
+                  , element-tree
+                js/console.log "\"NEW STAGE" $ .-stage @*app
         |on-control-event $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn on-control-event (elapsed states delta)
@@ -1968,8 +1974,11 @@
             defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
         |render! $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn render! (expanded-app dispatch! options)
-              when (nil? @*app) (init-pixi-app! options) (aset js/window "\"_phloxTree" @*app)
+            defn render! (expanded-app dispatch! options) (hint-fn async)
+              if (nil? @*app)
+                w-js-log $ do
+                  js-await $ init-pixi-app! options
+                  aset js/window "\"_phloxTree" @*app
               reset! *dispatch-fn dispatch!
               let
                   wrap-dispatch $ fn (op ? data)
@@ -1978,8 +1987,9 @@
                       if (tag? op)
                         @*dispatch-fn $ :: op data
                         @*dispatch-fn op
-                ; js/console.log "\"render!" expanded-app
-                if (nil? @*tree-element)
+                js/console.log "\"render!" expanded-app
+                if
+                  nil? $ w-js-log @*tree-element
                   do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                   rerender-app! expanded-app wrap-dispatch options
                 reset! *tree-element expanded-app
@@ -2002,7 +2012,7 @@
               update-children
                 [] $ [] 0 app
                 [] $ [] 0 @*tree-element
-                .-stage @*app
+                w-js-log $ .-stage @*app
                 , dispatch! options
         |reset-stage-config! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2173,8 +2183,8 @@
                   set! (.-height target) (nth size 1)
         |init-fill $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn init-fill (target color) (.!endFill target)
-              if (some? color) (.!beginFill target color)
+            defn init-fill (target color)
+              if (some? color) (.!fill target color)
         |init-filters $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn init-filters (target filters)
@@ -2194,13 +2204,13 @@
           :code $ quote
             defn init-geometry (data)
               let
-                  geo $ new PIXI/Geometry
+                  geo $ new PIXI/Geometry (js-object)
                   attrs $ :attributes data
-                &doseq (attr attrs)
+                ; &doseq (attr attrs)
                   .!addAttribute geo (:id attr)
                     to-js-data $ :buffer attr
                     :size attr
-                .!addIndex geo $ to-js-data (:index data)
+                ; .!addIndex geo $ to-js-data (:index data)
                 , geo
         |init-scale $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2248,9 +2258,9 @@
                   line-style $ :line-style props
                   position $ :position props
                   events $ :on props
+                draw-circle target $ :radius props
                 init-fill target $ :fill props
                 init-line-style target line-style
-                draw-circle target $ :radius props
                 init-events target events dispatch!
                 init-position target $ :position props
                 init-scale target $ :scale props
@@ -2364,9 +2374,9 @@
                   target $ new PIXI/Graphics
                   props $ :props element
                   events $ :on props
+                draw-rect target (:size props) (:radius props)
                 init-fill target $ :fill props
                 init-line-style target $ :line-style props
-                draw-rect target (:size props) (:radius props)
                 init-position target $ :position props
                 init-scale target $ :scale props
                 init-pivot target $ :pivot props
@@ -2749,11 +2759,11 @@
             defn draw-rect (target size radius)
               if (list? size)
                 if (some? radius)
-                  .!drawRoundedRect target 0 0
+                  .!roundRect target 0 0
                     use-number $ first size
                     use-number $ last size
                     , radius
-                  .!drawRect target 0 0
+                  .!rect target 0 0
                     use-number $ first size
                     use-number $ last size
                 js/console.warn "\"Unknown size" size
@@ -2781,12 +2791,12 @@
           :code $ quote
             defn init-line-style (target line-style)
               when (some? line-style)
-                .!lineStyle target $ js-object
+                .!stroke target $ js-object
                   :width $ use-number (:width line-style)
                   :color $ use-number (:color line-style)
                   :alpha $ either (:alpha line-style) 1
-                  :join $ read-line-join (:join line-style)
-                  :cap $ read-line-cap (:cap line-style)
+                  ; :join $ read-line-join (:join line-style)
+                  ; :cap $ read-line-cap (:cap line-style)
         |init-pivot $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn init-pivot (target pivot)
@@ -2950,7 +2960,7 @@
                             turn-string k
                           (string? k) k
                           true $ str k
-                    [] key-name $ case-default k
+                    [] key-name
                       cond
                           tag? v
                           turn-string v
@@ -2959,12 +2969,13 @@
                         (bool? v) v
                         (list? v) v
                         true $ do (println "\"Unknown style value:" v) v
-                      :fill-gradient-type $ case-default v
-                        do (println "\"unknown gradient type:") v
-                        :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                        :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                        :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
-                        :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                      ; case-default k $ :fill-gradient-type
+                        case-default v
+                          do (println "\"unknown gradient type:") v
+                          :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
+                          :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
+                          :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                          :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
                 pairs-map
                 to-js-data
         |detect-func-in-map? $ %{} :CodeEntry (:doc |)
