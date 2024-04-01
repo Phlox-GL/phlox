@@ -21,17 +21,20 @@
                     :alpha 1
                   :fill $ hslx 160 80 70
                   :on $ {}
-                    :pointertap $ fn (event dispatch!) (dispatch! :add-x nil)
-                rect
-                  {}
-                    :position $ [] 40 40
+                    :pointertap $ fn (event dispatch!)
+                      dispatch! $ :: :add-x
+                container
+                  {} $ :position ([] 40 40)
+                  rect $ {}
+                    :position $ [] 0 0
                     :size $ [] 50 50
                     :line-style $ {} (:width 4)
                       :color $ hslx 0 80 50
                       :alpha 1
                     :fill $ hslx 200 80 80
                     :on $ {}
-                      :pointertap $ fn (e dispatch!) (dispatch! :add-x nil)
+                      :pointertap $ fn (e dispatch!)
+                        dispatch! $ :: :add-x
                     :rotation $ + 1 (* 0.1 x)
                     :pivot $ [] 0 0
                   text $ {}
@@ -67,8 +70,6 @@
                     g :line-style $ {} (:width 4)
                       :color $ hslx 200 80 80
                       :alpha 1
-                    g :begin-fill $ {}
-                      :color $ hslx 0 80 20
                     g :move-to $ []
                       + (* 20 x) 100
                       , 200
@@ -79,6 +80,8 @@
                       - 500 $ * 20 x
                       , 300
                     g :close-path
+                    g :fill $ {}
+                      :color $ hslx 0 80 20
                   :rotation 0.1
                   :pivot $ [] 0 100
                   :alpha 0.5
@@ -383,15 +386,13 @@
                     :p1 $ [] 400 500
                     :p2 $ [] 300 200
                     :to-p $ [] 600 300
-                  g :begin-fill $ {}
-                    :color $ hslx 200 80 80
-                    :alpha 1
                   g :arc $ {}
                     :center $ [] 600 300
                     :radius 20
                     :angle $ [] 0 300
                     :anticlockwise? false
-                  g :end-fill nil
+                  g :fill $ {}
+                    :color $ hslx 200 80 80
                   ; g :line-to $ [] 400 400
               polyline $ {}
                 :style $ {} (:width 4)
@@ -1725,8 +1726,7 @@
                   :move-to $ dev-check-message "\"check :move-to" data lilac-point
                   :line-to $ dev-check-message "\"check :line-to" data lilac-point
                   :line-style $ dev-check-message "\"check :line-style" data lilac-line-style
-                  :begin-fill $ dev-check-message "\"check :fill" data lilac-begin-fill
-                  :end-fill nil
+                  :fill $ dev-check-message "\"check :fill" data lilac-begin-fill
                   :close-path nil
                   :arc $ dev-check-message "\"check :arc" data lilac-arc
                   :arc-to $ dev-check-message "\"check :arc-to" data lilac-arc-to
@@ -2258,9 +2258,9 @@
                   line-style $ :line-style props
                   position $ :position props
                   events $ :on props
-                draw-circle target $ :radius props
                 init-fill target $ :fill props
                 init-line-style target line-style
+                draw-circle target $ :radius props
                 init-events target events dispatch!
                 init-position target $ :position props
                 init-scale target $ :scale props
@@ -2375,8 +2375,8 @@
                   props $ :props element
                   events $ :on props
                 draw-rect target (:size props) (:radius props)
-                init-fill target $ :fill props
                 init-line-style target $ :line-style props
+                init-fill target $ :fill props
                 init-position target $ :position props
                 init-scale target $ :scale props
                 init-pivot target $ :pivot props
@@ -2394,7 +2394,10 @@
                   props $ :props element
                   style $ :style props
                   text-style $ new PIXI/TextStyle (convert-line-style style)
-                  target $ new PIXI/Text (:text props) text-style
+                  target $ new PIXI/Text
+                    js-object
+                      :text $ :text props
+                      :style text-style
                 init-position target $ :position props
                 init-scale target $ :scale props
                 init-pivot target $ :pivot props
@@ -2486,9 +2489,9 @@
                   or (not= position position') (not= radius radius') (not= line-style line-style')
                     not= (:fill props) (:fill props')
                   .!clear target
+                  draw-circle target $ :radius props
                   init-fill target $ :fill props
                   init-line-style target line-style
-                  draw-circle target $ :radius props
                 update-position target (:position props) (:position props')
                 update-scale target (:scale props) (:scale props')
                 update-alpha target (:alpha props) (:alpha props')
@@ -2639,9 +2642,9 @@
                   or (not= size size') (not= radius radius') (not= line-style line-style')
                     not= (:fill props) (:fill props')
                   .!clear target
+                  draw-rect target size $ :radius props
                   init-fill target $ :fill props
                   init-line-style target line-style
-                  draw-rect target size $ :radius props
                 update-position target (:position props) (:position props')
                 update-scale target (:scale props) (:scale props')
                 update-rotation target (:rotation props) (:rotation props')
@@ -2720,9 +2723,7 @@
                     :move-to $ .!moveTo target (first data) (last data)
                     :line-to $ .!lineTo target (first data) (last data)
                     :line-style $ init-line-style target data
-                    :begin-fill $ .!beginFill target (:color data)
-                      either (:alpha data) 1
-                    :end-fill $ .!endFill target
+                    :fill $ .!fill target (:color data)
                     :close-path $ .!closePath target
                     :arc $ let
                         center $ :center data
@@ -2752,7 +2753,7 @@
           :code $ quote
             defn draw-circle (target radius)
               if (number? radius)
-                .!drawCircle target 0 0 $ use-number radius
+                .!circle target 0 0 $ use-number radius
                 js/console.warn "\"Unknown radius"  radius
         |draw-rect $ %{} :CodeEntry (:doc |)
           :code $ quote
