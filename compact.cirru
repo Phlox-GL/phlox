@@ -315,7 +315,7 @@
                   cursor $ []
                   states $ :states store
                 group
-                  {} $ :position ([] 0 0)
+                  {} $ :position ([] -400 -300)
                   comp-tabs tabs (:tab store)
                     {} $ :position ([] 10 10)
                     fn (t d!) (d! :tab t)
@@ -640,9 +640,10 @@
                   state $ either (:data states)
                     {} (:text "\"initial text") (:long-text "\"long..")
                 container ({})
-                  rect
-                    {}
-                      :position $ [] 140 110
+                  container
+                    {} $ :position ([] 140 110)
+                    rect $ {}
+                      :position $ [] 0 0
                       :size $ [] 80 24
                       :fill $ hslx 0 0 20
                       :on $ {}
@@ -658,9 +659,10 @@
                       :position $ [] 6 4
                       :style $ {} (:font-size 14)
                         :fill $ hslx 0 0 80
-                  rect
-                    {}
-                      :position $ [] 140 180
+                  container
+                    {} $ :position ([] 140 180)
+                    rect $ {}
+                      :position $ [] 0 0
                       :size $ [] 200 100
                       :fill $ hslx 0 0 20
                       :on $ {}
@@ -1274,50 +1276,49 @@
                   rounded? $ :round? props
                 container
                   {} $ :position (:position props)
-                  rect
-                    {}
-                      :size $ [] 120 24
-                      :fill fill
-                      :on $ {}
-                        :pointerdown $ fn (e d!)
+                  rect $ {}
+                    :size $ [] 120 24
+                    :fill fill
+                    :on $ {}
+                      :pointerdown $ fn (e d!)
+                        let
+                            x1 $ -> e .-data .-global .-x
+                          d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
+                      :globalpointermove $ fn (e d!)
+                        when (:dragging? state)
                           let
-                              x1 $ -> e .-data .-global .-x
-                            d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
-                        :globalpointermove $ fn (e d!)
-                          when (:dragging? state)
-                            let
-                                x2 $ -> e .-data .-global .-x
-                              if (fn? on-change)
-                                on-change
-                                  ->
-                                    + (:v0 state)
-                                      * unit $ - x2 (:x0 state)
-                                    (fn (v) (if rounded? (js/Math.round v) v))
-                                    (fn (v) (if (some? (:max props)) (&min (:max props) v) v))
-                                    (fn (v) (if (some? (:min props)) (&max (:min props) v) v))
-                                  , d!
-                                js/console.log "\"[slider] missing :on-change listener"
-                        :pointerup $ fn (e d!)
-                          d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
-                        :pointerupoutside $ fn (e d!)
-                          d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
-                    text $ {}
-                      :text $ str "\"◀ "
-                        if (number? value)
-                          .!toFixed value $ if rounded? 0 4
-                          , "\"nil"
-                        , "\" ▶"
-                      :position $ [] 4 4
-                      :style $ {} (:fill color) (:font-size 12) (:font-family "\"Menlo, monospace")
-                    text $ {}
-                      :text $ str
-                        if (string? title) (str title "\" ") "\""
-                        , "\"◈ " unit
-                      :position $ [] 0 -18
-                      :style $ {}
-                        :fill $ hslx 0 0 80
-                        :font-size 13
-                        :font-family "\"Arial, sans-serif"
+                              x2 $ -> e .-data .-global .-x
+                            if (fn? on-change)
+                              on-change
+                                ->
+                                  + (:v0 state)
+                                    * unit $ - x2 (:x0 state)
+                                  (fn (v) (if rounded? (js/Math.round v) v))
+                                  (fn (v) (if (some? (:max props)) (&min (:max props) v) v))
+                                  (fn (v) (if (some? (:min props)) (&max (:min props) v) v))
+                                , d!
+                              js/console.log "\"[slider] missing :on-change listener"
+                      :pointerup $ fn (e d!)
+                        d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
+                      :pointerupoutside $ fn (e d!)
+                        d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
+                  text $ {}
+                    :text $ str "\"◀ "
+                      if (number? value)
+                        .!toFixed value $ if rounded? 0 4
+                        , "\"nil"
+                      , "\" ▶"
+                    :position $ [] 4 4
+                    :style $ {} (:fill color) (:font-size 12) (:font-family "\"Menlo, monospace")
+                  text $ {}
+                    :text $ str
+                      if (string? title) (str title "\" ") "\""
+                      , "\"◈ " unit
+                    :position $ [] 0 -18
+                    :style $ {}
+                      :fill $ hslx 0 0 80
+                      :font-size 13
+                      :font-family "\"Arial, sans-serif"
         |comp-slider-point $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn comp-slider-point (states props)
@@ -1335,41 +1336,40 @@
                   rounded? $ :round? props
                 container
                   {} $ :position (:position props)
-                  rect
-                    {}
-                      :size $ [] 16 16
-                      :fill fill
-                      :radius 4
-                      :on $ {}
-                        :pointerdown $ fn (e d!)
+                  rect $ {}
+                    :size $ [] 16 16
+                    :fill fill
+                    :radius 4
+                    :on $ {}
+                      :pointerdown $ fn (e d!)
+                        let
+                            x1 $ -> e .-data .-global .-x
+                          d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
+                      :globalpointermove $ fn (e d!)
+                        when (:dragging? state)
                           let
-                              x1 $ -> e .-data .-global .-x
-                            d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
-                        :globalpointermove $ fn (e d!)
-                          when (:dragging? state)
-                            let
-                                x2 $ -> e .-data .-global .-x
-                              if (fn? on-change)
-                                on-change
-                                  ->
-                                    + (:v0 state)
-                                      * unit $ - x2 (:x0 state)
-                                    (fn (v) (if rounded? (js/Math.round v) v))
-                                    (fn (v) (if (some? (:max props)) (&min (:max props) v) v))
-                                    (fn (v) (if (some? (:min props)) (&max (:min props) v) v))
-                                  , d!
-                                js/console.log "\"[slider] missing :on-change listener"
-                        :pointerup $ fn (e d!)
-                          d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
-                        :pointerupoutside $ fn (e d!)
-                          d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
-                    text $ {}
-                      :text $ str
-                        if (number? value)
-                          .!toFixed value $ if rounded? 0 4
-                          , "\"nil"
-                      :position $ [] 20 3
-                      :style $ {} (:fill color) (:font-size 10) (:font-family "\"Menlo, monospace")
+                              x2 $ -> e .-data .-global .-x
+                            if (fn? on-change)
+                              on-change
+                                ->
+                                  + (:v0 state)
+                                    * unit $ - x2 (:x0 state)
+                                  (fn (v) (if rounded? (js/Math.round v) v))
+                                  (fn (v) (if (some? (:max props)) (&min (:max props) v) v))
+                                  (fn (v) (if (some? (:min props)) (&max (:min props) v) v))
+                                , d!
+                              js/console.log "\"[slider] missing :on-change listener"
+                      :pointerup $ fn (e d!)
+                        d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
+                      :pointerupoutside $ fn (e d!)
+                        d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
+                  text $ {}
+                    :text $ str
+                      if (number? value)
+                        .!toFixed value $ if rounded? 0 4
+                        , "\"nil"
+                    :position $ [] 20 3
+                    :style $ {} (:fill color) (:font-size 10) (:font-family "\"Menlo, monospace")
         |comp-spin-slider $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn comp-spin-slider (states props)
@@ -1812,6 +1812,7 @@
             defn init-pixi-app! (options) (hint-fn async)
               let
                   pixi-app $ new PIXI/Application
+                set! js/window.__PIXI_APP__ pixi-app
                 js-await $ .!init pixi-app
                   js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
                     :backgroundColor $ either (:background-color options) (hslx 0 0 0)
@@ -1938,11 +1939,8 @@
           :code $ quote
             defn mount-app! (app dispatch!)
               let
-                  element-tree $ w-js-log (render-element app dispatch!)
-                .!addChild
-                  w-js-log $ .-stage @*app
-                  , element-tree
-                js/console.log "\"NEW STAGE" $ .-stage @*app
+                  element-tree $ render-element app dispatch!
+                .!addChild (.-stage @*app) element-tree
         |on-control-event $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn on-control-event (elapsed states delta)
@@ -1976,9 +1974,9 @@
           :code $ quote
             defn render! (expanded-app dispatch! options) (hint-fn async)
               if (nil? @*app)
-                w-js-log $ do
+                do
                   js-await $ init-pixi-app! options
-                  aset js/window "\"_phloxTree" @*app
+                  ; aset js/window "\"_phloxTree" @*app
               reset! *dispatch-fn dispatch!
               let
                   wrap-dispatch $ fn (op ? data)
@@ -1987,9 +1985,7 @@
                       if (tag? op)
                         @*dispatch-fn $ :: op data
                         @*dispatch-fn op
-                js/console.log "\"render!" expanded-app
-                if
-                  nil? $ w-js-log @*tree-element
+                if (nil? @*tree-element)
                   do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                   rerender-app! expanded-app wrap-dispatch options
                 reset! *tree-element expanded-app
@@ -2012,7 +2008,7 @@
               update-children
                 [] $ [] 0 app
                 [] $ [] 0 @*tree-element
-                w-js-log $ .-stage @*app
+                .-stage @*app
                 , dispatch! options
         |reset-stage-config! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2258,9 +2254,9 @@
                   line-style $ :line-style props
                   position $ :position props
                   events $ :on props
-                init-fill target $ :fill props
-                init-line-style target line-style
                 draw-circle target $ :radius props
+                init-line-style target line-style
+                init-fill target $ :fill props
                 init-events target events dispatch!
                 init-position target $ :position props
                 init-scale target $ :scale props
@@ -2375,8 +2371,8 @@
                   props $ :props element
                   events $ :on props
                 draw-rect target (:size props) (:radius props)
-                init-line-style target $ :line-style props
                 init-fill target $ :fill props
+                init-line-style target $ :line-style props
                 init-position target $ :position props
                 init-scale target $ :scale props
                 init-pivot target $ :pivot props
@@ -2490,8 +2486,8 @@
                     not= (:fill props) (:fill props')
                   .!clear target
                   draw-circle target $ :radius props
-                  init-fill target $ :fill props
                   init-line-style target line-style
+                  init-fill target $ :fill props
                 update-position target (:position props) (:position props')
                 update-scale target (:scale props) (:scale props')
                 update-alpha target (:alpha props) (:alpha props')
