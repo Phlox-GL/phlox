@@ -460,6 +460,7 @@
                       :base $ [] 109 129
                       :offset $ [] -123 -3
                       :zoom 0.26
+                  fractal-wgsl $ inline-file "\"fractal.wgsl"
                 container ({})
                   comp-button $ {} (:text "\"Tick")
                     :position $ [] 200 -40
@@ -470,16 +471,12 @@
                     mesh $ {} (:scale 1)
                       :position $ [] 0 0
                       :geometry $ {}
-                        :attributes $ []
-                          {} (:id "\"aVertexPosition") (:size 2)
-                            :buffer $ [] -400 -400 400 -400 400 400 -400 400
-                          {} (:id "\"aUvs") (:size 2)
-                            :buffer $ [] 0 0 1 0 1 1 0 1
+                        :attributes $ js-object
+                          :aPosition $ js-array -400 -400 400 -400 400 400 -400 400
+                          :aUvs $ js-array 0 0 1 0 1 1 0 1
+                        ; :index $ [] 0 1 2
                         :index $ [] 0 1 2 0 3 2
-                      :shader $ {}
-                        :vertex-source $ inline-file "\"demo.vert"
-                        :fragment-source $ inline-file "\"demo.frag"
-                      :draw-mode :triangles
+                      :source fractal-wgsl
                       :uniforms $ js-object (:uSampler2 sample-texture)
                         :time $ :x state
                         ; :base $ :base state
@@ -765,7 +762,7 @@
       :defs $ {}
         |store $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def store $ {} (:tab :buttons) (:x 0) (:keyboard-on? false) (:counted 0)
+            def store $ {} (:tab :mesh) (:x 0) (:keyboard-on? false) (:counted 0)
               :states $ {}
               :cursor $ []
       :ns $ %{} :CodeEntry (:doc |)
@@ -1016,15 +1013,13 @@
                       :on-change $ fn (position d!)
                         if (fn? on-change) (on-change from position d!) (js/console.warn "\"missing onchange for arrow")
                   graphics $ {}
-                    :ops $ []
-                      g :line-style $ {} (:width width)
-                        :color $ hslx 200 80 80
-                        :alpha 1
-                      g :move-to from
-                      g :line-to to
+                    :ops $ [] (g :move-to from) (g :line-to to)
                       g :line-to $ complex/add to arm-left
                       g :move-to to
                       g :line-to $ complex/add to arm-right
+                      g :line-style $ {} (:width width)
+                        :color $ hslx 200 80 80
+                        :alpha 1
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns phlox.comp.arrow $ :require
@@ -1811,7 +1806,7 @@
                   pixi-app $ new PIXI/Application
                 set! js/window.__PIXI_APP__ pixi-app
                 js-await $ .!init pixi-app
-                  js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
+                  js-object (:preference "\"webgpu") (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2) (:width js/window.innerWidth) (:height js/window.innerHeight)
                     :backgroundColor $ either (:background-color options) (hslx 0 0 0)
                     :interactive $ either (:interactive options) true
                     :backgroundAlpha $ either (:background-alpha options) 1
@@ -2167,6 +2162,14 @@
         :code $ quote (ns phlox.math)
     |phlox.render $ %{} :FileEntry
       :defs $ {}
+        |build-index-buffer $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defn build-index-buffer (indexes)
+              if (some? indexes)
+                new PIXI/Buffer $ js-object
+                  :data $ new js/Uint32Array (js-array & indexes)
+                  :usage $ .-INDEX PIXI/BufferUsage
+                , js/undefined
         |init-box-size $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn init-box-size (target size)
@@ -2193,17 +2196,15 @@
                         new ctor $ to-js-data (nth ft 1)
                       js/console.warn "\"Unknown filter:" ft
                   set! (.-filters target) filters-arr
-        |init-geometry $ %{} :CodeEntry (:doc |)
+        |init-geometry $ %{} :CodeEntry (:doc "|expects attributes in js data, since fragile design in PIXI, better not converting it.\n\nthere are other features, that are still not implemented. according to https://pixijs.download/release/docs/rendering.Geometry.html .")
           :code $ quote
-            defn init-geometry (data)
+            defn init-geometry (options)
               let
-                  geo $ new PIXI/Geometry (js-object)
-                  attrs $ :attributes data
-                ; &doseq (attr attrs)
-                  .!addAttribute geo (:id attr)
-                    to-js-data $ :buffer attr
-                    :size attr
-                ; .!addIndex geo $ to-js-data (:index data)
+                  attributes $ :attributes options
+                  topology $ read-topology-alias (:topology options)
+                  index-buffer $ build-index-buffer (:index options)
+                  geo $ new PIXI/Geometry
+                    js-object (:attributes attributes) (:topology topology) (:indexBuffer index-buffer)
                 , geo
         |init-scale $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2227,14 +2228,26 @@
                   true $ js/console.error "\"unknown scale" scale
         |init-shader $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn init-shader (data uniforms)
-              .!from PIXI/Shader (:vertex-source data) (:fragment-source data) uniforms
-        |read-draw-mode-alias $ %{} :CodeEntry (:doc |)
+            defn init-shader (source uniforms)
+              .!from PIXI/Shader $ js-object (:gl js/undefined)
+                :gpu $ js-object
+                  :vertex $ js-object (:entryPoint "\"vert_main") (:source source)
+                  :fragment $ js-object (:entryPoint "\"frag_main") (:source source)
+                :resources $ js-object
+                  :uGGGG $ js-object
+                    :aaa $ js-array 9.999 8.999 9.999 9.999
+        |read-topology-alias $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn read-draw-mode-alias (draw-mode)
-              if (tag? draw-mode)
-                case-default draw-mode (js/console.warn "\"Unknown draw mode:" draw-mode) (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
-                , draw-mode
+            defn read-topology-alias (topology)
+              if (tag? topology)
+                case-default topology
+                  do (js/console.warn "\"Unknown draw mode:" topology) "\"triangle-list"
+                  :point-list "\"point-list"
+                  :line-list "\"line-list"
+                  :line-strip "\"line-strip"
+                  :triangle-list "\"triangle-list"
+                  :triangle-strip "\"triangle-strip"
+                either topology "\"triangle-list"
         |render-children $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn render-children (target children dispatch!)
@@ -2339,12 +2352,13 @@
             defn render-mesh (element dispatch!)
               let
                   props $ :props element
-                  geo $ init-geometry (:geometry props)
-                  shader $ init-shader (:shader props) (:uniforms props)
-                  draw-mode $ or
-                    read-draw-mode-alias $ :draw-mode props
-                    , js/undefined
-                  target $ new PIXI/Mesh geo shader nil draw-mode
+                  source $ :source props
+                  geo $ w-js-log
+                    init-geometry $ :geometry props
+                  shader $ w-js-log
+                    init-shader (:source props) (:uniforms props)
+                  target $ new PIXI/Mesh
+                    js-object (:geometry geo) (:shader shader)
                   events $ :on props
                 init-position target $ :position props
                 init-scale target $ :scale props
@@ -2511,14 +2525,6 @@
                 update-rotation target (:rotation props) (:rotation props')
                 update-alpha target (:alpha props) (:alpha props')
                 update-filters target (:filters props) (:filters props')
-        |update-draw-mode $ %{} :CodeEntry (:doc |)
-          :code $ quote
-            defn update-draw-mode (target draw-mode draw-mode')
-              when (not= draw-mode draw-mode')
-                let
-                    m $ read-draw-mode-alias draw-mode
-                  if (nil? m) (eprintln "\"updating draw-mode to nil")
-                  set! (.-drawMode target) m
         |update-element $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn update-element (coord element old-element parent-element idx dispatch! options)
@@ -2555,8 +2561,11 @@
                 init-filters target filters
         |update-geometry $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn update-geometry (target geo geo')
-              when (not= geo geo')
+            defn update-geometry (target geo geo') (; js/console.log "\"comparing geometry" geo)
+              when
+                or
+                  not= (:index geo) (:index geo')
+                  not $ identical? (:attributes geo) (:attributes geo')
                 -> target .-geometry $ set! (init-geometry geo)
         |update-graphics $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -2606,9 +2615,8 @@
                   ops $ :ops props
                   ops' $ :ops props'
                 update-geometry target (:geometry props) (:geometry props')
-                update-shader target (:shader props) (:shader props') (:uniforms props)
-                update-draw-mode target (:draw-mode props) (:draw-mode props')
-                let
+                update-shader target (:source props) (:source props') (:uniforms props)
+                ; let
                     pointer $ -> target .-shader .-uniforms
                   -> (:uniforms props) js/Object.entries $ .!forEach
                     fn (arr ? a b)
@@ -2675,7 +2683,8 @@
           :code $ quote
             defn update-shader (target shader shader' uniforms)
               when (not= shader shader')
-                -> target .-shader $ set! (init-shader shader uniforms)
+                -> target .-shader $ set!
+                  w-js-log $ init-shader shader uniforms
         |update-text $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn update-text (element old-element target)
