@@ -424,12 +424,10 @@
                 :position $ [] 120 160
                 :style $ {}
                   :fill $ [] (hslx 0 0 100) (hslx 0 0 40)
-                  ; :fill-gradient-type :v
               text $ {} (:text "\"long long text")
                 :position $ [] 120 200
                 :style $ {}
                   :fill $ [] (hslx 0 0 100) (hslx 0 0 40)
-                  ; :fill-gradient-type :h
               text $ {} (:text "\"long long text")
                 :position $ [] 120 120
                 :style $ {}
@@ -688,7 +686,7 @@
             def sample-texture $ .!from PIXI/Texture "\"https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/1a2af589827261.5e022908ed0b1.jpg"
         |tabs $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") ([] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows") ([] :shadow "\"Shadow") ([] :mesh "\"Mesh")
+            def tabs $ [] ([] :drafts "\"Drafts") ([] :grids "\"Grids") ([] :curves "\"Curves") (; [] :gradients "\"Gradients") ([] :keyboard "\"Keyboard") ([] :slider "\"Slider") ([] :buttons "\"Buttons") ([] :points "\"Points") ([] :switch "\"Switch") ([] :input "\"Input") ([] :messages "\"Messages") ([] :slider-point "\"Slider Point") ([] :spin-slider "\"Spin Slider") ([] :arrows "\"Arrows") (; [] :shadow "\"Shadow") ([] :mesh "\"Mesh")
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns phlox.app.container $ :require
@@ -729,10 +727,11 @@
           :code $ quote
             defn main! () (hint-fn async) (; js/console.log PIXI)
               if dev? $ load-console-formatter!
-              js-await $ render-app!
               add-watch *store :change $ fn (store prev) (render-app!)
               when true (render-control!) (start-control-loop! 8 on-control-event)
               js-await $ -> (new FontFaceObserver "\"Josefin Sans") (.!load)
+              -> PIXI/Ticker .-shared .-autoStart $ set! false
+              -> PIXI/Ticker .-shared $ .!stop
               js-await $ render-app!
               println "\"App Started"
         |reload! $ %{} :CodeEntry (:doc |)
@@ -766,7 +765,7 @@
       :defs $ {}
         |store $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def store $ {} (:tab :grids) (:x 0) (:keyboard-on? false) (:counted 0)
+            def store $ {} (:tab :buttons) (:x 0) (:keyboard-on? false) (:counted 0)
               :states $ {}
               :cursor $ []
       :ns $ %{} :CodeEntry (:doc |)
@@ -962,8 +961,6 @@
                 :drop-shadow-distance $ number+
                 :fill $ or+
                   [] lilac-color $ list+ lilac-color
-                :fill-gradient-type $ enum+ (#{} :vertical :horizontal :v :h)
-                :fill-gradient-stops $ any+
                 :font-family $ string+
                 :font-size $ number+
                 :font-style $ enum+ (#{} :normal :italic :oblique)
@@ -2005,7 +2002,7 @@
         |rerender-app! $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn rerender-app! (app dispatch! options) (; js/console.log "\"rerender tree" app @*tree-element)
-              update-children
+              update-children ([])
                 [] $ [] 0 app
                 [] $ [] 0 @*tree-element
                 .-stage @*app
@@ -2424,14 +2421,16 @@
                     set! (.-height target) js/undefined
         |update-children $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn update-children (children-dict old-children-dict parent-container dispatch! options)
+            defn update-children (coord children-dict old-children-dict parent-container dispatch! options)
               when dev? $ assert "\"children should not contain nil element"
                 and
                   every? (map children-dict last) some?
                   every? (map old-children-dict last) some?
               let
                   list-ops $ find-minimal-ops lcs-state-0 (map old-children-dict first) (map children-dict first)
-                ; js/console.log "\"ops" $ :total list-ops
+                ; if
+                  > (:step list-ops) 0
+                  js/console.log "\"ops" list-ops
                 loop
                     idx 0
                     ops $ :acc list-ops
@@ -2441,7 +2440,7 @@
                     let
                         op $ first ops
                       case-default (first op)
-                        do $ println "\"Unknown op:" op
+                        do $ eprintln "\"Unknown op:" op
                         :remains $ do
                           when dev? $ assert
                             = (last op)
@@ -2449,6 +2448,7 @@
                               first $ first ys
                             , "\"check key"
                           update-element
+                            conj coord $ first (first xs)
                             last $ first xs
                             last $ first ys
                             , parent-container idx dispatch! options
@@ -2457,6 +2457,7 @@
                           when dev? $ assert "\"check key"
                             = (last op)
                               first $ first xs
+                          ; js/console.log "\"Adding idx" coord
                           .!addChildAt parent-container
                             render-element
                               last $ first xs
@@ -2467,6 +2468,7 @@
                           when dev? $ assert "\"check key"
                             = (last op)
                               first $ first ys
+                          ; js/console.log "\"Removing idx" idx
                           .!removeChildAt parent-container idx
                           recur idx (rest ops) xs $ rest ys
         |update-circle $ %{} :CodeEntry (:doc |)
@@ -2519,7 +2521,7 @@
                   set! (.-drawMode target) m
         |update-element $ %{} :CodeEntry (:doc |)
           :code $ quote
-            defn update-element (element old-element parent-element idx dispatch! options)
+            defn update-element (coord element old-element parent-element idx dispatch! options)
               cond
                   or (nil? element) (nil? element)
                   js/console.error "\"Not supposed to be empty"
@@ -2527,6 +2529,8 @@
                   do
                     let
                         target $ .!getChildAt parent-element idx
+                      ; js/console.log "\"Updateing element" coord (:name element)
+                        to-lispy-string $ :props element
                       case-default (:name element)
                         do $ eprintln "\"not implement yet for updating:" (:name element)
                         :container $ update-container element old-element target
@@ -2536,9 +2540,9 @@
                         :graphics $ update-graphics element old-element target dispatch!
                         :mesh $ update-mesh element old-element target dispatch!
                         :image $ update-image element old-element target dispatch!
-                    update-children (:children element) (:children old-element) (.!getChildAt parent-element idx) dispatch! options
+                    update-children coord (:children element) (:children old-element) (.!getChildAt parent-element idx) dispatch! options
                 (not= (:name element) (:name old-element))
-                  do (.!removeChildAt parent-element idx)
+                  do (; js/console.log "\"Recreaing element" coord element) (.!removeChildAt parent-element idx)
                     .!addChildAt parent-element (render-element element dispatch!) idx
                 true $ js/console.warn "\"Unknown case:" element old-element
         |update-filters $ %{} :CodeEntry (:doc |)
@@ -2693,13 +2697,13 @@
                 update-angle target (:angle props) (:angle props')
                 update-pivot target (:pivot props) (:pivot props')
                 update-alpha target (:alpha props) (:alpha props')
-                if
+                ; if
                   not= (:align props) (:align props')
                   if
                     = :center $ :align props
                     .!set (.-anchor target) 0.5
                     .!set (.-anchor target) nil
-                update-filters target (:filters props) (:filters props')
+                ; update-filters target (:filters props) (:filters props')
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns phlox.render $ :require ("\"pixi.js" :as PIXI)
@@ -2834,7 +2838,7 @@
           :code $ quote
             defn update-alpha (target alpha alpha0)
               when (not= alpha alpha0)
-                set! (-> target .-alpha) alpha
+                set! (-> target .-alpha) (either alpha 1)
         |update-events $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn update-events (target events old-events dispatch!)
@@ -2957,22 +2961,14 @@
                             turn-string k
                           (string? k) k
                           true $ str k
-                    [] key-name
-                      cond
-                          tag? v
-                          turn-string v
-                        (string? v) v
-                        (number? v) v
-                        (bool? v) v
-                        (list? v) v
-                        true $ do (println "\"Unknown style value:" v) v
-                      ; case-default k $ :fill-gradient-type
-                        case-default v
-                          do (println "\"unknown gradient type:") v
-                          :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                          :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                          :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
-                          :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                    [] key-name $ cond
+                        tag? v
+                        turn-string v
+                      (string? v) v
+                      (number? v) v
+                      (bool? v) v
+                      (list? v) v
+                      true $ do (println "\"Unknown style value:" v) v
                 pairs-map
                 to-js-data
         |detect-func-in-map? $ %{} :CodeEntry (:doc |)
