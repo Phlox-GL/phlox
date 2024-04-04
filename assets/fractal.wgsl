@@ -39,9 +39,9 @@ fn frag_main(input: VertexOutput) -> @location(0) vec4<f32> {
 
   let uv = input.aUvs;
   let base = vec2<f32>(0.0, 0.0);
-  let zoom = 2.0;
-  let offset_x = 0.1;
-  let offset_y = 0.1;
+  let zoom = 1.0;
+  let offset_x = 0.14;
+  let offset_y = 0.6;
 
   var z = uv - base * 0.4 / zoom;
   var escaped = false;

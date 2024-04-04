@@ -473,11 +473,11 @@
                       :geometry $ {}
                         :attributes $ js-object
                           :aPosition $ js-array -400 -400 400 -400 400 400 -400 400
-                          :aUvs $ js-array 0 0 1 0 1 1 0 1
+                          :aUvs $ js-array -1 -1 1 -1 1 1 -1 1
                         ; :index $ [] 0 1 2
                         :index $ [] 0 1 2 0 3 2
                       :source fractal-wgsl
-                      :uniforms $ js-object (:uSampler2 sample-texture)
+                      :uniforms $ js-object (; :uSampler2 sample-texture)
                         :time $ :x state
                         ; :base $ :base state
                         :baseX $ first (:base state)
@@ -2353,9 +2353,9 @@
               let
                   props $ :props element
                   source $ :source props
-                  geo $ w-js-log
+                  geo $ wo-js-log
                     init-geometry $ :geometry props
-                  shader $ w-js-log
+                  shader $ wo-js-log
                     init-shader (:source props) (:uniforms props)
                   target $ new PIXI/Mesh
                     js-object (:geometry geo) (:shader shader)
@@ -2706,7 +2706,7 @@
                 update-angle target (:angle props) (:angle props')
                 update-pivot target (:pivot props) (:pivot props')
                 update-alpha target (:alpha props) (:alpha props')
-                ; if
+                if
                   not= (:align props) (:align props')
                   if
                     = :center $ :align props
