@@ -1,6 +1,6 @@
 
 {} (:about "|file is generated - never edit directly; learn cr edit/tree workflows before changing") (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.2)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.3)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
