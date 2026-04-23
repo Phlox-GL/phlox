@@ -1,6 +1,6 @@
 
 {} (:about "|file is generated - never edit directly; learn cr edit/tree workflows before changing") (:package |phlox)
-  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.1)
+  :configs $ {} (:init-fn |phlox.app.main/main!) (:reload-fn |phlox.app.main/reload!) (:version |0.7.3)
     :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
   :entries $ {}
   :files $ {}
@@ -911,7 +911,7 @@
                 :angle $ optional+ (number+)
                 :style lilac-line-style
                 :segments $ list+
-                  tuple+ ([] lilac-point lilac-point)
+                  tuple+ (:: lilac-point lilac-point)
                     {} $ :check-size? true
                 :on-keyboard $ optional+ lilac-event-map
               {} $ :check-keys? true
@@ -927,7 +927,7 @@
         |lilac-point $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
             def lilac-point $ tuple+
-              [] (number+) (number+)
+              :: (number+) (number+)
               {} $ :check-size? true
           :examples $ []
         |lilac-polyline $ %{} :CodeEntry (:doc |) (:schema nil)
@@ -942,7 +942,7 @@
                 :angle $ optional+ (number+)
                 :style lilac-line-style
                 :points $ list+
-                  tuple+ $ [] (number+) (number+)
+                  tuple+ $ :: (number+) (number+)
                 :on-keyboard $ optional+ lilac-event-map
               {} $ :check-keys? true
           :examples $ []
@@ -1223,7 +1223,7 @@
                 :color $ optional+ (number+)
                 :alpha $ optional+ (number+)
                 :position $ tuple+
-                  [] (number+) (number+)
+                  :: (number+) (number+)
                 :hide-text? $ optional+ (bool+)
                 :on-change $ fn+
               {} $ :check-keys? true
@@ -1526,7 +1526,7 @@
                 :max $ optional+ (number+)
                 :min $ optional+ (number+)
                 :position $ optional+
-                  tuple+ $ [] (number+) (number+)
+                  tuple+ $ :: (number+) (number+)
               {} $ :check-keys? true
           :examples $ []
         |lilac-slider-point $ %{} :CodeEntry (:doc |) (:schema nil)
@@ -1542,7 +1542,7 @@
                 :max $ optional+ (number+)
                 :min $ optional+ (number+)
                 :position $ optional+
-                  tuple+ $ [] (number+) (number+)
+                  tuple+ $ :: (number+) (number+)
               {} $ :check-keys? true
           :examples $ []
       :ns $ %{} :NsEntry (:doc |)
@@ -1687,13 +1687,12 @@
           :examples $ []
         |rand-point $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
-            defn$ rand-point
-                n
-                rand-point n n
-              (n m)
+            defn rand-point (n ? m)
+              let
+                  m0 $ either m n
                 []
                   - n $ rand-int (* 2 n)
-                  - m $ rand-int (* 2 m)
+                  - m0 $ rand-int (* 2 m0)
           :examples $ []
         |rebase $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
@@ -1724,7 +1723,9 @@
                   + (* a y) (* b x)
           :examples $ []
       :ns $ %{} :NsEntry (:doc |)
-        :code $ quote (ns phlox.complex)
+        :code $ quote
+          ns phlox.complex $ :require
+            [] @calcit/std :refer $ rand-int
     |phlox.config $ %{} :FileEntry
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |) (:schema nil)
@@ -1928,9 +1929,9 @@
             def lilac-arc $ record+
               {} (:center lilac-point)
                 :angle $ optional+
-                  tuple+ $ [] (number+) (number+)
+                  tuple+ $ :: (number+) (number+)
                 :radian $ optional+
-                  tuple+ $ [] (number+) (number+)
+                  tuple+ $ :: (number+) (number+)
                 :radius $ number+
                 :anticlockwise? $ optional+ (bool+)
                 :filters $ optional+
@@ -1962,7 +1963,7 @@
             def lilac-image $ record+
               {}
                 :url $ string+
-                :size $ options+ lilac-point
+                :size $ optional+ lilac-point
                 :on $ optional+ lilac-event-map
                 :position $ optional+ lilac-point
                 :pivot $ optional+ lilac-point
@@ -2175,7 +2176,7 @@
             phlox.render :refer $ render-element update-element update-children
             phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
             |@quamolit/phlox-utils :refer $ hcl-to-hex
-            phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments
+            phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments lilac-event-map
             lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
             phlox.keyboard :refer $ handle-keyboard-events
             memof.once :refer $ reset-memof1-caches!
@@ -2683,11 +2684,14 @@
         |update-filters $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
             defn update-filters (target filters filters0)
-              if
-                not=
-                  map (.to-list filters) last
-                  map (.to-list filters0) last
-                init-filters target filters
+              let
+                  next-filters $ either filters ([])
+                  prev-filters $ either filters0 ([])
+                if
+                  not= (map next-filters last) (map prev-filters last)
+                  if (empty? next-filters)
+                    set! (.-filters target) nil
+                    init-filters target next-filters
           :examples $ []
         |update-geometry $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
@@ -3165,7 +3169,8 @@
         |element? $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
             defn element? (x)
-              and (record? x) (&record:matches? schema/PhloxElement x)
+              and (record? x)
+                = (&record:struct x) schema/PhloxElement
           :examples $ []
         |index-items $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
@@ -3205,6 +3210,7 @@
       :ns $ %{} :NsEntry (:doc |)
         :code $ quote
           ns phlox.util $ :require ([] |pixi.js :as PIXI) ([] phlox.schema :as schema)
+            [] @calcit/std :refer $ rand-int
     |phlox.util.lcs $ %{} :FileEntry
       :defs $ {}
         |find-minimal-ops $ %{} :CodeEntry (:doc |) (:schema nil)
