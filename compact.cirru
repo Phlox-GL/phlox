@@ -1730,7 +1730,7 @@
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
-            def dev? $ = |dev (get-env |mode |release)
+            def dev? $ = |dev (option:unwrap-or (get-env |mode) |release)
           :examples $ []
         |mobile? $ %{} :CodeEntry (:doc |) (:schema nil)
           :code $ quote
