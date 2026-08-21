@@ -1,6 +1,6 @@
 
 {}
-  :calcit-version |0.12.14
+  :calcit-version |0.13.29
   :dependencies
     {} (|Quatrefoil-GL/touch-control |0.0.17)
       |calcit-lang/lilac |0.5.1

@@ -2,11 +2,11 @@
   "version": "0.7.3",
   "packageManager": "yarn@4.12.0",
   "scripts": {
-    "compile": "caps --ci && dev=false cr compact.cirru js",
+    "compile": "caps --ci && dev=false calcit compact.cirru js",
     "release": "yarn vite build --base=./"
   },
   "dependencies": {
-    "@calcit/procs": "^0.12.14",
+    "@calcit/procs": "^0.13.29",
     "@quamolit/phlox-utils": "^0.0.2",
     "@triadica/touch-control": "^0.0.4-a1",
     "fontfaceobserver-es": "^3.3.3",
