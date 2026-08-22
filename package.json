@@ -2,7 +2,7 @@
   "version": "0.7.3",
   "packageManager": "yarn@4.12.0",
   "scripts": {
-    "compile": "caps --ci && dev=false calcit compact.cirru js",
+    "compile": "caps --ci && calcit calcit.cirru js",
     "release": "yarn vite build --base=./"
   },
   "dependencies": {

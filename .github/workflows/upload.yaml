@@ -23,7 +23,7 @@ jobs:
 
     - name: "compiles to js"
       run: >
-        caps --ci && dev=false calcit compact.cirru js
+        caps --ci && calcit calcit.cirru js
         && yarn install --immutable && yarn vite build --base=./
 
     - name: Deploy to server
