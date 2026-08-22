@@ -3,7 +3,7 @@
   :entries $ {}
     :default $ {} (:description |) (:init-fn 'phlox.app.main/main!) (:mode :native) (:reload-fn 'phlox.app.main/reload!)
       :feature-policy $ {}
-      :modules $ [] |memof/ |lilac/ |pointed-prompt/ |touch-control/
+      :modules $ [] |pointed-prompt/ |touch-control/
       :type-slots $ {}
   :files $ {}
     |phlox.app.comp.drafts $ %{} 'FileEntry
@@ -346,7 +346,7 @@
                         :font-family |Helvetica
                     :drafts $ comp-drafts
                       option:unwrap-or (get store :x) nil
-                    :grids $ memof1-call comp-grids
+                    :grids comp-grids
                     :curves $ comp-curves
                     :gradients $ comp-gradients
                     :keyboard $ comp-keyboard
@@ -764,7 +764,6 @@
             phlox.input :refer $ request-text!
             phlox.comp.messages :refer $ comp-messages
             |nanoid :refer $ nanoid
-            memof.once :refer $ memof1-call
             phlox.util.styles :refer $ font-code
             phlox.comp.arrow :refer $ comp-arrow
             phlox.complex :refer $ polar-point
@@ -868,233 +867,65 @@
       :defs $ {}
         |dev-check $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defmacro dev-check (data rule)
-              if dev?
-                &let
-                  result $ gensym |result
-                  quasiquote $ &let
-                    ~result $ validate-lilac ~data ~rule
-                    when-not
-                      option:unwrap-or (get ~result :ok?) nil
-                      js/console.error
-                        option:unwrap-or (get ~result :formatted-message) nil
-                        , &newline
-                          str "|(dev-check " (quote ~data) "| " (quote ~rule) "|) where props is:"
-                          to-js-data ~data
-                quasiquote nil
+            defmacro dev-check (data rule) (quasiquote nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |dev-check-message $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defmacro dev-check-message (message data rule)
-              if dev?
-                &let
-                  result $ gensym |result
-                  quasiquote $ &let
-                    ~result $ validate-lilac ~data ~rule
-                    when-not
-                      option:unwrap-or (get ~result :ok?) nil
-                      js/console.error
-                        option:unwrap-or (get ~result :formatted-message) nil
-                        , &newline (str ~message "|, when props is:") (to-js-data ~data)
-                quasiquote nil
+            defmacro dev-check-message (message data rule) (quasiquote nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-circle $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-circle $ record+
-              {}
-                :line-style $ optional+ lilac-line-style
-                :on $ optional+ lilac-event-map
-                :position lilac-point
-                :radius $ number+
-                :fill $ optional+ (number+)
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :pivot $ optional+ lilac-point
-                :fill $ optional+ (number+)
-                :on-keyboard $ optional+ lilac-event-map
-                :filters $ optional+
-                  list+ $ list+ (any+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-circle nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-color $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-color $ or+
-              [] (number+) (string+)
+          :code $ quote (def lilac-color nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-container $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-container $ record+
-              {} (:position lilac-point)
-                :rotation $ number+
-                :pivot lilac-point
-                :alpha $ number+
-                :angle $ number+
-                :on-keyboard $ optional+ lilac-event-map
-              {} (:check-keys? true) (:all-optional? true)
+          :code $ quote (def lilac-container nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-event-map $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-event-map $ dict+ (keyword+) (fn+)
+          :code $ quote (def lilac-event-map nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-graphics $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-graphics $ record+
-              {}
-                :on $ optional+ lilac-event-map
-                :position $ optional+ lilac-point
-                :pivot $ optional+ lilac-point
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :ops $ list+
-                  optional+ $ tuple+
-                    [] (keyword+) (any+)
-                  {} $ :allow-seq? true
-                :on-keyboard $ optional+ lilac-event-map
-                :filters $ optional+
-                  list+ $ list+ (any+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-graphics nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-line-segments $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-line-segments $ record+
-              {}
-                :on $ optional+ lilac-event-map
-                :position $ optional+ lilac-point
-                :pivot $ optional+ lilac-point
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :style lilac-line-style
-                :segments $ list+
-                  tuple+ (:: lilac-point lilac-point)
-                    {} $ :check-size? true
-                :on-keyboard $ optional+ lilac-event-map
-              {} $ :check-keys? true
+          :code $ quote (def lilac-line-segments nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-line-style $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-line-style $ record+
-              {}
-                :width $ number+
-                :color $ number+
-                :alpha $ optional+ (number+)
+          :code $ quote (def lilac-line-style nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-point $ tuple+
-              :: (number+) (number+)
-              {} $ :check-size? true
+          :code $ quote (def lilac-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-polyline $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-polyline $ record+
-              {}
-                :on $ optional+ lilac-event-map
-                :position $ optional+ lilac-point
-                :pivot $ optional+ lilac-point
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :style lilac-line-style
-                :points $ list+
-                  tuple+ $ :: (number+) (number+)
-                :on-keyboard $ optional+ lilac-event-map
-              {} $ :check-keys? true
+          :code $ quote (def lilac-polyline nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-rect $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-rect $ record+
-              {}
-                :line-style $ optional+ lilac-line-style
-                :on $ optional+ lilac-event-map
-                :position $ optional+ lilac-point
-                :size lilac-point
-                :pivot $ optional+ lilac-point
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :fill $ optional+ lilac-color
-                :radius $ optional+ (number+)
-                :on-keyboard $ optional+ lilac-event-map
-                :filters $ optional+
-                  list+ $ list+ (any+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-rect nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-text $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-text $ record+
-              {}
-                :text $ string+
-                :style lilac-text-style
-                :position $ optional+ lilac-point
-                :pivot $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :alpha $ optional+ (number+)
-                :align $ optional+
-                  enum+ $ #{} :left :center :right
-                :on-keyboard $ optional+ lilac-event-map
-                :filters $ optional+
-                  list+ $ list+ (any+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-text nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-text-style $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-text-style $ record+
-              {}
-                :align $ enum+ (#{} :left :center :right)
-                :break-words $ bool+
-                :drop-shadow $ bool+
-                :drop-shadow-alpha $ number+
-                  {} (:min 0) (:max 1)
-                :drop-shadow-angle $ number+
-                :drop-shadow-blur $ number+
-                :drop-shadow-color lilac-color
-                :drop-shadow-distance $ number+
-                :fill $ or+
-                  [] lilac-color $ list+ lilac-color
-                :fill-gradient-type $ enum+ (#{} :vertical :horizontal :v :h)
-                :fill-gradient-stops $ any+
-                :font-family $ string+
-                :font-size $ number+
-                :font-style $ enum+ (#{} :normal :italic :oblique)
-                :font-variant $ enum+ (#{} :normal :small-caps)
-                :font-weight $ number+
-                :leading $ number+
-                :letter-spacing $ number+
-                :line-height $ number+
-                :line-join $ enum+ (#{} :miter :round :round :bevel)
-                :miter-limit $ number+
-                :padding $ number+
-                :stroke lilac-color
-                :stroke-thickness $ number+
-                :trim $ bool+
-                :text-baseline $ enum+ (#{} :alphabetic)
-                :white-space $ enum+ (#{} :normal :pre :pre-line)
-                :word-wrap $ bool+
-                :word-wrap-width $ number+
-              {} (:check-keys? true) (:all-optional? true)
+          :code $ quote (def lilac-text-style nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.check $ :require
-            lilac.core :refer $ validate-lilac record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             phlox.config :refer $ dev?
     |phlox.comp.arrow $ %{} 'FileEntry
       :defs $ {}
@@ -1148,7 +979,6 @@
         :code $ quote
           ns phlox.comp.arrow $ :require
             phlox.core :refer $ g hslx rect circle text container graphics create-list >>
-            lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             [] phlox.check :refer $ [] lilac-event-map dev-check
             phlox.complex :as complex
             phlox.comp.drag-point :refer $ comp-drag-point
@@ -1199,29 +1029,15 @@
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-button $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-button $ record+
-              {}
-                :color $ number+
-                :fill $ number+
-                :text $ string+
-                :size $ number+
-                :font-family $ string+
-                :position $ tuple+
-                  [] (number+) (number+)
-                :on lilac-event-map
-                :on-pointertap $ fn+
-                :align-right? $ bool+
-              {} (:all-optional? true) (:check-keys? true)
+          :code $ quote (def lilac-button nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.comp.button $ :require
-            [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-            [] phlox.util :refer $ [] measure-text-width!
-            [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
-            [] phlox.check :refer $ [] lilac-event-map dev-check
+            phlox.core :refer $ g hslx rect circle text container graphics create-list
+            phlox.util :refer $ measure-text-width!
+            phlox.check :refer $ lilac-event-map dev-check
     |phlox.comp.drag-point $ %{} 'FileEntry
       :defs $ {}
         |comp-drag-point $ %{} 'CodeEntry (:doc |)
@@ -1317,26 +1133,11 @@
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-cursor $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-cursor $ list+
-              any+ $ {} (:some? true)
+          :code $ quote (def lilac-cursor nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-drag-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-drag-point $ record+
-              {}
-                :unit $ optional+ (number+)
-                :title $ optional+ (string+)
-                :radius $ optional+ (number+)
-                :fill $ optional+ (number+)
-                :color $ optional+ (number+)
-                :alpha $ optional+ (number+)
-                :position $ tuple+
-                  :: (number+) (number+)
-                :hide-text? $ optional+ (bool+)
-                :on-change $ fn+
-              {} $ :check-keys? true
+          :code $ quote (def lilac-drag-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
@@ -1344,7 +1145,6 @@
           ns phlox.comp.drag-point $ :require
             phlox.core :refer $ g hslx rect circle text container graphics create-list
             phlox.check :refer $ lilac-event-map dev-check
-            lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             phlox.complex :as complex
     |phlox.comp.messages $ %{} 'FileEntry
       :defs $ {}
@@ -1391,35 +1191,19 @@
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-message-list $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-message-list $ list+
-              record+
-                {}
-                  :id $ string+
-                  :text $ string+
-                {} $ :exact-keys? true
-              {} $ :allow-seq? true
+          :code $ quote (def lilac-message-list nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-messages $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-messages $ record+
-              {} (:messages lilac-message-list)
-                :color $ number+
-                :fill $ number+
-                :position lilac-point
-                :bottom? $ bool+
-                :on-pointertap $ fn+
-              {} (:check-keys? true) (:all-optional? true)
+          :code $ quote (def lilac-messages nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.comp.messages $ :require
-            [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-            [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
-            [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
-            [] phlox.comp.button :refer $ [] comp-button
+            phlox.core :refer $ g hslx rect circle text container graphics create-list
+            phlox.check :refer $ lilac-event-map dev-check lilac-point
+            phlox.comp.button :refer $ comp-button
     |phlox.comp.slider $ %{} 'FileEntry
       :defs $ {}
         |*prev-spin-point $ %{} 'CodeEntry (:doc |)
@@ -1690,52 +1474,22 @@
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-cursor $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-cursor $ list+
-              any+ $ {} (:some? true)
+          :code $ quote (def lilac-cursor nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-slider $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-slider $ record+
-              {}
-                :value $ number+
-                :on-change $ fn+
-                :unit $ optional+ (number+)
-                :fill $ optional+ (number+)
-                :color $ optional+ (number+)
-                :title $ optional+ (string+)
-                :round? $ optional+ (bool+)
-                :max $ optional+ (number+)
-                :min $ optional+ (number+)
-                :position $ optional+
-                  tuple+ $ :: (number+) (number+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-slider nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-slider-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-slider-point $ record+
-              {}
-                :value $ number+
-                :on-change $ fn+
-                :unit $ optional+ (number+)
-                :fill $ optional+ (number+)
-                :color $ optional+ (number+)
-                :round? $ optional+ (bool+)
-                :max $ optional+ (number+)
-                :min $ optional+ (number+)
-                :position $ optional+
-                  tuple+ $ :: (number+) (number+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-slider-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.comp.slider $ :require
-            [] phlox.core :refer $ [] g >> hslx rect circle text container graphics create-list
-            [] phlox.check :refer $ [] lilac-event-map dev-check
-            [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+ bool+
+            phlox.core :refer $ g >> hslx rect circle text container graphics create-list
+            phlox.check :refer $ lilac-event-map dev-check
             phlox.math :refer $ vec-length bound-x
             phlox.complex :refer $ rebase
             phlox.complex :as complex
@@ -1784,22 +1538,14 @@
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-switch $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-switch $ record+
-              {}
-                :value $ bool+
-                :position $ optional+ lilac-point
-                :on-change $ fn+
-                :title $ optional+ (string+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-switch nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.comp.switch $ :require
-            [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-            [] phlox.check :refer $ [] lilac-event-map dev-check lilac-point
-            [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
+            phlox.core :refer $ g hslx rect circle text container graphics create-list
+            phlox.check :refer $ lilac-event-map dev-check lilac-point
     |phlox.comp.tabs $ %{} 'FileEntry
       :defs $ {}
         |comp-tabs $ %{} 'CodeEntry (:doc |)
@@ -1843,7 +1589,6 @@
           ns phlox.comp.tabs $ :require
             phlox.core :refer $ g hslx hsluvx rect circle text container graphics create-list
             phlox.check :refer $ lilac-event-map dev-check lilac-point
-            lilac.core :refer $ record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
             phlox.complex :as complex
     |phlox.complex $ %{} 'FileEntry
       :defs $ {}
@@ -2000,7 +1745,7 @@
           :schema $ :: 'Dynamic
         |clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defn clear-phlox-caches! () $ reset-memof1-caches!
+            defn clear-phlox-caches! () $ do nil
           :examples $ []
           :schema $ :: 'Dynamic
         |container $ %{} 'CodeEntry (:doc |)
@@ -2485,102 +2230,31 @@
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-arc $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-arc $ record+
-              {} (:center lilac-point)
-                :angle $ optional+
-                  tuple+ $ :: (number+) (number+)
-                :radian $ optional+
-                  tuple+ $ :: (number+) (number+)
-                :radius $ number+
-                :anticlockwise? $ optional+ (bool+)
-                :filters $ optional+
-                  list+ $ list+ (any+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-arc nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-arc-to $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-arc-to $ record+
-              {} (:p1 lilac-point) (:p2 lilac-point)
-                :radius $ number+
-              {} $ :exact-keys? true
+          :code $ quote (def lilac-arc-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-begin-fill $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-begin-fill $ record+
-              {} (:color lilac-color)
-                :alpha $ optional+ (number+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-begin-fill nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-bezier-to $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-bezier-to $ record+
-              {} (:p1 lilac-point) (:p2 lilac-point) (:to-p lilac-point)
-              {} $ :exact-keys? true
+          :code $ quote (def lilac-bezier-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-image $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-image $ record+
-              {}
-                :url $ string+
-                :size $ optional+ lilac-point
-                :on $ optional+ lilac-event-map
-                :position $ optional+ lilac-point
-                :pivot $ optional+ lilac-point
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :on-keyboard $ optional+ lilac-event-map
-                :filters $ optional+
-                  list+ $ list+ (any+)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-image nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-mesh $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-mesh $ record+
-              {}
-                :on $ optional+ lilac-event-map
-                :position lilac-point
-                :radius $ number+
-                :fill $ optional+ (number+)
-                :alpha $ optional+ (number+)
-                :rotation $ optional+ (number+)
-                :angle $ optional+ (number+)
-                :pivot $ optional+ lilac-point
-                :fill $ optional+ (number+)
-                :on-keyboard $ optional+ lilac-event-map
-                :filters $ optional+
-                  list+ $ list+ (any+)
-                :geometry $ record+
-                  {}
-                    :attributes $ list+
-                      record+ $ {}
-                        :id $ string+
-                        :buffer $ list+ (number+)
-                        :size $ number+
-                    :index $ list+
-                      number+ $ {} (:min 0)
-                :shader $ record+
-                  {}
-                    :vertex-source $ string+
-                    :fragment-source $ string+
-                :uniforms $ any+
-                :draw-mode $ optional+
-                  or (keyword+)
-                    number+ $ {} (:min 0) (:max 6)
-              {} $ :check-keys? true
+          :code $ quote (def lilac-mesh nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |lilac-quodratic-to $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-quodratic-to $ record+
-              {} (:p1 lilac-point) (:to-p lilac-point)
-              {} $ :exact-keys? true
+          :code $ quote (def lilac-quodratic-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |line-segments $ %{} 'CodeEntry (:doc |)
@@ -2766,9 +2440,7 @@
             phlox.util :refer $ index-items remove-nil-values detect-func-in-map?
             |@quamolit/phlox-utils :refer $ hcl-to-hex
             phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-point lilac-circle dev-check-message lilac-line-style lilac-polyline lilac-line-segments lilac-event-map
-            lilac.core :refer $ record+ number+ string+ optional+ tuple+ dict+ fn+ keyword+ bool+ list+ or+ any+
             phlox.keyboard :refer $ handle-keyboard-events
-            memof.once :refer $ reset-memof1-caches!
             phlox.complex :as complex
             phlox.math :refer $ vec-length
             |hsluv :refer $ Hsluv
@@ -2788,14 +2460,7 @@
     |phlox.input $ %{} 'FileEntry
       :defs $ {}
         |lilac-input $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            def lilac-input $ record+
-              {}
-                :placeholder $ string+
-                :initial $ string+
-                :style $ dict+ (keyword+) (any+)
-                :textarea? $ bool+
-              {} (:all-optional? true) (:check-keys? true)
+          :code $ quote (def lilac-input nil)
           :examples $ []
           :schema $ :: 'Dynamic
         |request-text! $ %{} 'CodeEntry (:doc |)
@@ -2809,8 +2474,7 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.input $ :require
-            [] lilac.core :refer $ [] record+ number+ string+ optional+ tuple+ enum+ dict+ fn+ any+ keyword+ bool+ list+ or+ is+
-            [] phlox.check :refer $ [] dev-check
+            phlox.check :refer $ dev-check
             pointed-prompt.core :refer $ prompt-at!
     |phlox.keyboard $ %{} 'FileEntry
       :defs $ {}
@@ -3902,7 +3566,6 @@
         :code $ quote
           ns phlox.render.draw $ :require
             phlox.util :refer $ use-number
-            lilac.core :refer $ record+ number+ string+ optional+ bool+ tuple+ dict+ fn+ keyword+ list+ or+
             phlox.check :refer $ dev-check dev-check-message lilac-point lilac-line-style lilac-color
             phlox.math :refer $ angle->radian
             phlox.render.draw :refer $ init-line-style
