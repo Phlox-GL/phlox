@@ -346,7 +346,7 @@
                         :font-family |Helvetica
                     :drafts $ comp-drafts
                       option:unwrap-or (get store :x) nil
-                    :grids comp-grids
+                    :grids $ comp-grids
                     :curves $ comp-curves
                     :gradients $ comp-gradients
                     :keyboard $ comp-keyboard
@@ -924,9 +924,7 @@
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
-        :code $ quote
-          ns phlox.check $ :require
-            phlox.config :refer $ dev?
+        :code $ quote (ns phlox.check)
     |phlox.comp.arrow $ %{} 'FileEntry
       :defs $ {}
         |comp-arrow $ %{} 'CodeEntry (:doc |)
