@@ -3226,10 +3226,10 @@
             defn update-children (children-dict old-children-dict parent-container dispatch! options)
               when dev? $ assert "|children should not contain nil element"
                 and
-                  every? (map children-dict phlox.render/last-value) some?
-                  every? (map old-children-dict phlox.render/last-value) some?
+                  every? (map children-dict last-value) some?
+                  every? (map old-children-dict last-value) some?
               let
-                  list-ops $ find-minimal-ops lcs-state-0 (map old-children-dict phlox.render/first-value) (map children-dict phlox.render/first-value)
+                  list-ops $ find-minimal-ops lcs-state-0 (map old-children-dict first-value) (map children-dict first-value)
                 ; js/console.log |ops $ option:unwrap-or (get list-ops :total) nil
                 loop
                     idx 0
@@ -3238,34 +3238,34 @@
                     ys old-children-dict
                   when-not (empty? ops)
                     let
-                        op $ phlox.render/first-value ops
-                      case-default (phlox.render/first-value op)
+                        op $ first-value ops
+                      case-default (first-value op)
                         do $ println "|Unknown op:" op
                         :remains $ do
                           when dev? $ assert
-                            = (phlox.render/last-value op)
-                              phlox.render/first-value $ phlox.render/first-value xs
-                              phlox.render/first-value $ phlox.render/first-value ys
+                            = (last-value op)
+                              first-value $ first-value xs
+                              first-value $ first-value ys
                             , "|check key"
                           update-element
-                            phlox.render/last-value $ phlox.render/first-value xs
-                            phlox.render/last-value $ phlox.render/first-value ys
+                            last-value $ first-value xs
+                            last-value $ first-value ys
                             , parent-container idx dispatch! options
                           recur (inc idx) (rest ops) (rest xs) (rest ys)
                         :add $ do
                           when dev? $ assert "|check key"
-                            = (phlox.render/last-value op)
-                              phlox.render/first-value $ phlox.render/first-value xs
+                            = (last-value op)
+                              first-value $ first-value xs
                           .!addChildAt parent-container
                             render-element
-                              phlox.render/last-value $ phlox.render/first-value xs
+                              last-value $ first-value xs
                               , dispatch!
                             , idx
                           recur (inc idx) (rest ops) (rest xs) ys
                         :remove $ do
                           when dev? $ assert "|check key"
-                            = (phlox.render/last-value op)
-                              phlox.render/first-value $ phlox.render/first-value ys
+                            = (last-value op)
+                              first-value $ first-value ys
                           .!removeChildAt parent-container idx
                           recur idx (rest ops) xs $ rest ys
           :examples $ []
