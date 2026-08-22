@@ -2379,9 +2379,9 @@
                 if
                   and
                     or
-                      phlox.core/ffi-bool $ .-metaKey event
-                      phlox.core/ffi-bool $ .-ctrlKey event
-                      phlox.core/ffi-bool $ .-shiftKey event
+                      ffi-bool $ .-metaKey event
+                      ffi-bool $ .-ctrlKey event
+                      ffi-bool $ .-shiftKey event
                     some? @*drag-moving-cache
                   let
                       prev @*drag-moving-cache
@@ -2394,11 +2394,11 @@
                 fn (event)
                   if
                     or
-                      phlox.core/ffi-bool $ .-metaKey event
-                      phlox.core/ffi-bool $ .-ctrlKey event
-                      phlox.core/ffi-bool $ .-shiftKey event
+                      ffi-bool $ .-metaKey event
+                      ffi-bool $ .-ctrlKey event
+                      ffi-bool $ .-shiftKey event
                     let
-                        dy $ * 0.001 (phlox.core/ffi-event-delta-y event)
+                        dy $ * 0.001 (ffi-event-delta-y event)
                         scale $ option:unwrap-or (get @*stage-config :scale) nil
                         pointer $ complex/minus
                           [] (.-clientX event) (.-clientY event)
@@ -2408,9 +2408,9 @@
                       when
                         not $ or
                           and (<= scale 0.1)
-                            < (phlox.core/ffi-event-delta-y event) 0
+                            < (ffi-event-delta-y event) 0
                           and (>= scale 4)
-                            > (phlox.core/ffi-event-delta-y event) 0
+                            > (ffi-event-delta-y event) 0
                         swap! *stage-config update :move $ fn (pos)
                           let
                               shift $ complex/minus pointer pos
@@ -2469,17 +2469,17 @@
                       :backgroundAlpha $ either
                         option:unwrap-or (get options :background-alpha) nil
                         , 1
-                phlox.core/ffi-stop $ phlox.core/ffi-ticker pixi-app
-                -> PIXI/Ticker .-shared $ phlox.core/ffi-stop
-                -> PIXI/Ticker .-system $ phlox.core/ffi-stop
+                ffi-stop $ ffi-ticker pixi-app
+                -> PIXI/Ticker .-shared $ ffi-stop
+                -> PIXI/Ticker .-system $ ffi-stop
                 reset! *app pixi-app
                 let
-                    el $ phlox.core/ffi-view pixi-app
-                  -> js/document phlox.core/ffi-document-body $ phlox.core/ffi-append-child el
+                    el $ ffi-view pixi-app
+                  -> js/document ffi-document-body $ ffi-append-child el
                   handle-drag-moving el
-                -> pixi-app phlox.core/ffi-renderer phlox.core/ffi-plugins phlox.core/ffi-accessibility $ phlox.core/ffi-destroy
+                -> pixi-app ffi-renderer ffi-plugins ffi-accessibility $ ffi-destroy
                 js/window.addEventListener |resize $ fn (event)
-                  -> pixi-app phlox.core/ffi-renderer $ phlox.core/ffi-resize (ffi-number js/window.innerWidth) (ffi-number js/window.innerHeight)
+                  -> pixi-app ffi-renderer $ ffi-resize (ffi-number js/window.innerWidth) (ffi-number js/window.innerHeight)
                   render-stage-for-viewer!
                 , pixi-app
           :examples $ []
@@ -2610,7 +2610,7 @@
             defn mount-app! (app dispatch!)
               let
                   element-tree $ render-element app dispatch!
-                phlox.core/ffi-add-child (phlox.core/ffi-stage @*app) element-tree
+                ffi-add-child (ffi-stage @*app) element-tree
           :examples $ []
           :schema $ :: 'Dynamic
         |on-control-event $ %{} 'CodeEntry (:doc |)
@@ -2624,7 +2624,7 @@
                     scales $ option:unwrap-or (get delta :right-move) nil
                   update-stage-config!
                     map move $ fn (x)
-                      * x (phlox.core/ffi-abs x) 0.02
+                      * x (ffi-abs x) 0.02
                     nth scales 1
           :examples $ []
           :schema $ :: 'Dynamic
@@ -2652,7 +2652,7 @@
           :code $ quote
             defn render! (expanded-app dispatch! options)
               when
-                phlox.core/ffi-nullish? $ unsafe-coerce @*app Dynamic
+                ffi-nullish? $ unsafe-coerce @*app Dynamic
                 init-pixi-app! options
                 aset js/window |_phloxTree @*app
               reset! *dispatch-fn dispatch!
@@ -2665,7 +2665,7 @@
                         @*dispatch-fn op
                 ; js/console.log |render! expanded-app
                 if
-                  phlox.core/ffi-nullish? $ unsafe-coerce @*tree-element Dynamic
+                  ffi-nullish? $ unsafe-coerce @*tree-element Dynamic
                   do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                   rerender-app! expanded-app wrap-dispatch options
                 reset! *tree-element expanded-app
@@ -2678,18 +2678,18 @@
               let
                   scale $ option:unwrap-or (get @*stage-config :scale) nil
                   move $ option:unwrap-or (get @*stage-config :move) nil
-                phlox.core/ffi-set-x!
-                  phlox.core/ffi-position $ phlox.core/ffi-stage @*app
+                ffi-set-x!
+                  ffi-position $ ffi-stage @*app
                   +
                     * 0.5 $ ffi-number js/window.innerWidth
                     nth move 0
-                phlox.core/ffi-set-y!
-                  phlox.core/ffi-position $ phlox.core/ffi-stage @*app
+                ffi-set-y!
+                  ffi-position $ ffi-stage @*app
                   +
                     * 0.5 $ ffi-number js/window.innerHeight
                     nth move 1
-                -> @*app phlox.core/ffi-stage phlox.core/ffi-scale $ phlox.core/ffi-set-scale! scale scale
-              -> @*app phlox.core/ffi-renderer $ phlox.core/ffi-render (phlox.core/ffi-stage @*app)
+                -> @*app ffi-stage ffi-scale $ ffi-set-scale! scale scale
+              -> @*app ffi-renderer $ ffi-render (ffi-stage @*app)
           :examples $ []
           :schema $ :: 'Dynamic
         |rerender-app! $ %{} 'CodeEntry (:doc |)
@@ -2698,7 +2698,7 @@
               update-children
                 [] $ [] 0 app
                 [] $ [] 0 @*tree-element
-                phlox.core/ffi-stage @*app
+                ffi-stage @*app
                 , dispatch! options
           :examples $ []
           :schema $ :: 'Dynamic
@@ -2726,7 +2726,7 @@
                     let
                         delta $ - scale0 1
                       if
-                        > 0.01 $ phlox.core/ffi-abs delta
+                        > 0.01 $ ffi-abs delta
                         , 1 $ + prev
                           if (> delta 0) -0.01 0.01
                 render-stage-for-viewer!
