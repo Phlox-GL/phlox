@@ -2882,7 +2882,7 @@
           :schema $ :: 'Dynamic
         |radian-ratio $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def radian-ratio $ / phlox.math/ffi-pi 180
+            def radian-ratio $ / ffi-pi 180
           :examples $ []
           :schema $ :: 'Dynamic
         |vec-length $ %{} 'CodeEntry (:doc |)
