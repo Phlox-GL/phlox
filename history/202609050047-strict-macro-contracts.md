@@ -5,7 +5,7 @@ Agent / 身份: `codex-01a06771-786-phlox-4d2a`
 ## English
 
 - Migrated `inline-file`, `dev-check`, `dev-check-message`, and `defcomp` through the Calcit 0.13.51 compatibility window into complete strict `Macro` contracts without changing their expansions.
-- Declared the compile-time file-read capability on `inline-file`; the no-op development checks expand to `Nil`, and `defcomp` expands to an `Fn` definition.
+- Declared the compile-time filesystem-read capability on `inline-file`; the no-op development checks expand to `Nil`, and `defcomp` expands to an `Fn` definition.
 - Aligned Calcit and `@calcit/procs` exactly at 0.13.77 and added Linux validation for canonical formatting, check-only mode, attached tests, JavaScript generation, and the Vite build.
 - Kept pull-request validation credential-free and restricted the verified-host deployment to successful pushes on `main`.
 

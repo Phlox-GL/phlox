@@ -741,7 +741,7 @@
           :examples $ []
           :schema $ :: 'Macro
             {}
-              :capabilities $ #{} :platform-read
+              :capabilities $ #{} :fs-read
               :expansion $ :: 'Expr 'String
               :required $ [] (:: 'Expr 'String)
         'sample-texture $ %{} 'CodeEntry (:doc |)
