@@ -2111,7 +2111,7 @@
                   :arc $ dev-check-message "|check :arc" data lilac-arc
                   :arc-to $ dev-check-message "|check :arc-to" data lilac-arc-to
                   :bezier-to $ dev-check-message "|check :bezier-to" data lilac-bezier-to
-                  :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quodratic-to
+                  :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quadratic-to
                   :begin-hole nil
                   :end-hole nil
                 [] op data
@@ -2267,8 +2267,8 @@
           :code $ quote (def lilac-mesh nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        'lilac-quodratic-to $ %{} 'CodeEntry (:doc |)
-          :code $ quote (def lilac-quodratic-to nil)
+        'lilac-quadratic-to $ %{} 'CodeEntry (:doc |)
+          :code $ quote (def lilac-quadratic-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
         'line-segments $ %{} 'CodeEntry (:doc |)
@@ -3845,7 +3845,7 @@
           :examples $ []
           :schema $ :: 'Dynamic
         'font-normal $ %{} 'CodeEntry (:doc |)
-          :code $ quote (def font-normal "|Hind, Helvatica, Arial, sans-serif")
+          :code $ quote (def font-normal "|Hind, Helvetica, Arial, sans-serif")
           :examples $ []
           :schema $ :: 'Dynamic
         'layout-column $ %{} 'CodeEntry (:doc |)
