@@ -6,9 +6,9 @@
       :modules $ [] |pointed-prompt/ |touch-control/
       :type-slots $ {}
   :files $ {}
-    |phlox.app.comp.drafts $ %{} 'FileEntry
+    'phlox.app.comp.drafts $ %{} 'FileEntry
       :defs $ {}
-        |comp-drafts $ %{} 'CodeEntry (:doc |)
+        'comp-drafts $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-drafts (x)
               container
@@ -101,9 +101,9 @@
         :code $ quote
           ns phlox.app.comp.drafts $ :require
             [] phlox.core :refer $ [] g hslx hclx rect circle text container graphics create-list image
-    |phlox.app.comp.keyboard $ %{} 'FileEntry
+    'phlox.app.comp.keyboard $ %{} 'FileEntry
       :defs $ {}
-        |comp-keyboard $ %{} 'CodeEntry (:doc |)
+        'comp-keyboard $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-keyboard (on? counted)
               container
@@ -137,9 +137,9 @@
         :code $ quote
           ns phlox.app.comp.keyboard $ :require
             [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
-    |phlox.app.comp.slider-demo $ %{} 'FileEntry
+    'phlox.app.comp.slider-demo $ %{} 'FileEntry
       :defs $ {}
-        |comp-slider-demo $ %{} 'CodeEntry (:doc |)
+        'comp-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-slider-demo (states)
               let
@@ -199,7 +199,7 @@
                       :max 10
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
+        'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-slider-point-demo (states)
               let
@@ -255,7 +255,7 @@
                       :max 10
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
+        'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-spin-slider-demo (states)
               let
@@ -285,9 +285,9 @@
           ns phlox.app.comp.slider-demo $ :require
             [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
             [] phlox.comp.slider :refer $ [] comp-slider comp-slider-point comp-spin-slider
-    |phlox.app.container $ %{} 'FileEntry
+    'phlox.app.container $ %{} 'FileEntry
       :defs $ {}
-        |comp-arrows-demo $ %{} 'CodeEntry (:doc |)
+        'comp-arrows-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-arrows-demo (states)
               let
@@ -307,7 +307,7 @@
                       d! cursor $ assoc (assoc state :from from) :to to
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-buttons $ %{} 'CodeEntry (:doc |)
+        'comp-buttons $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-buttons () $ container
               {} $ :position ([] 100 100)
@@ -324,7 +324,7 @@
                 :on-pointertap $ fn (e d!) (println |clicked)
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-container $ %{} 'CodeEntry (:doc |)
+        'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-container (store)
               ; println |Store store $ option:unwrap-or (get store :tab) nil
@@ -369,7 +369,7 @@
                     :fill 0xffffff
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-curves $ %{} 'CodeEntry (:doc |)
+        'comp-curves $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-curves () $ container ({})
               graphics $ {}
@@ -445,7 +445,7 @@
                         , 80
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-gradients $ %{} 'CodeEntry (:doc |)
+        'comp-gradients $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-gradients () $ container ({})
               text $ {} (:text "|long long text")
@@ -464,7 +464,7 @@
                   :fill $ hslx 20 90 60
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-grids $ %{} 'CodeEntry (:doc |)
+        'comp-grids $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-grids () (echo "|calculating grids")
               container ({})
@@ -484,7 +484,7 @@
                             :pointerover $ fn (e d!) (println |hover: x y)
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-mesh-demo $ %{} 'CodeEntry (:doc |)
+        'comp-mesh-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-mesh-demo (states)
               let
@@ -524,9 +524,13 @@
                           option:unwrap-or (get state :base) nil
                         :zoom $ option:unwrap-or (get state :zoom) nil
                         :offsetX $ * 1
-                          first $ option:unwrap-or (get state :offset) nil
+                          option:unwrap-or
+                            first $ option:unwrap-or (get state :offset) ([] 0 0)
+                            , 0
                         :offsetY $ * 1
-                          last $ option:unwrap-or (get state :offset) nil
+                          option:unwrap-or
+                            last $ option:unwrap-or (get state :offset) ([] 0 0)
+                            , 0
                       ; :on $ {}
                         :pointertap $ fn (e d!) (println |clicked)
                     comp-drag-point (>> states :base)
@@ -553,7 +557,7 @@
                         d! cursor $ assoc state :zoom value
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-messages-demo $ %{} 'CodeEntry (:doc |)
+        'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-messages-demo (states)
               let
@@ -594,7 +598,7 @@
                                 option:unwrap-or (get message :id) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-points-demo $ %{} 'CodeEntry (:doc |)
+        'comp-points-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-points-demo (states)
               let
@@ -644,7 +648,7 @@
                         d! cursor $ assoc state :p5 position
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-shadow-demo $ %{} 'CodeEntry (:doc |)
+        'comp-shadow-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-shadow-demo () $ container
               {} $ :position (canvas-center!)
@@ -663,7 +667,7 @@
                     :blur 6
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-switch-demo $ %{} 'CodeEntry (:doc |)
+        'comp-switch-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-switch-demo (states)
               let
@@ -686,7 +690,7 @@
                       d! cursor $ assoc state :value value
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-text-input $ %{} 'CodeEntry (:doc |)
+        'comp-text-input $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-text-input (states)
               let
@@ -734,18 +738,22 @@
                         :fill $ hslx 0 0 80
           :examples $ []
           :schema $ :: 'Dynamic
-        |inline-file $ %{} 'CodeEntry (:doc |)
+        'inline-file $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defmacro inline-file (name)
               read-file $ str |assets/ name
           :examples $ []
-          :schema $ :: 'Dynamic
-        |sample-texture $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Macro
+            {}
+              :capabilities $ #{} :fs-read
+              :expansion $ :: 'Expr 'String
+              :required $ [] (:: 'Expr 'String)
+        'sample-texture $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def sample-texture $ .!from PIXI/Texture |https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/1a2af589827261.5e022908ed0b1.jpg
           :examples $ []
           :schema $ :: 'Dynamic
-        |tabs $ %{} 'CodeEntry (:doc |)
+        'tabs $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def tabs $ [] ([] :drafts |Drafts) ([] :grids |Grids) ([] :curves |Curves) ([] :gradients |Gradients) ([] :keyboard |Keyboard) ([] :slider |Slider) ([] :buttons |Buttons) ([] :points |Points) ([] :switch |Switch) ([] :input |Input) ([] :messages |Messages) ([] :slider-point "|Slider Point") ([] :spin-slider "|Spin Slider") ([] :arrows |Arrows) ([] :shadow |Shadow) ([] :mesh |Mesh)
           :examples $ []
@@ -771,17 +779,19 @@
             |@pixi/filter-drop-shadow :refer $ DropShadowFilter
             |pixi.js :as PIXI
             phlox.comp.tabs :refer $ comp-tabs
-    |phlox.app.main $ %{} 'FileEntry
+    'phlox.app.main $ %{} 'FileEntry
       :defs $ {}
-        |*store $ %{} 'CodeEntry (:doc |)
+        '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *store schema/store)
           :examples $ []
           :schema $ :: 'Dynamic
-        |dispatch! $ %{} 'CodeEntry (:doc |)
+        'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op)
               when
-                and dev? $ not= (nth op 0) :states
+                and dev? $ not=
+                  option:unwrap-or (nth op 0) :unknown
+                  , :states
                 js/console.log |dispatch! op
               let
                   op-id $ nanoid
@@ -789,7 +799,7 @@
                 reset! *store $ updater @*store op op-id op-time
           :examples $ []
           :schema $ :: 'Dynamic
-        |main! $ %{} 'CodeEntry (:doc |)
+        'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! () (; js/console.log PIXI)
               if dev? $ load-console-formatter!
@@ -801,7 +811,7 @@
               println "|App Started"
           :examples $ []
           :schema $ :: 'Dynamic
-        |reload! $ %{} 'CodeEntry (:doc |)
+        'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ if (nil? build-errors)
               do (clear-phlox-caches!) (remove-watch *store :change)
@@ -812,7 +822,7 @@
               hud! |error build-errors
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-app! $ %{} 'CodeEntry (:doc |)
+        'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-app! (? arg)
               render! (comp-container @*store) dispatch! $ either arg ({})
@@ -831,9 +841,9 @@
             |./calcit.build-errors :default build-errors
             |bottom-tip :default hud!
             touch-control.core :refer $ render-control! start-control-loop! replace-control-loop!
-    |phlox.app.schema $ %{} 'FileEntry
+    'phlox.app.schema $ %{} 'FileEntry
       :defs $ {}
-        |store $ %{} 'CodeEntry (:doc |)
+        'store $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def store $ {} (:tab :mesh) (:x 0) (:keyboard-on? false) (:counted 0)
               :states $ {}
@@ -842,9 +852,9 @@
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns phlox.app.schema)
-    |phlox.app.updater $ %{} 'FileEntry
+    'phlox.app.updater $ %{} 'FileEntry
       :defs $ {}
-        |updater $ %{} 'CodeEntry (:doc |)
+        'updater $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn updater (store op op-id op-time)
               tag-match op
@@ -863,71 +873,79 @@
         :code $ quote
           ns phlox.app.updater $ :require
             [] phlox.cursor :refer $ [] update-states
-    |phlox.check $ %{} 'FileEntry
+    'phlox.check $ %{} 'FileEntry
       :defs $ {}
-        |dev-check $ %{} 'CodeEntry (:doc |)
+        'dev-check $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defmacro dev-check (data rule) (quasiquote nil)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |dev-check-message $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Macro
+            {}
+              :capabilities $ #{}
+              :expansion $ :: 'Expr 'Nil
+              :required $ [] (:: 'Expr 'Dynamic) (:: 'Expr 'Dynamic)
+        'dev-check-message $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defmacro dev-check-message (message data rule) (quasiquote nil)
           :examples $ []
-          :schema $ :: 'Dynamic
-        |lilac-circle $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Macro
+            {}
+              :capabilities $ #{}
+              :expansion $ :: 'Expr 'Nil
+              :required $ [] (:: 'Expr 'Dynamic) (:: 'Expr 'Dynamic) (:: 'Expr 'Dynamic)
+        'lilac-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-circle nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-color $ %{} 'CodeEntry (:doc |)
+        'lilac-color $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-color nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-container $ %{} 'CodeEntry (:doc |)
+        'lilac-container $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-container nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-event-map $ %{} 'CodeEntry (:doc |)
+        'lilac-event-map $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-event-map nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-graphics $ %{} 'CodeEntry (:doc |)
+        'lilac-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-graphics nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-line-segments $ %{} 'CodeEntry (:doc |)
+        'lilac-line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-line-segments nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-line-style $ %{} 'CodeEntry (:doc |)
+        'lilac-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-line-style nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-point $ %{} 'CodeEntry (:doc |)
+        'lilac-point $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-polyline $ %{} 'CodeEntry (:doc |)
+        'lilac-polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-polyline nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-rect $ %{} 'CodeEntry (:doc |)
+        'lilac-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-rect nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-text $ %{} 'CodeEntry (:doc |)
+        'lilac-text $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-text nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-text-style $ %{} 'CodeEntry (:doc |)
+        'lilac-text-style $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-text-style nil)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns phlox.check)
-    |phlox.comp.arrow $ %{} 'FileEntry
+    'phlox.comp.arrow $ %{} 'FileEntry
       :defs $ {}
-        |comp-arrow $ %{} 'CodeEntry (:doc |)
+        'comp-arrow $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-arrow (states props) (; dev-check props lilac-arrow)
               let
@@ -981,9 +999,9 @@
             phlox.complex :as complex
             phlox.comp.drag-point :refer $ comp-drag-point
             phlox.math :refer $ vec-length
-    |phlox.comp.button $ %{} 'FileEntry
+    'phlox.comp.button $ %{} 'FileEntry
       :defs $ {}
-        |comp-button $ %{} 'CodeEntry (:doc |)
+        'comp-button $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-button (props) (dev-check props lilac-button)
               let
@@ -1002,14 +1020,16 @@
                   color $ either
                     option:unwrap-or (get props :color) nil
                     hslx 0 0 100
-                  position $ option:unwrap-or (get props :position) nil
+                  position $ option:unwrap-or (get props :position) ([] 0 0)
                   width $ + 16 (measure-text-width! button-text size font-family)
                   align-right? $ option:unwrap-or (get props :align-right?) nil
                 container
                   {} $ :position
                     if align-right?
                       []
-                        - (first position) width
+                        -
+                          option:unwrap-or (first position) 0
+                          , width
                         last position
                       , position
                   rect $ {} (:fill fill)
@@ -1026,7 +1046,7 @@
                     :style $ {} (:fill color) (:font-size size) (:font-family font-family)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-button $ %{} 'CodeEntry (:doc |)
+        'lilac-button $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-button nil)
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1036,9 +1056,9 @@
             phlox.core :refer $ g hslx rect circle text container graphics create-list
             phlox.util :refer $ measure-text-width!
             phlox.check :refer $ lilac-event-map dev-check
-    |phlox.comp.drag-point $ %{} 'FileEntry
+    'phlox.comp.drag-point $ %{} 'FileEntry
       :defs $ {}
-        |comp-drag-point $ %{} 'CodeEntry (:doc |)
+        'comp-drag-point $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-drag-point (states props)
               dev-check
@@ -1066,7 +1086,8 @@
                   alpha $ either
                     option:unwrap-or (get props :alpha) nil
                     , 1
-                  on-change $ option:unwrap-or (get props :on-change) nil
+                  on-change $ option:unwrap-or (get props :on-change)
+                    fn (pos d!) nil
                   hide-text? $ either
                     option:unwrap-or (get props :hide-text?) nil
                     , false
@@ -1099,8 +1120,10 @@
                                   complex/add
                                     option:unwrap-or (get state :p0) nil
                                     []
-                                      * unit $ - x (first x0)
-                                      * unit $ - y (last x0)
+                                      * unit $ - x
+                                        option:unwrap-or (first x0) 0
+                                      * unit $ - y
+                                        option:unwrap-or (last x0) 0
                                   , d!
                         :pointerup $ fn (e d!)
                           d! cursor $ assoc state :dragging? false
@@ -1130,11 +1153,11 @@
                         :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-cursor $ %{} 'CodeEntry (:doc |)
+        'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-cursor nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-drag-point $ %{} 'CodeEntry (:doc |)
+        'lilac-drag-point $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-drag-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1144,13 +1167,13 @@
             phlox.core :refer $ g hslx rect circle text container graphics create-list
             phlox.check :refer $ lilac-event-map dev-check
             phlox.complex :as complex
-    |phlox.comp.messages $ %{} 'FileEntry
+    'phlox.comp.messages $ %{} 'FileEntry
       :defs $ {}
-        |comp-messages $ %{} 'CodeEntry (:doc |)
+        'comp-messages $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-messages (options) (dev-check options lilac-messages)
               let
-                  messages $ option:unwrap-or (get options :messages) nil
+                  messages $ option:unwrap-or (get options :messages) ([])
                   bottom? $ option:unwrap-or (get options :bottom?) nil
                   base-position $ either
                     option:unwrap-or (get options :position) nil
@@ -1188,11 +1211,11 @@
                           :on-pointertap $ fn (e d!) (on-pointertap message d!)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-message-list $ %{} 'CodeEntry (:doc |)
+        'lilac-message-list $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-message-list nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-messages $ %{} 'CodeEntry (:doc |)
+        'lilac-messages $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-messages nil)
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1202,18 +1225,18 @@
             phlox.core :refer $ g hslx rect circle text container graphics create-list
             phlox.check :refer $ lilac-event-map dev-check lilac-point
             phlox.comp.button :refer $ comp-button
-    |phlox.comp.slider $ %{} 'FileEntry
+    'phlox.comp.slider $ %{} 'FileEntry
       :defs $ {}
-        |*prev-spin-point $ %{} 'CodeEntry (:doc |)
+        '*prev-spin-point $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *prev-spin-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |*spin-pivot $ %{} 'CodeEntry (:doc |)
+        '*spin-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defatom *spin-pivot $ [] 0 0
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-slider $ %{} 'CodeEntry (:doc |)
+        'comp-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-slider (states props)
               dev-check
@@ -1261,12 +1284,12 @@
                                 on-change
                                   ->
                                     +
-                                      option:unwrap-or (get state :v0) nil
+                                      option:unwrap-or (get state :v0) value
                                       * unit $ - x2
-                                        option:unwrap-or (get state :x0) nil
+                                        option:unwrap-or (get state :x0) 0
                                     (fn (v) (if rounded? (js/Math.round v) v))
-                                    (fn (v) (if (some? (option:unwrap-or (get props :max) nil)) (&min (option:unwrap-or (get props :max) nil) v) v))
-                                    (fn (v) (if (some? (option:unwrap-or (get props :min) nil)) (&max (option:unwrap-or (get props :min) nil) v) v))
+                                    (fn (v) (if (some? (option:unwrap-or (get props :max) nil)) (&min (option:unwrap-or (get props :max) v) v) v))
+                                    (fn (v) (if (some? (option:unwrap-or (get props :min) nil)) (&max (option:unwrap-or (get props :min) v) v) v))
                                   , d!
                                 js/console.log "|[slider] missing :on-change listener"
                         :pointerup $ fn (e d!)
@@ -1292,7 +1315,7 @@
                         :font-family "|Arial, sans-serif"
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-slider-point $ %{} 'CodeEntry (:doc |)
+        'comp-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-slider-point (states props)
               dev-check
@@ -1340,12 +1363,12 @@
                                 on-change
                                   ->
                                     +
-                                      option:unwrap-or (get state :v0) nil
+                                      option:unwrap-or (get state :v0) value
                                       * unit $ - x2
-                                        option:unwrap-or (get state :x0) nil
+                                        option:unwrap-or (get state :x0) 0
                                     (fn (v) (if rounded? (js/Math.round v) v))
-                                    (fn (v) (if (some? (option:unwrap-or (get props :max) nil)) (&min (option:unwrap-or (get props :max) nil) v) v))
-                                    (fn (v) (if (some? (option:unwrap-or (get props :min) nil)) (&max (option:unwrap-or (get props :min) nil) v) v))
+                                    (fn (v) (if (some? (option:unwrap-or (get props :max) nil)) (&min (option:unwrap-or (get props :max) v) v) v))
+                                    (fn (v) (if (some? (option:unwrap-or (get props :min) nil)) (&max (option:unwrap-or (get props :min) v) v) v))
                                   , d!
                                 js/console.log "|[slider] missing :on-change listener"
                         :pointerup $ fn (e d!)
@@ -1361,7 +1384,7 @@
                       :style $ {} (:fill color) (:font-size 10) (:font-family "|Menlo, monospace")
           :examples $ []
           :schema $ :: 'Dynamic
-        |comp-spin-slider $ %{} 'CodeEntry (:doc |)
+        'comp-spin-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-spin-slider (states props)
               let
@@ -1391,7 +1414,8 @@
                   position $ either
                     option:unwrap-or (get props :position) nil
                     [] 0 0
-                  on-move $ option:unwrap-or (get props :on-move) nil
+                  on-move $ option:unwrap-or (get props :on-move)
+                    fn (pos d!) nil
                   border-color $ or
                     option:unwrap-or (get props :border-color) nil
                     hslx 240 80 80
@@ -1418,8 +1442,8 @@
                             option:unwrap-or (get state :dragging?) nil
                             let
                                 current-point $ []
-                                  - x $ first @*spin-pivot
-                                  - y $ last @*spin-pivot
+                                  - x $ option:unwrap-or (first @*spin-pivot) 0
+                                  - y $ option:unwrap-or (last @*spin-pivot) 0
                                 prev-point @*prev-spin-point
                               if
                                 < (vec-length current-point) (&* 0.5 radius)
@@ -1433,7 +1457,7 @@
                                         on-change
                                           bound-x
                                             +
-                                              option:unwrap-or (get props :value) nil
+                                              option:unwrap-or (get props :value) 0
                                               &* unit delta
                                             option:unwrap-or (get props :min) nil
                                             option:unwrap-or (get props :max) nil
@@ -1465,21 +1489,21 @@
                         :alpha 0.5
                         :on-change $ fn (pos d!) (on-move pos d!)
                     if-let
-                      label $ option:unwrap-or (get props :label) nil
+                      label $ get props :label
                       text $ {} (:text label) (:alpha 0.8) (:align :center)
                         :position $ complex/add position ([] 0 -20)
                         :style $ {} (:fill color) (:font-size 13) (:font-family "|Josefin Sans, sans-serif")
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-cursor $ %{} 'CodeEntry (:doc |)
+        'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-cursor nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-slider $ %{} 'CodeEntry (:doc |)
+        'lilac-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-slider nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-slider-point $ %{} 'CodeEntry (:doc |)
+        'lilac-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-slider-point nil)
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1492,9 +1516,9 @@
             phlox.complex :refer $ rebase
             phlox.complex :as complex
             phlox.comp.drag-point :refer $ comp-drag-point
-    |phlox.comp.switch $ %{} 'FileEntry
+    'phlox.comp.switch $ %{} 'FileEntry
       :defs $ {}
-        |comp-switch $ %{} 'CodeEntry (:doc |)
+        'comp-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-switch (props) (dev-check props lilac-switch)
               let
@@ -1535,7 +1559,7 @@
                     :alpha 1
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-switch $ %{} 'CodeEntry (:doc |)
+        'lilac-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-switch nil)
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1544,9 +1568,9 @@
           ns phlox.comp.switch $ :require
             phlox.core :refer $ g hslx rect circle text container graphics create-list
             phlox.check :refer $ lilac-event-map dev-check lilac-point
-    |phlox.comp.tabs $ %{} 'FileEntry
+    'phlox.comp.tabs $ %{} 'FileEntry
       :defs $ {}
-        |comp-tabs $ %{} 'CodeEntry (:doc |)
+        'comp-tabs $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn comp-tabs (tabs selected options on-select)
               let
@@ -1588,9 +1612,9 @@
             phlox.core :refer $ g hslx hsluvx rect circle text container graphics create-list
             phlox.check :refer $ lilac-event-map dev-check lilac-point
             phlox.complex :as complex
-    |phlox.complex $ %{} 'FileEntry
+    'phlox.complex $ %{} 'FileEntry
       :defs $ {}
-        |add $ %{} 'CodeEntry (:doc |)
+        'add $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn add (p1 p2)
               let-sugar
@@ -1600,20 +1624,24 @@
                 [] (+ a x) (+ b y)
           :examples $ []
           :schema $ :: 'Dynamic
-        |conjugate $ %{} 'CodeEntry (:doc |)
+        'conjugate $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn conjugate (pair) (update pair 1 negate)
           :examples $ []
           :schema $ :: 'Dynamic
-        |divide-by $ %{} 'CodeEntry (:doc |)
+        'divide-by $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn divide-by (point x)
               []
-                / (first point) x
-                / (last point) x
+                /
+                  option:unwrap-or (first point) 0
+                  , x
+                /
+                  option:unwrap-or (last point) 0
+                  , x
           :examples $ []
           :schema $ :: 'Dynamic
-        |minus $ %{} 'CodeEntry (:doc |)
+        'minus $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn minus (v1 v2)
               let-sugar
@@ -1623,7 +1651,7 @@
                 [] (- a x) (- b y)
           :examples $ []
           :schema $ :: 'Dynamic
-        |polar-point $ %{} 'CodeEntry (:doc |)
+        'polar-point $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn polar-point (angle r)
               []
@@ -1631,7 +1659,7 @@
                 * r $ phlox.core/ffi-sin angle
           :examples $ []
           :schema $ :: 'Dynamic
-        |rand-point $ %{} 'CodeEntry (:doc |)
+        'rand-point $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn rand-point (n ? m)
               let
@@ -1641,7 +1669,7 @@
                   - m0 $ rand-int (* 2 m0)
           :examples $ []
           :schema $ :: 'Dynamic
-        |rebase $ %{} 'CodeEntry (:doc |)
+        'rebase $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn rebase (value base) "|complex number division, renamed since naming collision" $ let-sugar
                   [] x y
@@ -1654,13 +1682,13 @@
                 * inverted $ - (* y a) (* x b)
           :examples $ []
           :schema $ :: 'Dynamic
-        |scale $ %{} 'CodeEntry (:doc |)
+        'scale $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn scale (pair v)
               map pair $ fn (x) (* v x)
           :examples $ []
           :schema $ :: 'Dynamic
-        |times $ %{} 'CodeEntry (:doc |)
+        'times $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn times (v1 v2)
               let-sugar
@@ -1676,15 +1704,15 @@
         :code $ quote
           ns phlox.complex $ :require
             [] @calcit/std :refer $ rand-int
-    |phlox.config $ %{} 'FileEntry
+    'phlox.config $ %{} 'FileEntry
       :defs $ {}
-        |dev? $ %{} 'CodeEntry (:doc |)
+        'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def dev? $ = |dev
               option:unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Dynamic
-        |mobile? $ %{} 'CodeEntry (:doc |)
+        'mobile? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def mobile? $ .!mobile (new mobile-detect js/window.navigator.userAgent)
           :examples $ []
@@ -1692,40 +1720,41 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns phlox.config $ :require (|mobile-detect :default mobile-detect)
-    |phlox.core $ %{} 'FileEntry
+    'phlox.core $ %{} 'FileEntry
       :defs $ {}
-        |*app $ %{} 'CodeEntry (:doc |)
+        '*app $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *app nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |*dispatch-fn $ %{} 'CodeEntry (:doc |)
-          :code $ quote (defatom *dispatch-fn nil)
+        '*dispatch-fn $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defatom *dispatch-fn $ fn (& args) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |*drag-moving-cache $ %{} 'CodeEntry (:doc |)
+        '*drag-moving-cache $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *drag-moving-cache nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |*events-element $ %{} 'CodeEntry (:doc |)
+        '*events-element $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *events-element nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |*renderer $ %{} 'CodeEntry (:doc |)
+        '*renderer $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *renderer nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |*stage-config $ %{} 'CodeEntry (:doc |)
+        '*stage-config $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defatom *stage-config $ {}
               :move $ [] 0 0
               :scale 1
           :examples $ []
           :schema $ :: 'Dynamic
-        |*tree-element $ %{} 'CodeEntry (:doc |)
+        '*tree-element $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *tree-element nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |>> $ %{} 'CodeEntry (:doc |)
+        '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn >> (states k)
               let
@@ -1736,48 +1765,52 @@
                 assoc branch :cursor $ conj parent-cursor k
           :examples $ []
           :schema $ :: 'Dynamic
-        |circle $ %{} 'CodeEntry (:doc |)
+        'circle $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
+        'clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn clear-phlox-caches! () $ do nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |container $ %{} 'CodeEntry (:doc |)
+        'container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |create-element $ %{} 'CodeEntry (:doc |)
+        'create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn create-element (tag props children)
               %{} schema/PhloxElement (:name tag) (:props props)
                 :children $ remove-nil-values (index-items children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |create-list $ %{} 'CodeEntry (:doc |)
+        'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn create-list (tag props children)
               %{} schema/PhloxElement (:name tag) (:props props)
                 :children $ remove-nil-values children
           :examples $ []
           :schema $ :: 'Dynamic
-        |defcomp $ %{} 'CodeEntry (:doc |)
+        'defcomp $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defmacro defcomp (name params & body)
               quasiquote $ defn ~name ~params ~@body
           :examples $ []
-          :schema $ :: 'Dynamic
-        |ffi-abs $ %{} 'CodeEntry (:doc |)
+          :schema $ :: 'Macro
+            {} (:rest 'Syntax)
+              :capabilities $ #{}
+              :expansion $ :: 'Definition 'Fn
+              :required $ [] 'SyntaxSymbol 'SyntaxList
+        'ffi-abs $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-abs (value)
               unsafe-coerce (js/Math.abs value) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-accessibility $ %{} 'CodeEntry (:doc |)
+        'ffi-accessibility $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-accessibility (plugins)
               unsafe-coerce
@@ -1785,19 +1818,19 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-add-child $ %{} 'CodeEntry (:doc |)
+        'ffi-add-child $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-add-child (parent child)
               .!addChild (unsafe-coerce parent JsObject) child
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-add-event-listener $ %{} 'CodeEntry (:doc |)
+        'ffi-add-event-listener $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-add-event-listener (target event callback)
               .!addEventListener (unsafe-coerce target JsObject) event callback
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-anchor $ %{} 'CodeEntry (:doc |)
+        'ffi-anchor $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-anchor (target)
               unsafe-coerce
@@ -1805,38 +1838,38 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-append-child $ %{} 'CodeEntry (:doc |)
+        'ffi-append-child $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-append-child (parent child)
               .!appendChild (unsafe-coerce parent JsObject) child
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-atan2 $ %{} 'CodeEntry (:doc |)
+        'ffi-atan2 $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-atan2 (y x)
               unsafe-coerce (js/Math.atan2 y x) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-bool $ %{} 'CodeEntry (:doc |)
+        'ffi-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-bool (value) (unsafe-coerce value Bool)
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Bool)
               :args $ [] 'Dynamic
-        |ffi-cos $ %{} 'CodeEntry (:doc |)
+        'ffi-cos $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-cos (value)
               unsafe-coerce (js/Math.cos value) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-destroy $ %{} 'CodeEntry (:doc |)
+        'ffi-destroy $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-destroy (target)
               .!destroy $ unsafe-coerce target JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-document-body $ %{} 'CodeEntry (:doc |)
+        'ffi-document-body $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-document-body (document)
               unsafe-coerce
@@ -1844,7 +1877,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-event-data $ %{} 'CodeEntry (:doc |)
+        'ffi-event-data $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-event-data (event)
               unsafe-coerce
@@ -1852,7 +1885,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-event-delta-y $ %{} 'CodeEntry (:doc |)
+        'ffi-event-delta-y $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-event-delta-y (event)
               unsafe-coerce
@@ -1860,13 +1893,13 @@
                 , Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-for-each $ %{} 'CodeEntry (:doc |)
+        'ffi-for-each $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-for-each (items callback)
               .!forEach (unsafe-coerce items JsObject) callback
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-get-context $ %{} 'CodeEntry (:doc |)
+        'ffi-get-context $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-get-context (element kind)
               unsafe-coerce
@@ -1874,19 +1907,19 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-global $ %{} 'CodeEntry (:doc |)
+        'ffi-global $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-global (data)
               unsafe-coerce (.-global data) JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-load-font $ %{} 'CodeEntry (:doc |)
+        'ffi-load-font $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-load-font (font)
               .!load $ unsafe-coerce font JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-measure-text $ %{} 'CodeEntry (:doc |)
+        'ffi-measure-text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-measure-text (context text)
               unsafe-coerce
@@ -1894,7 +1927,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-nullish? $ %{} 'CodeEntry (:doc |)
+        'ffi-nullish? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-nullish? (value)
               nil? $ unsafe-coerce value Dynamic
@@ -1902,24 +1935,24 @@
           :schema $ :: 'Fn
             {} (:return 'Bool)
               :args $ [] 'Dynamic
-        |ffi-number $ %{} 'CodeEntry (:doc |)
+        'ffi-number $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-number (value) (unsafe-coerce value Number)
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-object-x $ %{} 'CodeEntry (:doc |)
+        'ffi-object-x $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-object-x (value)
               unsafe-coerce (.-x value) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-object-y $ %{} 'CodeEntry (:doc |)
+        'ffi-object-y $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-object-y (value)
               unsafe-coerce (.-y value) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-pivot $ %{} 'CodeEntry (:doc |)
+        'ffi-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-pivot (target)
               unsafe-coerce
@@ -1927,7 +1960,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-plugins $ %{} 'CodeEntry (:doc |)
+        'ffi-plugins $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-plugins (renderer)
               unsafe-coerce
@@ -1935,7 +1968,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-position $ %{} 'CodeEntry (:doc |)
+        'ffi-position $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-position (target)
               unsafe-coerce
@@ -1943,18 +1976,18 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-random $ %{} 'CodeEntry (:doc |)
+        'ffi-random $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-random () $ unsafe-coerce (js/Math.random) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-render $ %{} 'CodeEntry (:doc |)
+        'ffi-render $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-render (renderer stage)
               .!render (unsafe-coerce renderer JsObject) stage
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-renderer $ %{} 'CodeEntry (:doc |)
+        'ffi-renderer $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-renderer (app)
               unsafe-coerce
@@ -1962,13 +1995,13 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-resize $ %{} 'CodeEntry (:doc |)
+        'ffi-resize $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-resize (renderer width height)
               .!resize (unsafe-coerce renderer JsObject) width height
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-scale $ %{} 'CodeEntry (:doc |)
+        'ffi-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-scale (target)
               unsafe-coerce
@@ -1976,19 +2009,19 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-set-anchor! $ %{} 'CodeEntry (:doc |)
+        'ffi-set-anchor! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-set-anchor! (anchor value)
               .!set (unsafe-coerce anchor JsObject) value
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-set-scale! $ %{} 'CodeEntry (:doc |)
+        'ffi-set-scale! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-set-scale! (target x y)
               .!set (unsafe-coerce target JsObject) x y
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-set-x! $ %{} 'CodeEntry (:doc |)
+        'ffi-set-x! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-set-x! (target value)
               set!
@@ -1996,7 +2029,7 @@
                 , value
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-set-y! $ %{} 'CodeEntry (:doc |)
+        'ffi-set-y! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-set-y! (target value)
               set!
@@ -2004,7 +2037,7 @@
                 , value
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-shader $ %{} 'CodeEntry (:doc |)
+        'ffi-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-shader (target)
               unsafe-coerce
@@ -2012,13 +2045,13 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-sin $ %{} 'CodeEntry (:doc |)
+        'ffi-sin $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-sin (value)
               unsafe-coerce (js/Math.sin value) Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-stage $ %{} 'CodeEntry (:doc |)
+        'ffi-stage $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-stage (app)
               unsafe-coerce
@@ -2026,13 +2059,13 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-stop $ %{} 'CodeEntry (:doc |)
+        'ffi-stop $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-stop (target)
               .!stop $ unsafe-coerce target JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-text-width $ %{} 'CodeEntry (:doc |)
+        'ffi-text-width $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-text-width (metrics)
               unsafe-coerce
@@ -2040,13 +2073,13 @@
                 , Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-then $ %{} 'CodeEntry (:doc |)
+        'ffi-then $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-then (promise callback)
               .!then (unsafe-coerce promise JsObject) callback
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-ticker $ %{} 'CodeEntry (:doc |)
+        'ffi-ticker $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-ticker (app)
               unsafe-coerce
@@ -2054,7 +2087,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-uniforms $ %{} 'CodeEntry (:doc |)
+        'ffi-uniforms $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-uniforms (shader)
               unsafe-coerce
@@ -2062,7 +2095,7 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-view $ %{} 'CodeEntry (:doc |)
+        'ffi-view $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-view (app)
               unsafe-coerce
@@ -2070,17 +2103,17 @@
                 , JsObject
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-window-height $ %{} 'CodeEntry (:doc |)
+        'ffi-window-height $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-window-height () $ unsafe-coerce js/window.innerHeight Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-window-width $ %{} 'CodeEntry (:doc |)
+        'ffi-window-width $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn ffi-window-width () $ unsafe-coerce js/window.innerWidth Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |g $ %{} 'CodeEntry (:doc |)
+        'g $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn g (op ? arg)
               let
@@ -2095,24 +2128,24 @@
                   :arc $ dev-check-message "|check :arc" data lilac-arc
                   :arc-to $ dev-check-message "|check :arc-to" data lilac-arc-to
                   :bezier-to $ dev-check-message "|check :bezier-to" data lilac-bezier-to
-                  :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quodratic-to
+                  :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quadratic-to
                   :begin-hole nil
                   :end-hole nil
                 [] op data
           :examples $ []
           :schema $ :: 'Dynamic
-        |graphics $ %{} 'CodeEntry (:doc |)
+        'graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |group $ %{} 'CodeEntry (:doc |)
+        'group $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn group (props & children) (dev-check props lilac-container)
               noted "|which is an alias of container" $ create-element :container props children
           :examples $ []
           :schema $ :: 'Dynamic
-        |handle-drag-moving $ %{} 'CodeEntry (:doc |)
+        'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn handle-drag-moving (el)
               .!addEventListener el |mousedown $ fn (event)
@@ -2142,7 +2175,7 @@
                       ffi-bool $ .-shiftKey event
                     let
                         dy $ * 0.001 (ffi-event-delta-y event)
-                        scale $ option:unwrap-or (get @*stage-config :scale) nil
+                        scale $ option:unwrap-or (get @*stage-config :scale) 1
                         pointer $ complex/minus
                           [] (.-clientX event) (.-clientY event)
                           []
@@ -2164,13 +2197,13 @@
                 js-object $ :passive true
           :examples $ []
           :schema $ :: 'Dynamic
-        |hclx $ %{} 'CodeEntry (:doc |)
+        'hclx $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn hclx (h c l)
               .!toNumber $ new Color (hcl-to-hex h c l)
           :examples $ []
           :schema $ :: 'Dynamic
-        |hsluvx $ %{} 'CodeEntry (:doc |)
+        'hsluvx $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn hsluvx (h c l)
               let
@@ -2183,19 +2216,19 @@
                   js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
           :examples $ []
           :schema $ :: 'Dynamic
-        |hslx $ %{} 'CodeEntry (:doc |)
+        'hslx $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn hslx (h s l)
               .!toNumber $ new Color
                 js-object (:h h) (:s s) (:l l) (:a 1)
           :examples $ []
           :schema $ :: 'Dynamic
-        |image $ %{} 'CodeEntry (:doc |)
+        'image $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-pixi-app! $ %{} 'CodeEntry (:doc |)
+        'init-pixi-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-pixi-app! (options)
               let
@@ -2227,40 +2260,40 @@
                 , pixi-app
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-arc $ %{} 'CodeEntry (:doc |)
+        'lilac-arc $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-arc nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-arc-to $ %{} 'CodeEntry (:doc |)
+        'lilac-arc-to $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-arc-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-begin-fill $ %{} 'CodeEntry (:doc |)
+        'lilac-begin-fill $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-begin-fill nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-bezier-to $ %{} 'CodeEntry (:doc |)
+        'lilac-bezier-to $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-bezier-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-image $ %{} 'CodeEntry (:doc |)
+        'lilac-image $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-image nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-mesh $ %{} 'CodeEntry (:doc |)
+        'lilac-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-mesh nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |lilac-quodratic-to $ %{} 'CodeEntry (:doc |)
-          :code $ quote (def lilac-quodratic-to nil)
+        'lilac-quadratic-to $ %{} 'CodeEntry (:doc |)
+          :code $ quote (def lilac-quadratic-to nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |line-segments $ %{} 'CodeEntry (:doc |)
+        'line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn line-segments (props & children) (dev-check props lilac-line-segments)
               let
                   line-style $ option:unwrap-or (get props :style) nil
-                  segments $ option:unwrap-or (get props :segments) nil
+                  segments $ option:unwrap-or (get props :segments) ([])
                 create-element :graphics
                   assoc props :ops $ concat
                     [] $ g :line-style line-style
@@ -2272,12 +2305,12 @@
                   , children
           :examples $ []
           :schema $ :: 'Dynamic
-        |mesh $ %{} 'CodeEntry (:doc |)
+        'mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn mesh (props & children) (dev-check props lilac-mesh) (create-element :mesh props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |mount-app! $ %{} 'CodeEntry (:doc |)
+        'mount-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn mount-app! (app dispatch!)
               let
@@ -2285,27 +2318,27 @@
                 ffi-add-child (ffi-stage @*app) element-tree
           :examples $ []
           :schema $ :: 'Dynamic
-        |on-control-event $ %{} 'CodeEntry (:doc |)
+        'on-control-event $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn on-control-event (elapsed states delta)
               if
-                and $ option:unwrap-or (get states :left-b?) nil
+                and $ option:unwrap-or (get states :left-b?) false
                 reset-stage-config!
                 let
-                    move $ option:unwrap-or (get states :left-move) nil
-                    scales $ option:unwrap-or (get delta :right-move) nil
+                    move $ option:unwrap-or (get states :left-move) ([] 0 0)
+                    scales $ option:unwrap-or (get delta :right-move) ([] 0 0)
                   update-stage-config!
                     map move $ fn (x)
                       * x (ffi-abs x) 0.02
-                    nth scales 1
+                    option:unwrap-or (nth scales 1) 0
           :examples $ []
           :schema $ :: 'Dynamic
-        |polyline $ %{} 'CodeEntry (:doc |)
+        'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn polyline (props & children) (dev-check props lilac-polyline)
               let
                   line-style $ option:unwrap-or (get props :style) nil
-                  points $ option:unwrap-or (get props :points) nil
+                  points $ option:unwrap-or (get props :points) ([])
                 create-element :graphics
                   assoc props :ops $ concat
                     [] (g :line-style line-style)
@@ -2315,12 +2348,12 @@
                   , children
           :examples $ []
           :schema $ :: 'Dynamic
-        |rect $ %{} 'CodeEntry (:doc |)
+        'rect $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |render! $ %{} 'CodeEntry (:doc |)
+        'render! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render! (expanded-app dispatch! options)
               when
@@ -2344,7 +2377,7 @@
               render-stage-for-viewer!
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
+        'render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-stage-for-viewer! ()
               let
@@ -2354,17 +2387,17 @@
                   ffi-position $ ffi-stage @*app
                   +
                     * 0.5 $ ffi-number js/window.innerWidth
-                    nth move 0
+                    option:unwrap-or (nth move 0) 0
                 ffi-set-y!
                   ffi-position $ ffi-stage @*app
                   +
                     * 0.5 $ ffi-number js/window.innerHeight
-                    nth move 1
+                    option:unwrap-or (nth move 1) 0
                 -> @*app ffi-stage ffi-scale $ ffi-set-scale! scale scale
               -> @*app ffi-renderer $ ffi-render (ffi-stage @*app)
           :examples $ []
           :schema $ :: 'Dynamic
-        |rerender-app! $ %{} 'CodeEntry (:doc |)
+        'rerender-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn rerender-app! (app dispatch! options) (; js/console.log "|rerender tree" app @*tree-element)
               update-children
@@ -2374,11 +2407,11 @@
                 , dispatch! options
           :examples $ []
           :schema $ :: 'Dynamic
-        |reset-stage-config! $ %{} 'CodeEntry (:doc |)
+        'reset-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reset-stage-config! () $ let
                 move0 $ option:unwrap-or (get @*stage-config :move) nil
-                scale0 $ option:unwrap-or (get @*stage-config :scale) nil
+                scale0 $ option:unwrap-or (get @*stage-config :scale) 1
               when
                 or
                   not= ([] 0 0) move0
@@ -2404,16 +2437,16 @@
                 render-stage-for-viewer!
           :examples $ []
           :schema $ :: 'Dynamic
-        |text $ %{} 'CodeEntry (:doc |)
+        'text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-stage-config! $ %{} 'CodeEntry (:doc |)
+        'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-stage-config! (move scale-change)
               let
-                  scale0 $ option:unwrap-or (get @*stage-config :scale) nil
+                  scale0 $ option:unwrap-or (get @*stage-config :scale) 1
                 when
                   and
                     or
@@ -2443,9 +2476,9 @@
             phlox.math :refer $ vec-length
             |hsluv :refer $ Hsluv
             |pixi.js :refer $ Color
-    |phlox.cursor $ %{} 'FileEntry
+    'phlox.cursor $ %{} 'FileEntry
       :defs $ {}
-        |update-states $ %{} 'CodeEntry (:doc |)
+        'update-states $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-states (store cursor data)
               assoc-in store
@@ -2455,13 +2488,13 @@
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns phlox.cursor)
-    |phlox.input $ %{} 'FileEntry
+    'phlox.input $ %{} 'FileEntry
       :defs $ {}
-        |lilac-input $ %{} 'CodeEntry (:doc |)
+        'lilac-input $ %{} 'CodeEntry (:doc |)
           :code $ quote (def lilac-input nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |request-text! $ %{} 'CodeEntry (:doc |)
+        'request-text! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn request-text! (e options cb) (dev-check options lilac-input)
               prompt-at!
@@ -2474,14 +2507,14 @@
           ns phlox.input $ :require
             phlox.check :refer $ dev-check
             pointed-prompt.core :refer $ prompt-at!
-    |phlox.keyboard $ %{} 'FileEntry
+    'phlox.keyboard $ %{} 'FileEntry
       :defs $ {}
-        |get-value $ %{} 'CodeEntry (:doc |)
+        'get-value $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-value (*x) @*x
           :examples $ []
           :schema $ :: 'Dynamic
-        |handle-event $ %{} 'CodeEntry (:doc |)
+        'handle-event $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn handle-event (kind tree event dispatch!)
               when (some? tree)
@@ -2491,13 +2524,13 @@
                         listener $ get-in tree ([] :props :on-keyboard kind)
                       when (fn? listener) (listener event dispatch!)
                     ->
-                      option:unwrap-or (get tree :children) nil
+                      option:unwrap-or (get tree :children) ([])
                       map $ fn (pair)
                         let[] (k child) pair $ handle-event kind child event dispatch!
                   do $ js/console.log "|unknown tree for handling event:" tree
           :examples $ []
           :schema $ :: 'Dynamic
-        |handle-keyboard-events $ %{} 'CodeEntry (:doc |)
+        'handle-keyboard-events $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn handle-keyboard-events (*tree-element dispatch!)
               phlox.core/ffi-add-event-listener js/window |keydown $ fn (event)
@@ -2508,7 +2541,7 @@
                 handle-event :press (get-value *tree-element) (wrap-event event) dispatch!
           :examples $ []
           :schema $ :: 'Dynamic
-        |wrap-event $ %{} 'CodeEntry (:doc |)
+        'wrap-event $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn wrap-event (event)
               {} (:event event)
@@ -2523,31 +2556,31 @@
         :code $ quote
           ns phlox.keyboard $ :require
             [] phlox.util :refer $ [] element?
-    |phlox.math $ %{} 'FileEntry
+    'phlox.math $ %{} 'FileEntry
       :defs $ {}
-        |angle->radian $ %{} 'CodeEntry (:doc |)
+        'angle->radian $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn angle->radian (x) (* x radian-ratio)
           :examples $ []
           :schema $ :: 'Dynamic
-        |bound-x $ %{} 'CodeEntry (:doc |)
+        'bound-x $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn bound-x (x lower higher)
               js/Math.min (either higher js/+Infinity)
                 js/Math.max (either lower js/-Infinity) x
           :examples $ []
           :schema $ :: 'Dynamic
-        |ffi-pi $ %{} 'CodeEntry (:doc |)
+        'ffi-pi $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def ffi-pi $ unsafe-coerce js/Math.PI Number
           :examples $ []
           :schema $ :: 'Dynamic
-        |radian-ratio $ %{} 'CodeEntry (:doc |)
+        'radian-ratio $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def radian-ratio $ / ffi-pi 180
           :examples $ []
           :schema $ :: 'Dynamic
-        |vec-length $ %{} 'CodeEntry (:doc |)
+        'vec-length $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn vec-length (point)
               let[] (x y) point $ js/Math.sqrt
@@ -2556,15 +2589,15 @@
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns phlox.math)
-    |phlox.render $ %{} 'FileEntry
+    'phlox.render $ %{} 'FileEntry
       :defs $ {}
-        |first-value $ %{} 'CodeEntry (:doc |)
+        'first-value $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn first-value (items)
               option:unwrap-or (first items) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-box-size $ %{} 'CodeEntry (:doc |)
+        'init-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-box-size (target size)
               if (some? size)
@@ -2573,13 +2606,13 @@
                   set! (.-height target) (nth size 1)
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-fill $ %{} 'CodeEntry (:doc |)
+        'init-fill $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-fill (target color) (.!endFill target)
               if (some? color) (.!beginFill target color)
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-filters $ %{} 'CodeEntry (:doc |)
+        'init-filters $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-filters (target filters)
               if
@@ -2596,7 +2629,7 @@
                   set! (.-filters target) filters-arr
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-geometry $ %{} 'CodeEntry (:doc |)
+        'init-geometry $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-geometry (data)
               let
@@ -2612,7 +2645,7 @@
                 , geo
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-scale $ %{} 'CodeEntry (:doc |)
+        'init-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-scale (target scale)
               when (some? scale)
@@ -2634,7 +2667,7 @@
                   true $ js/console.error "|unknown scale" scale
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-shader $ %{} 'CodeEntry (:doc |)
+        'init-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-shader (data uniforms)
               .!from PIXI/Shader
@@ -2643,13 +2676,13 @@
                 , uniforms
           :examples $ []
           :schema $ :: 'Dynamic
-        |last-value $ %{} 'CodeEntry (:doc |)
+        'last-value $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn last-value (items)
               option:unwrap-or (last items) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |read-draw-mode-alias $ %{} 'CodeEntry (:doc |)
+        'read-draw-mode-alias $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn read-draw-mode-alias (draw-mode)
               if (tag? draw-mode)
@@ -2657,7 +2690,7 @@
                 , draw-mode
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-children $ %{} 'CodeEntry (:doc |)
+        'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-children (target children dispatch!)
               &doseq (child-pair children)
@@ -2666,7 +2699,7 @@
                   js/console.log "|nil child:" child-pair
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-circle $ %{} 'CodeEntry (:doc |)
+        'render-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-circle (element dispatch!)
               let
@@ -2692,7 +2725,7 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-container $ %{} 'CodeEntry (:doc |)
+        'render-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-container (element dispatch!)
               let
@@ -2711,7 +2744,7 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-element $ %{} 'CodeEntry (:doc |)
+        'render-element $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-element (element dispatch!)
               if (element? element)
@@ -2731,7 +2764,7 @@
                 do $ js/console.error "|Unknown element:" element
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-graphics $ %{} 'CodeEntry (:doc |)
+        'render-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-graphics (element dispatch!)
               let
@@ -2755,7 +2788,7 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-image $ %{} 'CodeEntry (:doc |)
+        'render-image $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-image (element dispatch!)
               let
@@ -2778,7 +2811,7 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-mesh $ %{} 'CodeEntry (:doc |)
+        'render-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-mesh (element dispatch!)
               let
@@ -2801,7 +2834,7 @@
                 init-alpha target $ option:unwrap-or (get props :alpha) nil
                 init-events target events dispatch!
                 if
-                  = :center $ option:unwrap-or (get props :align) nil
+                  = :center $ option:unwrap-or (get props :align) :left
                   phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
                 init-filters target $ option:unwrap-or (get props :filters) nil
                 render-children target
@@ -2811,7 +2844,7 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-rect $ %{} 'CodeEntry (:doc |)
+        'render-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-rect (element dispatch!)
               let
@@ -2837,7 +2870,7 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |render-text $ %{} 'CodeEntry (:doc |)
+        'render-text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn render-text (element dispatch!)
               let
@@ -2854,7 +2887,7 @@
                 init-rotation target $ option:unwrap-or (get props :rotation) nil
                 init-alpha target $ option:unwrap-or (get props :alpha) nil
                 if
-                  = :center $ option:unwrap-or (get props :align) nil
+                  = :center $ option:unwrap-or (get props :align) :left
                   phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
                 init-filters target $ option:unwrap-or (get props :filters) nil
                 render-children target
@@ -2863,14 +2896,14 @@
                 , target
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-angle $ %{} 'CodeEntry (:doc |)
+        'update-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-angle (target v v0)
               when (not= v v0)
                 set! (.-angle target) v
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-box-size $ %{} 'CodeEntry (:doc |)
+        'update-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-box-size (target size size')
               if (not= size size')
@@ -2883,7 +2916,7 @@
                     set! (.-height target) js/undefined
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-children $ %{} 'CodeEntry (:doc |)
+        'update-children $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-children (children-dict old-children-dict parent-container dispatch! options)
               when dev? $ assert "|children should not contain nil element"
@@ -2932,7 +2965,7 @@
                           recur idx (rest ops) xs $ rest ys
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-circle $ %{} 'CodeEntry (:doc |)
+        'update-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-circle (element old-element target dispatch!)
               let
@@ -2980,7 +3013,7 @@
                   option:unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-container $ %{} 'CodeEntry (:doc |)
+        'update-container $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-container (element old-element target)
               let
@@ -3009,7 +3042,7 @@
                   option:unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-draw-mode $ %{} 'CodeEntry (:doc |)
+        'update-draw-mode $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-draw-mode (target draw-mode draw-mode')
               when (not= draw-mode draw-mode')
@@ -3019,7 +3052,7 @@
                   set! (.-drawMode target) m
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-element $ %{} 'CodeEntry (:doc |)
+        'update-element $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-element (element old-element parent-element idx dispatch! options)
               cond
@@ -3051,7 +3084,7 @@
                 true $ js/console.warn "|Unknown case:" element old-element
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-filters $ %{} 'CodeEntry (:doc |)
+        'update-filters $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-filters (target filters filters0)
               let
@@ -3064,14 +3097,14 @@
                     init-filters target next-filters
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-geometry $ %{} 'CodeEntry (:doc |)
+        'update-geometry $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-geometry (target geo geo')
               when (not= geo geo')
                 -> target .-geometry $ set! (init-geometry geo)
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-graphics $ %{} 'CodeEntry (:doc |)
+        'update-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-graphics (element old-element target dispatch!)
               let
@@ -3107,7 +3140,7 @@
                   option:unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-image $ %{} 'CodeEntry (:doc |)
+        'update-image $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-image (element old-element target dispatch!)
               let
@@ -3152,7 +3185,7 @@
                   option:unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-mesh $ %{} 'CodeEntry (:doc |)
+        'update-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-mesh (element old-element target dispatch!)
               let
@@ -3207,7 +3240,7 @@
                   option:unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-rect $ %{} 'CodeEntry (:doc |)
+        'update-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-rect (element old-element target dispatch!)
               let
@@ -3257,7 +3290,7 @@
                   option:unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-scale $ %{} 'CodeEntry (:doc |)
+        'update-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-scale (target scale scale')
               when (not= scale scale')
@@ -3277,14 +3310,14 @@
                   true $ js/console.error "|unknown scale:" scale
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-shader $ %{} 'CodeEntry (:doc |)
+        'update-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-shader (target shader shader' uniforms)
               when (not= shader shader')
                 -> target .-shader $ set! (init-shader shader uniforms)
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-text $ %{} 'CodeEntry (:doc |)
+        'update-text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-text (element old-element target)
               let
@@ -3323,9 +3356,9 @@
                 if
                   not=
                     option:unwrap-or (get props :align) nil
-                    option:unwrap-or (get props' :align) nil
+                    option:unwrap-or (get props' :align) :left
                   if
-                    = :center $ option:unwrap-or (get props :align) nil
+                    = :center $ option:unwrap-or (get props :align) :left
                     phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
                     phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) nil
                 update-filters target
@@ -3341,9 +3374,9 @@
             phlox.render.draw :refer $ call-graphics-ops update-position update-pivot update-rotation update-alpha update-events draw-circle draw-rect init-events init-position init-pivot init-angle init-rotation init-alpha init-line-style
             phlox.check :refer $ dev-check lilac-color lilac-rect lilac-text lilac-container lilac-graphics lilac-circle
             phlox.config :refer $ dev?
-    |phlox.render.draw $ %{} 'FileEntry
+    'phlox.render.draw $ %{} 'FileEntry
       :defs $ {}
-        |call-graphics-ops $ %{} 'CodeEntry (:doc |)
+        'call-graphics-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn call-graphics-ops (target ops)
               &doseq (pair ops)
@@ -3366,7 +3399,7 @@
                             option:unwrap-or (get data :radian) nil
                           (some? (option:unwrap-or (get data :angle) nil))
                             map
-                              option:unwrap-or (get data :angle) nil
+                              option:unwrap-or (get data :angle) ([])
                               , angle->radian
                           true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
                       .!arc target (first center) (last center)
@@ -3392,7 +3425,7 @@
                     :end-hole $ .!endHole target
           :examples $ []
           :schema $ :: 'Dynamic
-        |draw-circle $ %{} 'CodeEntry (:doc |)
+        'draw-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn draw-circle (target radius)
               if (number? radius)
@@ -3400,7 +3433,7 @@
                 js/console.warn "|Unknown radius" radius
           :examples $ []
           :schema $ :: 'Dynamic
-        |draw-rect $ %{} 'CodeEntry (:doc |)
+        'draw-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn draw-rect (target size radius)
               if (list? size)
@@ -3415,21 +3448,21 @@
                 js/console.warn "|Unknown size" size
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-alpha $ %{} 'CodeEntry (:doc |)
+        'init-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-alpha (target alpha)
               when (some? alpha)
                 set! (-> target .-alpha) alpha
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-angle $ %{} 'CodeEntry (:doc |)
+        'init-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-angle (target v)
               when (some? v)
                 set! (.-angle target) v
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-events $ %{} 'CodeEntry (:doc |)
+        'init-events $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-events (target events dispatch!)
               when (some? events)
@@ -3438,10 +3471,11 @@
                 &doseq
                   pair $ to-pairs events
                   let[] (k listener) pair $ .!on target (turn-string k)
-                    fn (event) (listener event dispatch!)
+                    fn (event)
+                      when (fn? listener) (listener event dispatch!)
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-line-style $ %{} 'CodeEntry (:doc |)
+        'init-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-line-style (target line-style)
               when (some? line-style)
@@ -3459,7 +3493,7 @@
                     option:unwrap-or (get line-style :cap) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-pivot $ %{} 'CodeEntry (:doc |)
+        'init-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-pivot (target pivot)
               when (some? pivot)
@@ -3467,7 +3501,7 @@
                 phlox.core/ffi-set-y! (phlox.core/ffi-pivot target) (last pivot)
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-position $ %{} 'CodeEntry (:doc |)
+        'init-position $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-position (target point)
               when (some? point)
@@ -3477,14 +3511,14 @@
                   if (list? point) (last point) 0
           :examples $ []
           :schema $ :: 'Dynamic
-        |init-rotation $ %{} 'CodeEntry (:doc |)
+        'init-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn init-rotation (target v)
               when (some? v)
                 set! (.-rotation target) v
           :examples $ []
           :schema $ :: 'Dynamic
-        |read-line-cap $ %{} 'CodeEntry (:doc |)
+        'read-line-cap $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn read-line-cap (x)
               case-default x (println "|unknown line-cap:" x)
@@ -3494,7 +3528,7 @@
                 :square $ .-SQUARE PIXI/LINE_CAP
           :examples $ []
           :schema $ :: 'Dynamic
-        |read-line-join $ %{} 'CodeEntry (:doc |)
+        'read-line-join $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn read-line-join (x)
               case-default x
@@ -3505,14 +3539,14 @@
                 :round $ .-ROUND PIXI/LINE_JOIN
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-alpha $ %{} 'CodeEntry (:doc |)
+        'update-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-alpha (target alpha alpha0)
               when (not= alpha alpha0)
                 set! (-> target .-alpha) alpha
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-events $ %{} 'CodeEntry (:doc |)
+        'update-events $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-events (target events old-events dispatch!)
               when (some? old-events)
@@ -3523,7 +3557,8 @@
                 &doseq
                   pair $ to-pairs events
                   let[] (k listener) pair $ .!on target (turn-string k)
-                    fn (event) (listener event dispatch!)
+                    fn (event)
+                      when (fn? listener) (listener event dispatch!)
               if (some? events)
                 do
                   set! (.-buttonMode target) true
@@ -3533,7 +3568,7 @@
                   set! (.-eventMode target) |none
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-pivot $ %{} 'CodeEntry (:doc |)
+        'update-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-pivot (target pivot pivot0)
               when (not= pivot pivot0)
@@ -3543,7 +3578,7 @@
                   if (list? pivot) (last pivot) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-position $ %{} 'CodeEntry (:doc |)
+        'update-position $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-position (target point point0)
               when (not= point point0)
@@ -3553,7 +3588,7 @@
                   if (list? point) (last point) nil
           :examples $ []
           :schema $ :: 'Dynamic
-        |update-rotation $ %{} 'CodeEntry (:doc |)
+        'update-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-rotation (target v v0)
               when (not= v v0)
@@ -3568,18 +3603,18 @@
             phlox.math :refer $ angle->radian
             phlox.render.draw :refer $ init-line-style
             |pixi.js :as PIXI
-    |phlox.schema $ %{} 'FileEntry
+    'phlox.schema $ %{} 'FileEntry
       :defs $ {}
-        |PhloxElement $ %{} 'CodeEntry (:doc |)
+        'PhloxElement $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstruct PhloxElement (:name 'Dynamic) (:props 'Dynamic) (:children 'Dynamic)
           :examples $ []
           :schema $ :: 'Enum
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns phlox.schema)
-    |phlox.test $ %{} 'FileEntry
+    'phlox.test $ %{} 'FileEntry
       :defs $ {}
-        |test-lcs $ %{} 'CodeEntry (:doc |)
+        'test-lcs $ %{} 'CodeEntry (:doc |)
           :code $ quote
             deftest test-lcs $ testing "|Find simple changes"
               is $ =
@@ -3619,13 +3654,13 @@
           ns phlox.test $ :require
             [] cljs.test :refer $ [] deftest is testing run-tests
             [] phlox.util.lcs :refer $ [] find-minimal-ops lcs-state-0
-    |phlox.util $ %{} 'FileEntry
+    'phlox.util $ %{} 'FileEntry
       :defs $ {}
-        |*ctx-instance $ %{} 'CodeEntry (:doc |)
+        '*ctx-instance $ %{} 'CodeEntry (:doc |)
           :code $ quote (defatom *ctx-instance nil)
           :examples $ []
           :schema $ :: 'Dynamic
-        |camel-case $ %{} 'CodeEntry (:doc |)
+        'camel-case $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn camel-case (x)
               .!replace x (new js/RegExp |-[a-z])
@@ -3633,14 +3668,14 @@
                   .!toUpperCase $ get x 1
           :examples $ []
           :schema $ :: 'Dynamic
-        |canvas-center! $ %{} 'CodeEntry (:doc |)
+        'canvas-center! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn canvas-center! () $ []
               &* 0.5 $ phlox.core/ffi-number js/window.innerWidth
               &* 0.5 $ phlox.core/ffi-number js/window.innerHeight
           :examples $ []
           :schema $ :: 'Dynamic
-        |convert-line-style $ %{} 'CodeEntry (:doc |)
+        'convert-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn convert-line-style (props)
               -> props (to-pairs)
@@ -3669,11 +3704,12 @@
                         :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
                         :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
                         :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                &set:to-list
                 pairs-map
                 to-js-data
           :examples $ []
           :schema $ :: 'Dynamic
-        |detect-func-in-map? $ %{} 'CodeEntry (:doc |)
+        'detect-func-in-map? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn detect-func-in-map? (params)
               if (empty? params) false $ let
@@ -3688,21 +3724,21 @@
                   , true $ recur (rest params)
           :examples $ []
           :schema $ :: 'Dynamic
-        |element? $ %{} 'CodeEntry (:doc |)
+        'element? $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn element? (x)
               and (struct? x)
                 = (&struct:definition x) schema/PhloxElement
           :examples $ []
           :schema $ :: 'Dynamic
-        |index-items $ %{} 'CodeEntry (:doc |)
+        'index-items $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn index-items (xs)
               -> xs $ map-indexed
                 fn (idx x) ([] idx x)
           :examples $ []
           :schema $ :: 'Dynamic
-        |measure-text-width! $ %{} 'CodeEntry (:doc |)
+        'measure-text-width! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn measure-text-width! (text size font-family)
               when
@@ -3714,12 +3750,12 @@
               phlox.core/ffi-text-width $ phlox.core/ffi-measure-text @*ctx-instance text
           :examples $ []
           :schema $ :: 'Dynamic
-        |rand-color $ %{} 'CodeEntry (:doc |)
+        'rand-color $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn rand-color () $ rand-int 0xffffff
           :examples $ []
           :schema $ :: 'Dynamic
-        |remove-nil-values $ %{} 'CodeEntry (:doc |)
+        'remove-nil-values $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn remove-nil-values (dict)
               -> dict $ filter
@@ -3727,7 +3763,7 @@
                   option:some? $ last pair
           :examples $ []
           :schema $ :: 'Dynamic
-        |use-number $ %{} 'CodeEntry (:doc |)
+        'use-number $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn use-number (x)
               if
@@ -3740,9 +3776,9 @@
         :code $ quote
           ns phlox.util $ :require ([] |pixi.js :as PIXI) ([] phlox.schema :as schema)
             [] @calcit/std :refer $ rand-int
-    |phlox.util.lcs $ %{} 'FileEntry
+    'phlox.util.lcs $ %{} 'FileEntry
       :defs $ {}
-        |find-minimal-ops $ %{} 'CodeEntry (:doc |)
+        'find-minimal-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn find-minimal-ops (state xs ys)
               ; println "|find ops" state (count xs) (count ys)
@@ -3808,12 +3844,12 @@
                           , xs (rest ys)
                       if
                         <=
-                          option:unwrap-or (get solution-a :step) nil
-                          option:unwrap-or (get solution-b :step) nil
+                          option:unwrap-or (get solution-a :step) 0
+                          option:unwrap-or (get solution-b :step) 0
                         , solution-a solution-b
           :examples $ []
           :schema $ :: 'Dynamic
-        |lcs-state-0 $ %{} 'CodeEntry (:doc |)
+        'lcs-state-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def lcs-state-0 $ {}
               :acc $ []
@@ -3822,27 +3858,27 @@
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote (ns phlox.util.lcs)
-    |phlox.util.styles $ %{} 'FileEntry
+    'phlox.util.styles $ %{} 'FileEntry
       :defs $ {}
-        |font-code $ %{} 'CodeEntry (:doc |)
+        'font-code $ %{} 'CodeEntry (:doc |)
           :code $ quote (def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace")
           :examples $ []
           :schema $ :: 'Dynamic
-        |font-normal $ %{} 'CodeEntry (:doc |)
-          :code $ quote (def font-normal "|Hind, Helvatica, Arial, sans-serif")
+        'font-normal $ %{} 'CodeEntry (:doc |)
+          :code $ quote (def font-normal "|Hind, Helvetica, Arial, sans-serif")
           :examples $ []
           :schema $ :: 'Dynamic
-        |layout-column $ %{} 'CodeEntry (:doc |)
+        'layout-column $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def layout-column $ {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
           :examples $ []
           :schema $ :: 'Dynamic
-        |layout-expand $ %{} 'CodeEntry (:doc |)
+        'layout-expand $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def layout-expand $ {} (:flex 1) (:overflow :auto)
           :examples $ []
           :schema $ :: 'Dynamic
-        |layout-row $ %{} 'CodeEntry (:doc |)
+        'layout-row $ %{} 'CodeEntry (:doc |)
           :code $ quote
             def layout-row $ {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
           :examples $ []

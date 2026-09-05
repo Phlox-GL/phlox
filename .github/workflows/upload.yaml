@@ -6,37 +6,85 @@ on:
       - main
   pull_request: {}
 
+permissions:
+  contents: read
+
 jobs:
-  test:
-    runs-on: ubuntu-24.04
-    # runs-on: ubuntu-latest
+  validate:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v5.1.0
 
-    - uses: actions/setup-node@v6
-      with:
-        node-version: 24
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
 
-    - run: corepack enable && corepack prepare yarn@4.12.0 --activate
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.12.0 --activate
+          yarn --version
 
-    - uses: calcit-lang/setup-calcit@3b5843cb725963bb4ee158cfe49dad877134963e
+      - uses: calcit-lang/setup-calcit@v1.4.0
+        with:
+          tools: calcit,caps
 
-    - name: "compiles to js"
-      run: >
-        caps --ci && calcit calcit.cirru js
-        && yarn install --immutable && yarn vite build --base=./
+      - name: Validate Calcit project
+        run: |
+          caps --strict --ci
+          yarn install --immutable
+          caps verify --toolchain
+          calcit calcit.cirru edit format
+          git diff --exit-code -- calcit.cirru
+          calcit calcit.cirru --check-only
+          calcit calcit.cirru test
 
-    - name: Deploy to server
-      id: deploy
-      uses: Pendect/action-rsyncer@v2.0.0
-      env:
-        DEPLOY_KEY: ${{secrets.rsync_private_key}}
-      with:
-        flags: '-avzr --progress'
-        options: ''
-        ssh_options: ''
-        src: 'dist/*'
-        dest: 'rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}'
+      - name: Compile to JavaScript
+        run: |
+          calcit calcit.cirru js
+          yarn vite build --base=./
 
-    - name: Display status from deploy
-      run: echo "${{ steps.deploy.outputs.status }}"
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5.1.0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.12.0 --activate
+
+      - uses: calcit-lang/setup-calcit@v1.4.0
+        with:
+          tools: calcit,caps
+
+      - name: Build deployment
+        run: |
+          caps --strict --ci
+          yarn install --immutable
+          caps verify --toolchain
+          calcit calcit.cirru js
+          yarn vite build --base=./
+
+      - name: Deploy to server
+        env:
+          DEPLOY_KEY: ${{ secrets.rsync_private_key }}
+          RSYNC_KNOWN_HOSTS: ${{ secrets.rsync_known_hosts }}
+        run: |
+          test -n "$DEPLOY_KEY"
+          test -n "$RSYNC_KNOWN_HOSTS"
+          install -m 700 -d "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$RSYNC_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/ssh/known_hosts"
+          eval "$(ssh-agent -s)"
+          trap 'ssh-agent -k' EXIT
+          printf '%s\n' "$DEPLOY_KEY" | tr -d '\r' | ssh-add -
+          rsync -avzr --progress \
+            -e "ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" \
+            dist/* "rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}"

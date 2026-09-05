@@ -6,7 +6,7 @@
     "release": "yarn vite build --base=./"
   },
   "dependencies": {
-    "@calcit/procs": "^0.13.29",
+    "@calcit/procs": "0.13.77",
     "@quamolit/phlox-utils": "^0.0.2",
     "@triadica/touch-control": "^0.0.4-a1",
     "fontfaceobserver-es": "^3.3.3",
