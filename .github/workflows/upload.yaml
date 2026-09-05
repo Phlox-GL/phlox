@@ -44,6 +44,14 @@ jobs:
           calcit calcit.cirru js
           yarn vite build --base=./
 
+      - name: Verify deployment host key
+        run: |
+          host_count="$(awk '$1 == "tiye.me" { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
+          test "$host_count" -eq 1
+          host_key="$(awk '$1 == "tiye.me" { print $2 " " $3 }' .github/ssh_known_hosts)"
+          actual_fingerprint="$(printf '%s\n' "$host_key" | ssh-keygen -lf - | awk '{ print $2 }')"
+          test "$actual_fingerprint" = 'SHA256:f0ME3+UEzCM357Vtdic/bay2ygVUULBJ2pfaPTjBYhg'
+
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: validate
@@ -75,16 +83,16 @@ jobs:
       - name: Deploy to server
         env:
           DEPLOY_KEY: ${{ secrets.rsync_private_key }}
-          RSYNC_KNOWN_HOSTS: ${{ secrets.rsync_known_hosts }}
         run: |
+          set -euo pipefail
           test -n "$DEPLOY_KEY"
-          test -n "$RSYNC_KNOWN_HOSTS"
-          install -m 700 -d "$RUNNER_TEMP/ssh"
-          printf '%s\n' "$RSYNC_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
-          chmod 600 "$RUNNER_TEMP/ssh/known_hosts"
-          eval "$(ssh-agent -s)"
-          trap 'ssh-agent -k' EXIT
-          printf '%s\n' "$DEPLOY_KEY" | tr -d '\r' | ssh-add -
+          ssh_dir="$RUNNER_TEMP/phlox-ssh"
+          key_file="$ssh_dir/id_ed25519"
+          known_hosts_file="$GITHUB_WORKSPACE/.github/ssh_known_hosts"
+          install -d -m 700 "$ssh_dir"
+          install -m 600 /dev/null "$key_file"
+          printf '%s\n' "$DEPLOY_KEY" | tr -d '\r' > "$key_file"
+          trap 'rm -f "$key_file"' EXIT
           rsync -avzr --progress \
-            -e "ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" \
-            dist/* "rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}"
+            -e "ssh -i $key_file -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts_file" \
+            dist/ "rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}/"
