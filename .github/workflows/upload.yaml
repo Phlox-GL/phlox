@@ -46,6 +46,8 @@ jobs:
 
       - name: Verify deployment host key
         run: |
+          entry_count="$(awk 'NF && $1 !~ /^#/ { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
+          test "$entry_count" -eq 1
           host_count="$(awk '$1 == "tiye.me" { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
           test "$host_count" -eq 1
           host_key="$(awk '$1 == "tiye.me" { print $2 " " $3 }' .github/ssh_known_hosts)"
