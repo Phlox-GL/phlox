@@ -1735,16 +1735,30 @@
           :require $ [] @calcit/std :refer $ rand-int
     'phlox.config $ %{} 'FileEntry
       :defs $ {}
+        'MobileDetectHost $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ deftrait MobileDetectHost
+            .mobile $ :: 'Fn $ {}
+              :args $ [] 'MobileDetectHost
+              :return $ :: 'JsNullish 'String
+          :examples $ []
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+          :schema $ :: 'Trait
+        'detect-mobile? $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn detect-mobile? ()
+            js-present? $ .!mobile $ unsafe-coerce (new mobile-detect js/window.navigator.userAgent) MobileDetectHost
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Bool)
+            :args $ []
+            :features $ #{} :js-ffi
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
             = |dev $ option:unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Dynamic
         'mobile? $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def mobile?
-            .!mobile $ new mobile-detect js/window.navigator.userAgent
+          :code $ quote $ def mobile? (detect-mobile?)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.config
           :require $ |mobile-detect :default mobile-detect
