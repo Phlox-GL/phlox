@@ -3,9 +3,9 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |phlox
   :entries $ {} $ :default
-    {} (:description |) (:init-fn 'phlox.app.main/main!) (:mode :native) (:reload-fn 'phlox.app.main/reload!)
+    {} (:description |) (:init-fn 'phlox.app.main/main!) (:mode :js) (:reload-fn 'phlox.app.main/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |pointed-prompt/ |touch-control/
+      :modules $ [] |pointed-prompt/ |touch-control/ |js-ffi/
       :type-slots $ {}
   :files $ {}
     'phlox.app.comp.drafts $ %{} 'FileEntry
@@ -1802,7 +1802,9 @@
                 parent-cursor $ either
                   option:unwrap-or (get states :cursor) nil
                   []
-                branch $ either (get states k) ({})
+                branch $ let
+                    value $ option:unwrap-or (get states k) ({})
+                  if (map? value) value $ raise |expected-child-state-map
               assoc branch :cursor $ conj
                 assert-type parent-cursor $ :: 'List 'Dynamic
                 , k
@@ -1810,6 +1812,31 @@
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'Map 'Tag 'Dynamic) 'Tag
             :return $ :: 'Map 'Tag 'Dynamic
+          :tests $ []
+            %{} 'TestEntry (:name |missing-branch)
+              :code $ quote $ assert= ([] :root :child)
+                option:unwrap $ get
+                  >>
+                    {} $ :cursor $ [] :root
+                    , :child
+                  , :cursor
+            %{} 'TestEntry (:name |existing-branch)
+              :code $ quote $ let
+                  child $ >>
+                    {}
+                      :cursor $ [] :root
+                      :child $ {} $ :value 7
+                    , :child
+                assert= 7 $ option:unwrap $ get child :value
+                assert= ([] :root :child)
+                  option:unwrap $ get child :cursor
+            %{} 'TestEntry (:name |rejects-non-map-branch)
+              :code $ quote $ assert= true
+                try
+                  >>
+                    {} $ :child 7
+                    , :child
+                  fn (e) true
         'AppendableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait AppendableHost
             .appendChild $ :: 'Fn $ {}
@@ -2555,13 +2582,19 @@
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'ffi-window-height $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-window-height () (unsafe-coerce js/window.innerHeight Number)
+          :code $ quote $ defn ffi-window-height ()
+            let
+                viewport $ browser/viewport
+              viewport :height
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ []
             :features $ #{} :js-ffi
         'ffi-window-width $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-window-width () (unsafe-coerce js/window.innerWidth Number)
+          :code $ quote $ defn ffi-window-width ()
+            let
+                viewport $ browser/viewport
+              viewport :width
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ []
@@ -2705,8 +2738,8 @@
           :code $ quote $ defn init-pixi-app! (options)
             let
                 pixi-app $ new PIXI/Application $ js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2)
-                  :width $ ffi-number js/window.innerWidth
-                  :height $ ffi-number js/window.innerHeight
+                  :width $ ffi-window-width
+                  :height $ ffi-window-height
                   :backgroundColor $ either
                     option:unwrap-or (get options :background-color) nil
                     hslx 0 0 0
@@ -2726,7 +2759,7 @@
                 handle-drag-moving el
               -> pixi-app ffi-renderer ffi-plugins ffi-accessibility $ ffi-destroy
               ffi-add-event-listener js/window |resize $ fn (event)
-                -> pixi-app ffi-renderer $ ffi-resize (ffi-number js/window.innerWidth) (ffi-number js/window.innerHeight)
+                -> pixi-app ffi-renderer $ ffi-resize (ffi-window-width) (ffi-window-height)
                 render-stage-for-viewer!
               , pixi-app
           :examples $ []
@@ -2991,6 +3024,7 @@
             phlox.math :refer $ vec-length
             |hsluv :refer $ Hsluv
             |pixi.js :refer $ Color
+            js-ffi.browser :as browser
     'phlox.cursor $ %{} 'FileEntry
       :defs $ {} $ 'update-states
         %{} 'CodeEntry (:doc |)
