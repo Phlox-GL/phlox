@@ -9,92 +9,163 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: upload-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  validate:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5.1.0
+    - name: Check out repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
+    - name: Set up Node.js
+      uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      with:
+        node-version: 24
+        package-manager-cache: false
 
-      - name: Enable Corepack
-        run: |
-          corepack enable
-          corepack prepare yarn@4.12.0 --activate
-          yarn --version
+    - name: Enable Corepack
+      run: |
+        corepack enable
+        corepack prepare yarn@4.18.0 --activate
+        yarn --version
 
-      - uses: calcit-lang/setup-calcit@v1.4.0
-        with:
-          tools: calcit,caps
+    - name: Set up Calcit and Caps
+      uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0
+      with:
+        tools: calcit,caps
+        caps-version: "0.1.1"
 
-      - name: Validate Calcit project
-        run: |
-          caps --strict --ci
-          yarn install --immutable
-          caps verify --toolchain
-          calcit calcit.cirru edit format
-          git diff --exit-code -- calcit.cirru
-          calcit calcit.cirru --check-only
-          calcit calcit.cirru test
+    - name: Resolve immutable dependencies
+      run: |
+        # js-ffi is selected through transitive ranges, so let Caps resolve the
+        # compatible graph while keeping the committed result deterministic.
+        caps --ci
+        yarn install --immutable
+        caps verify --toolchain
 
-      - name: Compile to JavaScript
-        run: |
-          calcit calcit.cirru js
-          yarn vite build --base=./
+    - name: Validate Calcit upgrade
+      run: |
+        calcit edit format
+        git diff --exit-code -- calcit.cirru
+        calcit calcit.cirru --check-only
+        calcit calcit.cirru analyze check-public \
+          --ns phlox.app.comp.drafts \
+          --ns phlox.app.comp.keyboard \
+          --ns phlox.app.comp.slider-demo \
+          --ns phlox.app.container \
+          --ns phlox.app.main \
+          --ns phlox.app.schema \
+          --ns phlox.app.updater \
+          --ns phlox.check \
+          --ns phlox.comp.arrow \
+          --ns phlox.comp.button \
+          --ns phlox.comp.drag-point \
+          --ns phlox.comp.messages \
+          --ns phlox.comp.slider \
+          --ns phlox.comp.switch \
+          --ns phlox.comp.tabs \
+          --ns phlox.complex \
+          --ns phlox.config \
+          --ns phlox.core \
+          --ns phlox.cursor \
+          --ns phlox.input \
+          --ns phlox.keyboard \
+          --ns phlox.math \
+          --ns phlox.render \
+          --ns phlox.render.draw \
+          --ns phlox.schema \
+          --ns phlox.util \
+          --ns phlox.util.lcs \
+          --ns phlox.util.styles \
+          --summary-only --format json
+        calcit calcit.cirru test --require-match
+        calcit calcit.cirru analyze dynamic-methods --summary-only --format json
+        calcit calcit.cirru analyze deprecated --summary-only --format json
 
-      - name: Verify deployment host key
-        run: |
-          entry_count="$(awk 'NF && $1 !~ /^#/ { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
-          test "$entry_count" -eq 1
-          host_count="$(awk '$1 == "tiye.me" { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
-          test "$host_count" -eq 1
-          host_key="$(awk '$1 == "tiye.me" { print $2 " " $3 }' .github/ssh_known_hosts)"
-          actual_fingerprint="$(printf '%s\n' "$host_key" | ssh-keygen -lf - | awk '{ print $2 }')"
-          test "$actual_fingerprint" = 'SHA256:f0ME3+UEzCM357Vtdic/bay2ygVUULBJ2pfaPTjBYhg'
+    - name: Select CDN asset path
+      id: asset-path
+      env:
+        CDN_ORIGIN: https://cos-sh.tiye.me
+      run: |
+        if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+          asset_prefix="${GITHUB_REPOSITORY}/pr/"
+        elif [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
+          asset_prefix="${GITHUB_REPOSITORY}/"
+        else
+          asset_prefix="${GITHUB_REPOSITORY}/branches/${GITHUB_REF_NAME}/"
+        fi
+        base_url="${CDN_ORIGIN}/${asset_prefix}"
+        echo "VITE_BASE_URL=${base_url}" >> "$GITHUB_ENV"
+        echo "prefix=${asset_prefix}" >> "$GITHUB_OUTPUT"
+        echo "base-url=${base_url}" >> "$GITHUB_OUTPUT"
 
-  deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: validate
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5.1.0
+    - name: Build web assets with CDN URLs
+      run: |
+        yarn compile
+        yarn build
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
+    - name: Check COS credentials
+      id: cos-credentials
+      if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+      env:
+        COS_BUCKET: ${{ secrets.COS_BUCKET }}
+        COS_SECRET_ID: ${{ secrets.COS_SECRET_ID }}
+        COS_SECRET_KEY: ${{ secrets.COS_SECRET_KEY }}
+      run: |
+        if [[ -n "$COS_BUCKET" && -n "$COS_SECRET_ID" && -n "$COS_SECRET_KEY" ]]; then
+          echo "available=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "available=false" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            echo "::warning title=COS upload skipped::Configure COS_BUCKET, COS_SECRET_ID, and COS_SECRET_KEY to run public upload verification."
+          else
+            echo "::error title=COS credentials missing::COS_BUCKET, COS_SECRET_ID, and COS_SECRET_KEY are required for production deployment."
+            exit 1
+          fi
+        fi
 
-      - name: Enable Corepack
-        run: |
-          corepack enable
-          corepack prepare yarn@4.12.0 --activate
+    - name: Upload and verify static assets on COS
+      if: steps.cos-credentials.outputs.available == 'true'
+      uses: worktools/cos-upload-action@17e6d213fe9f6772a6090a13c8ba044cd6cbcb09 # v1.1.1
+      with:
+        source-dir: dist
+        bucket: ${{ secrets.COS_BUCKET }}
+        region: ap-shanghai
+        prefix: ${{ steps.asset-path.outputs.prefix }}
+        public-base-url: ${{ steps.asset-path.outputs.base-url }}
+        secret-id: ${{ secrets.COS_SECRET_ID }}
+        secret-key: ${{ secrets.COS_SECRET_KEY }}
 
-      - uses: calcit-lang/setup-calcit@v1.4.0
-        with:
-          tools: calcit,caps
+    - name: Verify deployment host key
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        entry_count="$(awk 'NF && $1 !~ /^#/ { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
+        test "$entry_count" -eq 1
+        host_count="$(awk '$1 == "tiye.me" { count += 1 } END { print count + 0 }' .github/ssh_known_hosts)"
+        test "$host_count" -eq 1
+        host_key="$(awk '$1 == "tiye.me" { print $2 " " $3 }' .github/ssh_known_hosts)"
+        actual_fingerprint="$(printf '%s\n' "$host_key" | ssh-keygen -lf - | awk '{ print $2 }')"
+        test "$actual_fingerprint" = 'SHA256:f0ME3+UEzCM357Vtdic/bay2ygVUULBJ2pfaPTjBYhg'
 
-      - name: Build deployment
-        run: |
-          caps --strict --ci
-          yarn install --immutable
-          caps verify --toolchain
-          calcit calcit.cirru js
-          yarn vite build --base=./
-
-      - name: Deploy to server
-        env:
-          DEPLOY_KEY: ${{ secrets.rsync_private_key }}
-        run: |
-          set -euo pipefail
-          test -n "$DEPLOY_KEY"
-          ssh_dir="$RUNNER_TEMP/phlox-ssh"
-          key_file="$ssh_dir/id_ed25519"
-          known_hosts_file="$GITHUB_WORKSPACE/.github/ssh_known_hosts"
-          install -d -m 700 "$ssh_dir"
-          install -m 600 /dev/null "$key_file"
-          printf '%s\n' "$DEPLOY_KEY" | tr -d '\r' > "$key_file"
-          trap 'rm -f "$key_file"' EXIT
-          rsync -avzr --progress \
-            -e "ssh -i $key_file -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts_file" \
-            dist/ "rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}/"
+    - name: Deploy web assets
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      env:
+        DEPLOY_KEY: ${{ secrets.rsync_private_key }}
+      run: |
+        set -euo pipefail
+        test -n "$DEPLOY_KEY"
+        ssh_dir="$RUNNER_TEMP/phlox-ssh"
+        key_file="$ssh_dir/id_ed25519"
+        known_hosts_file="$GITHUB_WORKSPACE/.github/ssh_known_hosts"
+        install -d -m 700 "$ssh_dir"
+        install -m 600 /dev/null "$key_file"
+        printf '%s\n' "$DEPLOY_KEY" | tr -d '\r' > "$key_file"
+        trap 'rm -f "$key_file"' EXIT
+        rsync -avzr --progress \
+          -e "ssh -i $key_file -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts_file" \
+          dist/ "rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}/"

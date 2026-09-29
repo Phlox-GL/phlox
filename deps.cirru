@@ -1,6 +1,6 @@
 
-{} (:calcit-version |0.24.3)
+{} (:calcit-version |0.27.0)
   :version |0.7.11
   :dependencies $ {} (|Triadica/touch-control |0.0.23)
-    |calcit-lang/js-ffi |0.2.0
-    |mvc-works/pointed-prompt |0.0.11
+    |calcit-lang/js-ffi |0.2.1-alpha.10
+    |mvc-works/pointed-prompt |0.0.13

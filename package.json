@@ -1,12 +1,14 @@
 {
   "version": "0.7.11",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.18.0",
   "scripts": {
-    "compile": "caps --ci && calcit calcit.cirru js",
-    "release": "yarn vite build --base=./"
+    "compile": "calcit calcit.cirru js",
+    "build": "vite build",
+    "release": "yarn compile && yarn build",
+    "dev": "vite"
   },
   "dependencies": {
-    "@calcit/procs": "0.24.3",
+    "@calcit/procs": "0.27.0",
     "@quamolit/phlox-utils": "^0.0.2",
     "@triadica/touch-control": "^0.0.4-a1",
     "fontfaceobserver-es": "^3.3.3",
@@ -18,6 +20,6 @@
   "devDependencies": {
     "@pixi/filter-drop-shadow": "^5.2.0",
     "bottom-tip": "^0.1.5",
-    "vite": "^5.1.6"
+    "vite": "8.2.2"
   }
 }
