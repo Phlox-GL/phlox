@@ -764,11 +764,18 @@
             :capabilities $ #{} :fs-read
             :expansion $ :: 'Expr 'String
             :required $ [] $ :: 'Expr 'String
-        'sample-texture $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def sample-texture
+        'load-sample-texture $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn load-sample-texture ()
             .!from PIXI/Texture |https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/1a2af589827261.5e022908ed0b1.jpg
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ :: 'Fn $ {}
+            :args $ []
+            :features $ #{} :js-ffi
+            :return $ :: 'JsNullish 'JsObject
+        'sample-texture $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ def sample-texture (load-sample-texture)
+          :examples $ []
+          :schema $ :: 'JsNullish 'JsObject
         'tabs $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def tabs
             [] ([] :drafts |Drafts) ([] :grids |Grids) ([] :curves |Curves) ([] :gradients |Gradients) ([] :keyboard |Keyboard) ([] :slider |Slider) ([] :buttons |Buttons) ([] :points |Points) ([] :switch |Switch) ([] :input |Input) ([] :messages |Messages) ([] :slider-point "|Slider Point") ([] :spin-slider "|Spin Slider") ([] :arrows |Arrows) ([] :shadow |Shadow) ([] :mesh |Mesh)
@@ -1152,11 +1159,11 @@
                   if-not hide-text? $ text $ {}
                     :text $ str "|("
                       .!toFixed
-                        either (first position) 0
+                        option:unwrap-or (first position) 0
                         , 1
                       , "|, "
                         .!toFixed
-                          either (last position) 0
+                          option:unwrap-or (last position) 0
                           , 1
                         , "|)➤" $ str unit
                     :alpha $ * alpha 0.3
@@ -1686,15 +1693,16 @@
             :args $ [] 'Number 'Number
             :return $ :: 'List 'Number
         'rand-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn rand-point (n ? m)
+          :code $ quote $ defn rand-point (n & xs)
             let
-                m0 $ either m n
+                m0 $ option:unwrap-or (first xs) n
               []
-                - n $ rand-int $ * 2 n
-                - m0 $ rand-int $ * 2 m0
+                - n $ floor $ * (random) (* 2 n)
+                - m0 $ floor $ * (random) (* 2 m0)
           :examples $ []
           :schema $ :: 'Fn $ {} (:rest 'Number)
             :args $ [] 'Number
+            :features $ #{} :js-ffi
             :return $ :: 'List 'Number
         'rebase $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rebase (value base) "|complex number division, renamed since naming collision"
@@ -1732,7 +1740,7 @@
             :return $ :: 'List 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.complex
-          :require $ [] @calcit/std :refer $ rand-int
+          :require $ js-ffi.browser :refer $ random
     'phlox.config $ %{} 'FileEntry
       :defs $ {}
         'MobileDetectHost $ %{} 'CodeEntry (:doc |)
@@ -1799,12 +1807,12 @@
         '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn >> (states k)
             let
-                parent-cursor $ either
-                  option:unwrap-or (get states :cursor) nil
-                  []
-                branch $ let
-                    value $ option:unwrap-or (get states k) ({})
-                  if (map? value) value $ raise |expected-child-state-map
+                parent-cursor $ option:unwrap-or (get states :cursor) ([])
+                branch $ assert-type
+                  let
+                      value $ option:unwrap-or (get states k) ({})
+                    if (map? value) value $ raise |expected-child-state-map
+                  :: 'Map 'Tag 'Dynamic
               assoc branch :cursor $ conj
                 assert-type parent-cursor $ :: 'List 'Dynamic
                 , k
@@ -3073,7 +3081,9 @@
               if (element? tree)
                 do
                   let
-                      listener $ get-in tree $ [] :props :on-keyboard kind
+                      listener $ option:unwrap-or
+                        get-in tree $ [] :props :on-keyboard kind
+                        , nil
                     when (fn? listener) (listener event dispatch!)
                   ->
                     option:unwrap-or (get tree :children) ([])
@@ -4337,14 +4347,12 @@
         'detect-func-in-map? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-func-in-map? (params)
             if (empty? params) false $ let
-                p0 $ first params
+                p0 $ option:unwrap-or (first params) nil
               if
                 and (map? p0)
-                  some
-                    fn
-                        [] k v
-                      fn? v
-                    , p0
+                  any? (to-pairs p0)
+                    fn (pair)
+                      fn? $ option:unwrap-or (last pair) nil
                 , true $ recur $ rest params
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
@@ -4376,9 +4384,12 @@
             :args $ [] 'String 'Number 'String
             :features $ #{} :js-ffi
         'rand-color $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn rand-color () (rand-int 0xffffff)
+          :code $ quote $ defn rand-color ()
+            floor $ * (random) 0xffffff
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Number)
+            :args $ []
+            :features $ #{} :js-ffi
         'remove-nil-values $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-nil-values (dict)
             -> dict $ filter $ fn (pair)
@@ -4398,8 +4409,10 @@
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.util
-          :require ([] |pixi.js :as PIXI) ([] phlox.schema :as schema)
-            [] @calcit/std :refer $ rand-int
+          :require
+            js-ffi.browser :refer $ random
+            |pixi.js :as PIXI
+            phlox.schema :as schema
     'phlox.util.lcs $ %{} 'FileEntry
       :defs $ {}
         'find-minimal-ops $ %{} 'CodeEntry (:doc |)
