@@ -6,6 +6,12 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
+### 前端 COS/CDN 部署
+
+COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
+
+同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。保留完整公开定义、附带测试和原严格类型门禁。本轮部署改动仍使用 Calcit/procs 0.27.0，不代表独立 0.28 迁移候选已通过完整构建或发布验收。
+
 ### Usage
 
 `render!` to add canvas to `<body/>`:
