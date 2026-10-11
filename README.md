@@ -2,7 +2,7 @@
 Phlox in calcit-js
 ----
 
-> Pixi.js DSL in ClojureScript with hot code swapping, inspired by Virtual DOMs. Currently only a small subset of Pixi.js features is supported.
+> Pixi.js DSL in Calcit with hot code swapping, inspired by Virtual DOMs. Currently only a small subset of Pixi.js features is supported.
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
@@ -10,24 +10,25 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
 
-同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。保留完整公开定义、附带测试和原严格类型门禁。本轮部署改动仍使用 Calcit/procs 0.27.0，不代表独立 0.28 迁移候选已通过完整构建或发布验收。
+同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。保留完整公开定义、附带测试和严格类型门禁。0.7.12 使用 Calcit/procs 0.29.0-alpha.30，配套已发布的 touch-control 0.0.24、pointed-prompt 0.0.14 和 js-ffi 0.2.1-alpha.16；当前浏览器 FFI 依赖需要这一编译器版本。
 
 ### Usage
 
 `render!` to add canvas to `<body/>`:
 
 ```cirru
-ns app.main $
-  :require $ [] phlox.core :refer
-    [] hslx render! create-list rect circle text container graphics >>
+ns app.main
+  :require
+    phlox.core :refer $ hslx render! rect text
 
-defn comp-demo (data)
+defn comp-demo ()
   rect
     {}
       :position $ [] 800 40
       :size $ [] 60 34
       :fill $ hslx 40 80 80
-      :on $ :pointertap $ fn (e d!) (d! :demo nil)
+      :on $ {}
+        :pointertap $ fn (e d!) (d! (:: :demo))
     text $ {}
       :text "|Demo"
       :position $ [] 808 44
@@ -36,16 +37,15 @@ defn comp-demo (data)
         :font-size 18
         :font-family "|Josefin Sans"
 
-defatom *store nil
-
-defn dispatch! (op op-data)
-  reset! *store (updater @*store op op-data))
+defn dispatch! (op)
+  println op
+  &unit
 
 defn main ()
-  render! (comp-demo data) dispatch! ({})
+  render! (comp-demo) dispatch! ({})
 
 defn reload! ()
-  render! (comp-container @*store) dispatch! $ {} (:swap? true)
+  render! (comp-demo) dispatch! $ {} (:swap? true)
 ```
 
 Notice that Phlox uses `:pointertap` instead of `:click` for touch screen support.
@@ -61,7 +61,7 @@ Phlox supports a naive global event system for listening to keyboard events from
   :up $ fn (e dispatch!)
 ```
 
-> Notice that Phlox depends on PIXI `6.5.x`. In `7.x` the event system is refactored and breaks Phlox.
+Phlox currently uses Pixi.js 7.x. Pointer handlers receive `(event dispatch!)`; `dispatch!` receives one operation, for example `(:: :demo)` or `(:: :states cursor data)`.
 
 ### Spec
 
