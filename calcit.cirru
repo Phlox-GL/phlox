@@ -197,7 +197,7 @@
                     :max 10
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Map 'Tag 'Dynamic
             :features $ #{} :js-ffi
         'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point-demo (states)
@@ -254,7 +254,7 @@
                     :max 10
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Map 'Tag 'Dynamic
             :features $ #{} :js-ffi
         'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider-demo (states)
@@ -280,7 +280,7 @@
                     :label |dgemo
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Map 'Tag 'Dynamic
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.slider-demo
@@ -308,7 +308,7 @@
                     d! cursor $ assoc (assoc state :from from) :to to
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Map 'Tag 'Dynamic
             :features $ #{} :js-ffi
         'comp-buttons $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-buttons ()
@@ -334,26 +334,27 @@
             ; println |Store store $ option:unwrap-or (get store :tab) nil
             let
                 cursor $ []
-                states $ option:unwrap-or (get store :states) nil
+                states $ decode-map-as
+                  option:unwrap-or (get store :states) nil
+                  :: 'Map 'Tag 'Dynamic
               group
                 {} $ :position $ [] 0 0
                 comp-tabs tabs
                   option:unwrap-or (get store :tab) nil
                   {} $ :position $ [] 10 10
                   fn (t d!) (d! :tab t)
-                case-default
+                match
                   option:unwrap-or (get store :tab) nil
-                  text $ {} (:text |Unknown)
-                    :style $ {}
-                      :fill $ hslx 0 100 80
-                      :font-size 12
-                      :font-family |Helvetica
-                  :drafts $ comp-drafts $ option:unwrap-or (get store :x) nil
+                  :drafts $ comp-drafts $ decode-map-as
+                    option:unwrap-or (get store :x) nil
+                    , Number
                   :grids $ comp-grids
                   :curves $ comp-curves
                   :gradients $ comp-gradients
                   :keyboard $ comp-keyboard
-                    option:unwrap-or (get store :keyboard-on?) nil
+                    decode-map-as
+                      option:unwrap-or (get store :keyboard-on?) nil
+                      , Bool
                     option:unwrap-or (get store :counted) nil
                   :buttons $ comp-buttons
                   :slider $ comp-slider-demo $ >> states :slider
@@ -366,6 +367,11 @@
                   :arrows $ comp-arrows-demo $ >> states :arrows
                   :shadow $ comp-shadow-demo
                   :mesh $ comp-mesh-demo $ >> states :mesh
+                  _ $ text $ {} (:text |Unknown)
+                    :style $ {}
+                      :fill $ hslx 0 100 80
+                      :font-size 12
+                      :font-family |Helvetica
                 circle $ {}
                   :position $ [] 0 0
                   :radius 10
@@ -520,23 +526,29 @@
                       :vertex-source $ inline-file |demo.vert
                       :fragment-source $ inline-file |demo.frag
                     :draw-mode :triangles
-                    :uniforms $ js-object (:uSampler2 sample-texture)
-                      :time $ option:unwrap-or (get state :x) nil
-                      ; :base $ option:unwrap-or (get state :base) nil
-                      :baseX $ first $ option:unwrap-or (get state :base) nil
-                      :baseY $ last $ option:unwrap-or (get state :base) nil
-                      :zoom $ option:unwrap-or (get state :zoom) nil
-                      :offsetX $ * 1 $ option:unwrap-or
-                        first $ option:unwrap-or (get state :offset) ([] 0 0)
-                        , 0
-                      :offsetY $ * 1 $ option:unwrap-or
-                        last $ option:unwrap-or (get state :offset) ([] 0 0)
-                        , 0
+                    :uniforms $ let
+                        base $ decode-map-as
+                          option:unwrap $ get state :base
+                          :: 'List 'Number
+                        offset $ decode-map-as
+                          option:unwrap-or (get state :offset) ([] 0 0)
+                          :: 'List 'Number
+                      js-object (:uSampler2 sample-texture)
+                        :time $ decode-map-as
+                          option:unwrap $ get state :x
+                          , Number
+                        :baseX $ option:unwrap $ first base
+                        :baseY $ option:unwrap $ last base
+                        :zoom $ decode-map-as
+                          option:unwrap $ get state :zoom
+                          , Number
+                        :offsetX $ option:unwrap-or (first offset) 0
+                        :offsetY $ option:unwrap-or (last offset) 0
                     ; :on $ {} $ :pointertap
                       fn (e d!) (println |clicked)
                   comp-drag-point (>> states :base)
                     {} (:radius 6) (:hide-text? true)
-                      :position $ wo-log $ option:unwrap-or (get state :base) nil
+                      :position $ option:unwrap-or (get state :base) nil
                       :fill $ hslx 200 100 50
                       :on-change $ fn (position d!)
                         d! cursor $ assoc state :base position
@@ -544,7 +556,7 @@
                     {} (:radius 6)
                       :fill $ hslx 0 100 50
                       :hide-text? true
-                      :position $ wo-log $ option:unwrap-or (get state :offset) nil
+                      :position $ option:unwrap-or (get state :offset) nil
                       :on-change $ fn (position d!)
                         d! cursor $ assoc state :offset position
                 comp-slider-point (>> states :zoom)
@@ -556,7 +568,7 @@
                       d! cursor $ assoc state :zoom value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Map 'Tag 'Dynamic
             :features $ #{} :js-ffi
         'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages-demo (states)
@@ -652,7 +664,7 @@
                       d! cursor $ assoc state :p5 position
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'Map 'Tag 'Dynamic
             :features $ #{} :js-ffi
         'comp-shadow-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-shadow-demo ()
@@ -805,7 +817,7 @@
     'phlox.app.main $ %{} 'FileEntry
       :defs $ {}
         '*store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *store schema/store
+          :code $ quote $ defref *store schema/store
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         'dispatch! $ %{} 'CodeEntry (:doc |)
@@ -819,6 +831,7 @@
                 op-id $ nanoid
                 op-time $ phlox.core/ffi-number js/Date.now
               reset! *store $ updater @*store op op-id op-time
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic
@@ -828,7 +841,7 @@
             if dev? $ load-console-formatter!
             -> (new FontFaceObserver "|Josefin Sans") (phlox.core/ffi-load-font)
               phlox.core/ffi-then $ fn (event) (render-app!)
-            add-watch *store :change $ fn (store prev) (render-app!)
+            add-watch! *store :change $ fn (store prev) (render-app!)
             render-app!
             when true (render-control!) (start-control-loop! 8 on-control-event)
             println "|App Started"
@@ -838,9 +851,9 @@
             :features $ #{} :js-ffi
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
-            if (nil? build-errors)
-              do (clear-phlox-caches!) (remove-watch *store :change)
-                add-watch *store :change $ fn (store prev) (render-app!)
+            if (js-nullish? build-errors)
+              do (clear-phlox-caches!) (remove-watch! *store :change)
+                add-watch! *store :change $ fn (store prev) (render-app!)
                 render-app!
                 when true $ replace-control-loop! 8 on-control-event
                 hud! |ok~ |OK
@@ -850,10 +863,10 @@
             :args $ []
             :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn render-app! (& args)
-            render! (comp-container @*store) dispatch! $ option:unwrap-or (first args) ({})
+          :code $ quote $ defn render-app! ()
+            render! (comp-container @*store) dispatch! $ {}
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'Unit)
+          :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
@@ -981,14 +994,20 @@
                 color $ either
                   option:unwrap-or (get props :color) nil
                   hslx 0 0 100
-                from $ option:unwrap-or (get props :from) nil
-                to $ option:unwrap-or (get props :to) nil
+                from $ decode-map-as
+                  option:unwrap-or (get props :from) nil
+                  :: 'List 'Number
+                to $ decode-map-as
+                  option:unwrap-or (get props :to) nil
+                  :: 'List 'Number
                 width $ either
                   option:unwrap-or (get props :width) nil
                   , 1
-                arg-length $ either
-                  option:unwrap-or (get props :arm-length) nil
-                  , 10
+                arg-length $ decode-map-as
+                  either
+                    option:unwrap-or (get props :arm-length) nil
+                    , 10
+                  , Number
                 on-change $ option:unwrap-or (get props :on-change) nil
                 reversed-vec $ complex/minus from to
                 reversed-unit $ complex/divide-by reversed-vec $ vec-length reversed-vec
@@ -1019,7 +1038,7 @@
                     g :line-to $ complex/add to arm-right
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
+            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.arrow
@@ -1034,22 +1053,30 @@
         'comp-button $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-button (props) (dev-check props lilac-button)
             let
-                button-text $ either
-                  option:unwrap-or (get props :text) nil
-                  , |BUTTON
-                size $ either
-                  option:unwrap-or (get props :font-size) nil
-                  , 14
-                font-family $ either
-                  option:unwrap-or (get props :font-family) nil
-                  , "|Josefin Sans, sans-serif"
+                button-text $ decode-map-as
+                  either
+                    option:unwrap-or (get props :text) nil
+                    , |BUTTON
+                  , String
+                size $ decode-map-as
+                  either
+                    option:unwrap-or (get props :font-size) nil
+                    , 14
+                  , Number
+                font-family $ decode-map-as
+                  either
+                    option:unwrap-or (get props :font-family) nil
+                    , "|Josefin Sans, sans-serif"
+                  , String
                 fill $ either
                   option:unwrap-or (get props :fill) nil
                   hslx 0 0 20
                 color $ either
                   option:unwrap-or (get props :color) nil
                   hslx 0 0 100
-                position $ option:unwrap-or (get props :position) ([] 0 0)
+                position $ decode-map-as
+                  option:unwrap-or (get props :position) ([] 0 0)
+                  :: 'List 'Number
                 width $ + 16 $ measure-text-width! button-text size font-family
                 align-right? $ option:unwrap-or (get props :align-right?) nil
               container
@@ -1058,14 +1085,14 @@
                     -
                       option:unwrap-or (first position) 0
                       , width
-                    last position
+                    option:unwrap $ last position
                   , position
                 rect $ {} (:fill fill)
                   :size $ [] width 32
                   :on $ cond
-                      some? $ option:unwrap-or (get props :on) nil
+                      non-nil? $ option:unwrap-or (get props :on) nil
                       option:unwrap-or (get props :on) nil
-                    (some? (option:unwrap-or (get props :on-pointertap) nil))
+                    (non-nil? (option:unwrap-or (get props :on-pointertap) nil))
                       {} $ :pointertap $ option:unwrap-or (get props :on-pointertap) nil
                     true nil
                 text $ {} (:text button-text)
@@ -1101,21 +1128,27 @@
                     {} (:dragging? false)
                       :x0 $ [] 0 0
                   :: 'Map 'Tag 'Dynamic
-                unit $ either
-                  option:unwrap-or (get props :unit) nil
-                  , 1
-                radius $ either
-                  option:unwrap-or (get props :radius) nil
-                  , 8
+                unit $ decode-map-as
+                  either
+                    option:unwrap-or (get props :unit) nil
+                    , 1
+                  , Number
+                radius $ decode-map-as
+                  either
+                    option:unwrap-or (get props :radius) nil
+                    , 8
+                  , Number
                 color $ either
                   option:unwrap-or (get props :color) nil
                   hslx 0 0 100
                 fill $ either
                   option:unwrap-or (get props :fill) nil
                   hslx 0 0 60
-                alpha $ either
-                  option:unwrap-or (get props :alpha) nil
-                  , 1
+                alpha $ decode-map-as
+                  either
+                    option:unwrap-or (get props :alpha) nil
+                    , 1
+                  , Number
                 on-change $ option:unwrap-or (get props :on-change)
                   fn (pos d!) nil
                 hide-text? $ either
@@ -1144,10 +1177,14 @@
                               x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                               y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                             let
-                                x0 $ option:unwrap-or (get state :x0) nil
+                                x0 $ decode-map-as
+                                  option:unwrap-or (get state :x0) nil
+                                  :: 'List 'Number
                               on-change
                                 complex/add
-                                  option:unwrap-or (get state :p0) nil
+                                  decode-map-as
+                                    option:unwrap-or (get state :p0) nil
+                                    :: 'List 'Number
                                   []
                                     * unit $ - x $ option:unwrap-or (first x0) 0
                                     * unit $ - y $ option:unwrap-or (last x0) 0
@@ -1171,7 +1208,7 @@
                     :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace")
                   if
                     and (not hide-text?)
-                      some? $ option:unwrap-or (get props :title) nil
+                      non-nil? $ option:unwrap-or (get props :title) nil
                     text $ {}
                       :text $ option:unwrap-or (get props :title) nil
                       :alpha $ * alpha 0.3
@@ -1258,13 +1295,13 @@
     'phlox.comp.slider $ %{} 'FileEntry
       :defs $ {}
         '*prev-spin-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *prev-spin-point nil
+          :code $ quote $ defref *prev-spin-point nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ :: 'Ref $ :: 'Optional (:: 'List 'Number)
         '*spin-pivot $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *spin-pivot ([] 0 0)
+          :code $ quote $ defref *spin-pivot ([] 0 0)
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ :: 'Ref $ :: 'List 'Number
         'comp-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider (states props)
             dev-check
@@ -1272,17 +1309,21 @@
               , lilac-cursor
             dev-check props lilac-slider
             let
-                value $ either
-                  option:unwrap-or (get props :value) nil
-                  , 1
+                value $ decode-map-as
+                  either
+                    option:unwrap-or (get props :value) nil
+                    , 1
+                  , Number
                 cursor $ option:unwrap-or (get states :cursor) nil
                 state $ either
                   option:unwrap-or (get states :data) nil
                   {} (:v0 value) (:x0 0) (:dragging? false)
                 title $ option:unwrap-or (get props :title) nil
-                unit $ either
-                  option:unwrap-or (get props :unit) nil
-                  , 0.1
+                unit $ decode-map-as
+                  either
+                    option:unwrap-or (get props :unit) nil
+                    , 0.1
+                  , Number
                 fill $ either
                   option:unwrap-or (get props :fill) nil
                   hslx 0 0 30
@@ -1311,11 +1352,15 @@
                               on-change
                                 ->
                                   +
-                                    option:unwrap-or (get state :v0) value
-                                    * unit $ - x2 $ option:unwrap-or (get state :x0) 0
-                                  (fn (v) (if rounded? (js/Math.round v) v))
-                                  (fn (v) (if (some? (option:unwrap-or (get props :max) nil)) (&min (option:unwrap-or (get props :max) v) v) v))
-                                  (fn (v) (if (some? (option:unwrap-or (get props :min) nil)) (&max (option:unwrap-or (get props :min) v) v) v))
+                                    decode-map-as
+                                      option:unwrap-or (get state :v0) value
+                                      , Number
+                                    * unit $ - x2 $ decode-map-as
+                                      option:unwrap-or (get state :x0) 0
+                                      , Number
+                                  (fn (v) (if rounded? (round v) v))
+                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :max) nil)) (&min (decode-map-as (option:unwrap-or (get props :max) v) Number) v) v))
+                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :min) nil)) (&max (decode-map-as (option:unwrap-or (get props :min) v) Number) v) v))
                                 , d!
                               js/console.log "|[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
@@ -1350,16 +1395,20 @@
               , lilac-cursor
             dev-check props lilac-slider-point
             let
-                value $ either
-                  option:unwrap-or (get props :value) nil
-                  , 1
+                value $ decode-map-as
+                  either
+                    option:unwrap-or (get props :value) nil
+                    , 1
+                  , Number
                 cursor $ option:unwrap-or (get states :cursor) nil
                 state $ either
                   option:unwrap-or (get states :data) nil
                   {} (:v0 value) (:x0 0) (:dragging? false)
-                unit $ either
-                  option:unwrap-or (get props :unit) nil
-                  , 0.1
+                unit $ decode-map-as
+                  either
+                    option:unwrap-or (get props :unit) nil
+                    , 0.1
+                  , Number
                 fill $ either
                   option:unwrap-or (get props :fill) nil
                   hslx 0 0 30
@@ -1389,11 +1438,15 @@
                               on-change
                                 ->
                                   +
-                                    option:unwrap-or (get state :v0) value
-                                    * unit $ - x2 $ option:unwrap-or (get state :x0) 0
-                                  (fn (v) (if rounded? (js/Math.round v) v))
-                                  (fn (v) (if (some? (option:unwrap-or (get props :max) nil)) (&min (option:unwrap-or (get props :max) v) v) v))
-                                  (fn (v) (if (some? (option:unwrap-or (get props :min) nil)) (&max (option:unwrap-or (get props :min) v) v) v))
+                                    decode-map-as
+                                      option:unwrap-or (get state :v0) value
+                                      , Number
+                                    * unit $ - x2 $ decode-map-as
+                                      option:unwrap-or (get state :x0) 0
+                                      , Number
+                                  (fn (v) (if rounded? (round v) v))
+                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :max) nil)) (&min (decode-map-as (option:unwrap-or (get props :max) v) Number) v) v))
+                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :min) nil)) (&max (decode-map-as (option:unwrap-or (get props :min) v) Number) v) v))
                                 , d!
                               js/console.log "|[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
@@ -1417,12 +1470,16 @@
                 state $ either
                   option:unwrap-or (get states :data) nil
                   {} $ :dragging? false
-                unit $ either
-                  option:unwrap-or (get props :unit) nil
-                  , 1
-                radius $ either
-                  option:unwrap-or (get props :radius) nil
-                  , 44
+                unit $ decode-map-as
+                  either
+                    option:unwrap-or (get props :unit) nil
+                    , 1
+                  , Number
+                radius $ decode-map-as
+                  either
+                    option:unwrap-or (get props :radius) nil
+                    , 44
+                  , Number
                 color $ either
                   option:unwrap-or (get props :color) nil
                   hslx 0 0 100
@@ -1436,9 +1493,11 @@
                   option:unwrap-or (get props :alpha) nil
                   , 1
                 on-change $ option:unwrap-or (get props :on-change) nil
-                position $ either
-                  option:unwrap-or (get props :position) nil
-                  [] 0 0
+                position $ decode-map-as
+                  either
+                    option:unwrap-or (get props :position) nil
+                    [] 0 0
+                  :: 'List 'Number
                 on-move $ option:unwrap-or (get props :on-move)
                   fn (pos d!) nil
                 border-color $ or
@@ -1474,7 +1533,7 @@
                               < (vec-length current-point) (&* 0.5 radius)
                               reset! *prev-spin-point nil
                               do
-                                if (some? prev-point)
+                                if (non-nil? prev-point)
                                   let
                                       delta-vec $ rebase current-point prev-point
                                       delta $ phlox.core/ffi-atan2
@@ -1484,7 +1543,9 @@
                                       on-change
                                         bound-x
                                           +
-                                            option:unwrap-or (get props :value) 0
+                                            decode-map-as
+                                              option:unwrap-or (get props :value) 0
+                                              , Number
                                             &* unit delta
                                           option:unwrap-or (get props :min) nil
                                           option:unwrap-or (get props :max) nil
@@ -1521,7 +1582,7 @@
                       :style $ {} (:fill color) (:font-size 13) (:font-family "|Josefin Sans, sans-serif")
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
+            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic
             :features $ #{} :js-ffi
         'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-cursor nil
@@ -1601,35 +1662,36 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-tabs (tabs selected options on-select)
             let
-                step $ or
-                  option:unwrap-or (get options :step) nil
-                  , 36
-                position $ or
-                  option:unwrap-or (get options :position) nil
-                  [] 0 0
+                step $ decode-map-as
+                  or
+                    option:unwrap-or (get options :step) nil
+                    , 36
+                  , Number
+                position $ decode-map-as
+                  or
+                    option:unwrap-or (get options :position) nil
+                    [] 0 0
+                  :: 'List 'Number
                 font-family $ or
                   option:unwrap-or (get options :font-family) nil
                   , "|Josefin Sans, sans-serif"
               create-list :container ({})
                 -> tabs $ map-indexed $ fn (idx info)
-                  let-sugar
-                        [] tab title
-                        , info
-                    [] idx $ container
-                      {} $ :position $ complex/add position
-                        [] 0 $ * idx step
-                      rect $ {}
-                        :position $ [] 0 0
-                        :size $ [] 100 30
-                        :fill $ if (= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
-                        :on $ {} $ :pointertap
-                          fn (event d!) (on-select tab d!)
-                      text $ {} (:text title)
-                        :style $ {}
-                          :fill $ hslx 200 90 100
-                          :font-size 20
-                          :font-family font-family
-                        :position $ [] 10 2
+                  let[] (tab title) info $ [] idx $ container
+                    {} $ :position $ complex/add position
+                      [] 0 $ * idx step
+                    rect $ {}
+                      :position $ [] 0 0
+                      :size $ [] 100 30
+                      :fill $ if (= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
+                      :on $ {} $ :pointertap
+                        fn (event d!) (on-select tab d!)
+                    text $ {} (:text title)
+                      :style $ {}
+                        :fill $ hslx 200 90 100
+                        :font-size 20
+                        :font-family font-family
+                      :position $ [] 10 2
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] (:: 'List 'Dynamic) 'Dynamic 'Dynamic 'Dynamic
@@ -1644,11 +1706,7 @@
       :defs $ {}
         'add $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn add (p1 p2)
-            let-sugar
-                  [] a b
-                  , p1
-                ([] x y) p2
-              [] (+ a x) (+ b y)
+            let[] (a b) p1 $ let[] (x y) p2 $ [] (+ a x) (+ b y)
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'List 'Number) (:: 'List 'Number)
@@ -1674,11 +1732,7 @@
             :return $ :: 'List 'Number
         'minus $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn minus (v1 v2)
-            let-sugar
-                  [] a b
-                  , v1
-                ([] x y) v2
-              [] (- a x) (- b y)
+            let[] (a b) v1 $ let[] (x y) v2 $ [] (- a x) (- b y)
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'List 'Number) (:: 'List 'Number)
@@ -1706,10 +1760,7 @@
             :return $ :: 'List 'Number
         'rebase $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rebase (value base) "|complex number division, renamed since naming collision"
-            let-sugar
-                  [] x y
-                  , value
-                ([] a b) base
+            let[] (x y) value $ let[] (a b) base $ let
                 inverted $ / 1 $ + (* a a) (* b b)
               []
                 * inverted $ + (* x a) (* y b)
@@ -1727,13 +1778,9 @@
             :return $ :: 'List 'Number
         'times $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn times (v1 v2)
-            let-sugar
-                  [] a b
-                  , v1
-                ([] x y) v2
-              []
-                - (* a x) (* b y)
-                + (* a y) (* b x)
+            let[] (a b) v1 $ let[] (x y) v2 $ []
+              - (* a x) (* b y)
+              + (* a y) (* b x)
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'List 'Number) (:: 'List 'Number)
@@ -1773,35 +1820,35 @@
     'phlox.core $ %{} 'FileEntry
       :defs $ {}
         '*app $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *app nil
+          :code $ quote $ defref *app nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '*dispatch-fn $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *dispatch-fn
+          :code $ quote $ defref *dispatch-fn
             fn (& args) nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '*drag-moving-cache $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *drag-moving-cache nil
+          :code $ quote $ defref *drag-moving-cache nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '*events-element $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *events-element nil
+          :code $ quote $ defref *events-element nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '*renderer $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *renderer nil
+          :code $ quote $ defref *renderer nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '*stage-config $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *stage-config
+          :code $ quote $ defref *stage-config
             {}
               :move $ [] 0 0
               :scale 1
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '*tree-element $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *tree-element nil
+          :code $ quote $ defref *tree-element nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         '>> $ %{} 'CodeEntry (:doc |)
@@ -2090,7 +2137,8 @@
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
             %{} schema/PhloxElement (:name tag) (:props props)
-              :children $ remove-nil-values children
+              :children $ remove-nil-values $ decode-map-as children
+                :: 'List $ :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Tag 'Dynamic $ :: 'List 'Dynamic
@@ -2611,7 +2659,7 @@
           :code $ quote $ defn g (op & args)
             let
                 data $ option:unwrap-or (first args) nil
-              case-default op (js/console.warn "|not supported:" op)
+              match op
                 :move-to $ dev-check-message "|check :move-to" data lilac-point
                 :line-to $ dev-check-message "|check :line-to" data lilac-point
                 :line-style $ dev-check-message "|check :line-style" data lilac-line-style
@@ -2624,6 +2672,7 @@
                 :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quadratic-to
                 :begin-hole nil
                 :end-hole nil
+                _ $ js/console.warn "|not supported:" op
               [] op data
           :examples $ []
           :schema $ :: 'Fn $ {} (:rest 'Dynamic)
@@ -2650,7 +2699,7 @@
               if
                 and
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
-                  some? @*drag-moving-cache
+                  non-nil? @*drag-moving-cache
                 let
                     prev @*drag-moving-cache
                     current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
@@ -2807,8 +2856,8 @@
             let
                 pair0 $ assert-type pair $ :: 'List 'Dynamic
               []
-                g :move-to $ nth pair0 0
-                g :line-to $ nth pair0 1
+                g :move-to $ option:unwrap $ nth pair0 0
+                g :line-to $ option:unwrap $ nth pair0 1
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic
@@ -2848,23 +2897,17 @@
             :args $ [] 'Dynamic 'Dynamic
         'on-control-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-control-event (elapsed states delta)
-            if
-              and $ option:unwrap-or (get states :left-b?) false
-              reset-stage-config!
+            if (:left-b? states) (reset-stage-config!)
               let
-                  move $ assert-type
-                    option:unwrap-or (get states :left-move) ([] 0 0)
-                    :: 'List 'Number
-                  scales $ assert-type
-                    option:unwrap-or (get delta :right-move) ([] 0 0)
-                    :: 'List 'Number
+                  move $ :left-move states
+                  scales $ :right-move delta
                 update-stage-config!
                   map move $ fn (x)
                     * x (ffi-abs x) 0.02
                   option:unwrap-or (nth scales 1) 0
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Number 'Dynamic 'Dynamic
+            :args $ [] 'Number 'touch-control.core/ControlState 'touch-control.core/ControlDelta
             :features $ #{} :js-ffi
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
@@ -2874,7 +2917,7 @@
               create-element :graphics
                 assoc props :ops $ concat
                   [] (g :line-style line-style)
-                    g :move-to $ nth points 0
+                    g :move-to $ option:unwrap $ nth points 0
                   ->
                     assert-type points $ :: 'List 'Dynamic
                     rest
@@ -3058,10 +3101,13 @@
           :code $ quote $ defn request-text! (e options cb) (dev-check options lilac-input)
             prompt-at!
               [] (-> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x) (-> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y)
-              , options cb
+              decode-map-as options $ :: 'Map 'Tag 'Dynamic
+              , cb
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ [] 'Dynamic 'Dynamic $ :: 'Fn
+              {} (:return 'Unit)
+                :args $ [] 'String
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.input
@@ -3077,7 +3123,7 @@
             :args $ [] $ :: 'Ref 'Dynamic
         'handle-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-event (kind tree event dispatch!)
-            when (some? tree)
+            when (non-nil? tree)
               if (element? tree)
                 do
                   let
@@ -3086,7 +3132,9 @@
                         , nil
                     when (fn? listener) (listener event dispatch!)
                   ->
-                    option:unwrap-or (get tree :children) ([])
+                    decode-map-as
+                      option:unwrap-or (get tree :children) ([])
+                      :: 'List $ :: 'List 'Dynamic
                     map $ fn (pair)
                       let[] (k child) pair $ handle-event kind child event dispatch!
                 do $ js/console.log "|unknown tree for handling event:" tree
@@ -3167,17 +3215,20 @@
             :args $ [] 'Dynamic
         'init-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-box-size (target size)
-            if (some? size)
-              do
-                set! (.-width target) (nth size 0)
-                set! (.-height target) (nth size 1)
+            if (non-nil? size)
+              let
+                  size $ decode-map-as size $ :: 'List 'Number
+                set! (.-width target)
+                  option:unwrap $ nth size 0
+                set! (.-height target)
+                  option:unwrap $ nth size 1
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'init-fill $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-fill (target color) (.!endFill target)
-            if (some? color) (.!beginFill target color)
+            if (non-nil? color) (.!beginFill target color)
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -3186,7 +3237,8 @@
         'init-filters $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-filters (target filters)
             if
-              not $ empty? filters
+              and (non-nil? filters)
+                not $ empty? filters
               let
                   filters-arr $ js-array
                 &doseq (ft filters)
@@ -3218,14 +3270,18 @@
             :features $ #{} :js-ffi
         'init-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-scale (target scale)
-            when (some? scale)
+            when (non-nil? scale)
               cond
                   list? scale
                   do
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
-                      option:unwrap-or (first scale) 1
+                      decode-map-as
+                        option:unwrap-or (first scale) 1
+                        , Number
                     phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
-                      option:unwrap-or (last scale) 1
+                      decode-map-as
+                        option:unwrap-or (last scale) 1
+                        , Number
                 (number? scale)
                   do
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
@@ -3258,7 +3314,8 @@
         'read-draw-mode-alias $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-draw-mode-alias (draw-mode)
             if (tag? draw-mode)
-              case-default draw-mode (js/console.warn "|Unknown draw mode:" draw-mode) (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
+              match draw-mode (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
+                _ $ js/console.warn "|Unknown draw mode:" draw-mode
               , draw-mode
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
@@ -3267,8 +3324,10 @@
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (target children dispatch!)
             &doseq (child-pair children)
-              if (some? child-pair)
-                .!addChild target $ render-element (last child-pair) dispatch!
+              if (non-nil? child-pair)
+                .!addChild target $ render-element
+                  option:unwrap $ last child-pair
+                  , dispatch!
                 js/console.log "|nil child:" child-pair
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -3324,11 +3383,8 @@
         'render-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-element (element dispatch!)
             if (element? element)
-              case-default
+              match
                 option:unwrap-or (get element :name) nil
-                do
-                  println "|unknown tag:" $ option:unwrap-or (get element :tag) nil
-                  {}
                 nil nil
                 :container $ render-container element dispatch!
                 :graphics $ render-graphics element dispatch!
@@ -3337,6 +3393,9 @@
                 :text $ render-text element dispatch!
                 :mesh $ render-mesh element dispatch!
                 :image $ render-image element dispatch!
+                _ $ do
+                  println "|unknown tag:" $ option:unwrap-or (get element :tag) nil
+                  {}
               do $ js/console.error "|Unknown element:" element
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
@@ -3488,10 +3547,13 @@
         'update-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-box-size (target size size')
             if (not= size size')
-              if (some? size)
-                do
-                  set! (.-width target) (nth size 0)
-                  set! (.-height target) (nth size 1)
+              if (non-nil? size)
+                let
+                    size $ decode-map-as size $ :: 'List 'Number
+                  set! (.-width target)
+                    option:unwrap $ nth size 0
+                  set! (.-height target)
+                    option:unwrap $ nth size 1
                 do
                   set! (.-width target) js/undefined
                   set! (.-height target) js/undefined
@@ -3500,48 +3562,53 @@
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'update-children $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-children (children-dict old-children-dict parent-container dispatch! options)
-            when dev? $ assert "|children should not contain nil element" $ and
-              every? (map children-dict last-value) some?
-              every? (map old-children-dict last-value) some?
+          :code $ quote $ defn update-children (raw-children raw-old-children parent-container dispatch! options)
             let
-                list-ops $ find-minimal-ops lcs-state-0 (map old-children-dict first-value) (map children-dict first-value)
-              ; js/console.log |ops $ option:unwrap-or (get list-ops :total) nil
-              loop
-                  idx 0
-                  ops $ option:unwrap-or (get list-ops :acc) nil
-                  xs children-dict
-                  ys old-children-dict
-                when-not (empty? ops)
-                  let
-                      op $ first-value ops
-                    case-default (first-value op)
-                      do $ println "|Unknown op:" op
-                      :remains $ do
-                        when dev? $ assert
-                          = (last-value op)
-                            first-value $ first-value xs
-                            first-value $ first-value ys
-                          , "|check key"
-                        update-element
-                          last-value $ first-value xs
-                          last-value $ first-value ys
-                          , parent-container idx dispatch! options
-                        recur (inc idx) (rest ops) (rest xs) (rest ys)
-                      :add $ do
-                        when dev? $ assert "|check key" $ = (last-value op)
-                          first-value $ first-value xs
-                        .!addChildAt parent-container
-                          render-element
+                children-dict $ decode-map-as raw-children $ :: 'List (:: 'List 'Dynamic)
+                old-children-dict $ decode-map-as raw-old-children $ :: 'List (:: 'List 'Dynamic)
+              when dev? $ assert "|children should not contain nil element" $ and
+                every? (map children-dict last-value) non-nil?
+                every? (map old-children-dict last-value) non-nil?
+              let
+                  list-ops $ find-minimal-ops lcs-state-0 (map old-children-dict first-value) (map children-dict first-value)
+                loop
+                    idx 0
+                    ops $ decode-map-as
+                      option:unwrap $ get list-ops :acc
+                      :: 'List $ :: 'List 'Dynamic
+                    xs children-dict
+                    ys old-children-dict
+                  when-not (empty? ops)
+                    let
+                        op $ first-value ops
+                      match (first-value op)
+                        :remains $ do
+                          when dev? $ assert
+                            = (last-value op)
+                              first-value $ first-value xs
+                              first-value $ first-value ys
+                            , "|check key"
+                          update-element
                             last-value $ first-value xs
-                            , dispatch!
-                          , idx
-                        recur (inc idx) (rest ops) (rest xs) ys
-                      :remove $ do
-                        when dev? $ assert "|check key" $ = (last-value op)
-                          first-value $ first-value ys
-                        .!removeChildAt parent-container idx
-                        recur idx (rest ops) xs $ rest ys
+                            last-value $ first-value ys
+                            , parent-container idx dispatch! options
+                          recur (inc idx) (rest ops) (rest xs) (rest ys)
+                        :add $ do
+                          when dev? $ assert "|check key" $ = (last-value op)
+                            first-value $ first-value xs
+                          .!addChildAt parent-container
+                            render-element
+                              last-value $ first-value xs
+                              , dispatch!
+                            , idx
+                          recur (inc idx) (rest ops) (rest xs) ys
+                        :remove $ do
+                          when dev? $ assert "|check key" $ = (last-value op)
+                            first-value $ first-value ys
+                          .!removeChildAt parent-container idx
+                          recur idx (rest ops) xs $ rest ys
+                        _ $ do $ println "|Unknown op:" op
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic $ :: 'Map 'Tag 'Dynamic
@@ -3645,9 +3712,8 @@
                 do
                   let
                       target $ .!getChildAt parent-element idx
-                    case-default
+                    match
                       option:unwrap-or (get element :name) nil
-                      do $ eprintln "|not implement yet for updating:" $ option:unwrap-or (get element :name) nil
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
                       :rect $ update-rect element old-element target dispatch!
@@ -3655,6 +3721,8 @@
                       :graphics $ update-graphics element old-element target dispatch!
                       :mesh $ update-mesh element old-element target dispatch!
                       :image $ update-image element old-element target dispatch!
+                      _ $ do $ eprintln "|not implement yet for updating:"
+                        option:unwrap-or (get element :name) nil
                   update-children
                     option:unwrap-or (get element :children) nil
                     option:unwrap-or (get old-element :children) nil
@@ -3671,8 +3739,12 @@
         'update-filters $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-filters (target filters filters0)
             let
-                next-filters $ either filters $ []
-                prev-filters $ either filters0 $ []
+                next-filters $ decode-map-as
+                  either filters $ []
+                  :: 'List $ :: 'List 'Dynamic
+                prev-filters $ decode-map-as
+                  either filters0 $ []
+                  :: 'List $ :: 'List 'Dynamic
               if
                 not= (map next-filters last) (map prev-filters last)
                 if (empty? next-filters)
@@ -3886,9 +3958,13 @@
                   list? scale
                   do
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
-                      option:unwrap-or (first scale) 1
+                      decode-map-as
+                        option:unwrap-or (first scale) 1
+                        , Number
                     phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
-                      option:unwrap-or (last scale) 1
+                      decode-map-as
+                        option:unwrap-or (last scale) 1
+                        , Number
                 (number? scale)
                   do
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
@@ -3973,10 +4049,14 @@
         'call-graphics-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn call-graphics-ops (target ops)
             &doseq (pair ops)
-              when (some? pair)
-                let[] (op data) pair $ case-default op (js/console.warn "|not supported op:" op data)
-                  :move-to $ .!moveTo target (first data) (last data)
-                  :line-to $ .!lineTo target (first data) (last data)
+              when (non-nil? pair)
+                let[] (op data) pair $ match op
+                  :move-to $ .!moveTo target
+                    option:unwrap $ first data
+                    option:unwrap $ last data
+                  :line-to $ .!lineTo target
+                    option:unwrap $ first data
+                    option:unwrap $ last data
                   :line-style $ init-line-style target data
                   :begin-fill $ .!beginFill target
                     option:unwrap-or (get data :color) nil
@@ -3988,34 +4068,53 @@
                   :arc $ let
                       center $ option:unwrap-or (get data :center) nil
                       radian $ cond
-                          some? $ option:unwrap-or (get data :radian) nil
+                          non-nil? $ option:unwrap-or (get data :radian) nil
                           option:unwrap-or (get data :radian) nil
-                        (some? (option:unwrap-or (get data :angle) nil))
+                        (non-nil? (option:unwrap-or (get data :angle) nil))
                           map
-                            option:unwrap-or (get data :angle) ([])
+                            decode-map-as
+                              option:unwrap-or (get data :angle) ([])
+                              :: 'List 'Number
                             , angle->radian
                         true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
-                    .!arc target (first center) (last center)
+                    .!arc target
+                      option:unwrap $ first center
+                      option:unwrap $ last center
                       option:unwrap-or (get data :radius) nil
-                      first radian
-                      last radian
+                      option:unwrap $ first radian
+                      option:unwrap $ last radian
                       option:unwrap-or (get data :anticlockwise?) nil
                   :arc-to $ let
                       p1 $ option:unwrap-or (get data :p1) nil
                       p2 $ option:unwrap-or (get data :p2) nil
-                    .!arcTo target (first p1) (last p1) (first p2) (last p2)
+                    .!arcTo target
+                      option:unwrap $ first p1
+                      option:unwrap $ last p1
+                      option:unwrap $ first p2
+                      option:unwrap $ last p2
                       option:unwrap-or (get data :radius) nil
                   :bezier-to $ let
                       p1 $ option:unwrap-or (get data :p1) nil
                       p2 $ option:unwrap-or (get data :p2) nil
                       to-p $ option:unwrap-or (get data :to-p) nil
-                    .!bezierCurveTo target (first p1) (last p1) (first p2) (last p2) (first to-p) (last to-p)
+                    .!bezierCurveTo target
+                      option:unwrap $ first p1
+                      option:unwrap $ last p1
+                      option:unwrap $ first p2
+                      option:unwrap $ last p2
+                      option:unwrap $ first to-p
+                      option:unwrap $ last to-p
                   :quadratic-to $ let
                       p1 $ option:unwrap-or (get data :p1) nil
                       to-p $ option:unwrap-or (get data :to-p) nil
-                    .!quadraticCurveTo target (first p1) (last p1) (first to-p) (last to-p)
+                    .!quadraticCurveTo target
+                      option:unwrap $ first p1
+                      option:unwrap $ last p1
+                      option:unwrap $ first to-p
+                      option:unwrap $ last to-p
                   :begin-hole $ .!beginHole target
                   :end-hole $ .!endHole target
+                  _ $ js/console.warn "|not supported op:" op data
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -4033,14 +4132,14 @@
         'draw-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn draw-rect (target size radius)
             if (list? size)
-              if (some? radius)
+              if (non-nil? radius)
                 .!drawRoundedRect target 0 0
-                  use-number $ first size
-                  use-number $ last size
+                  use-number $ option:unwrap $ first size
+                  use-number $ option:unwrap $ last size
                   , radius
                 .!drawRect target 0 0
-                  use-number $ first size
-                  use-number $ last size
+                  use-number $ option:unwrap $ first size
+                  use-number $ option:unwrap $ last size
               js/console.warn "|Unknown size" size
             , &unit
           :examples $ []
@@ -4049,7 +4148,7 @@
             :features $ #{} :js-ffi
         'init-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-alpha (target alpha)
-            when (some? alpha)
+            when (non-nil? alpha)
               set! (-> target .-alpha) alpha
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -4057,7 +4156,7 @@
             :features $ #{} :js-ffi
         'init-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-angle (target v)
-            when (some? v)
+            when (non-nil? v)
               set! (.-angle target) v
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -4065,14 +4164,18 @@
             :features $ #{} :js-ffi
         'init-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-events (target events dispatch!)
-            when (some? events)
-              set! (.-eventMode target) |dynamic
-              set! (.-buttonMode target) true
-              &doseq
-                pair $ to-pairs events
-                let[] (k listener) pair $ .!on target (turn-string k)
-                  fn (event)
-                    when (fn? listener) (listener event dispatch!)
+            when (non-nil? events)
+              let
+                  checked-events $ decode-map-as events $ :: 'Map 'Tag 'Dynamic
+                set! (.-eventMode target) |dynamic
+                set! (.-buttonMode target) true
+                &doseq
+                  k $ keys checked-events
+                  let
+                      listener $ option:unwrap $ get checked-events k
+                    .!on target (to-string k)
+                      fn (event)
+                        when (fn? listener) (listener event dispatch!)
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -4080,7 +4183,7 @@
             :features $ #{} :js-ffi
         'init-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-line-style (target line-style)
-            when (some? line-style)
+            when (non-nil? line-style)
               .!lineStyle target $ js-object
                 :width $ use-number $ option:unwrap-or (get line-style :width) nil
                 :color $ use-number $ option:unwrap-or (get line-style :color) nil
@@ -4096,11 +4199,15 @@
             :features $ #{} :js-ffi
         'init-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pivot (target pivot)
-            when (some? pivot)
+            when (non-nil? pivot)
               phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
-                option:unwrap-or (first pivot) 0
+                decode-map-as
+                  option:unwrap-or (first pivot) 0
+                  , Number
               phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
-                option:unwrap-or (last pivot) 0
+                decode-map-as
+                  option:unwrap-or (last pivot) 0
+                  , Number
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -4108,14 +4215,18 @@
             :features $ #{} :js-ffi
         'init-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-position (target point)
-            when (some? point)
+            when (non-nil? point)
               phlox.core/ffi-set-x! (phlox.core/ffi-position target)
                 if (list? point)
-                  option:unwrap-or (first point) 0
+                  decode-map-as
+                    option:unwrap-or (first point) 0
+                    , Number
                   , 0
               phlox.core/ffi-set-y! (phlox.core/ffi-position target)
                 if (list? point)
-                  option:unwrap-or (last point) 0
+                  decode-map-as
+                    option:unwrap-or (last point) 0
+                    , Number
                   , 0
             , &unit
           :examples $ []
@@ -4124,7 +4235,7 @@
             :features $ #{} :js-ffi
         'init-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-rotation (target v)
-            when (some? v)
+            when (non-nil? v)
               set! (.-rotation target) v
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -4132,23 +4243,24 @@
             :features $ #{} :js-ffi
         'read-line-cap $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-line-cap (x)
-            case-default x (println "|unknown line-cap:" x)
+            match x
               nil $ .-BUTT PIXI/LINE_CAP
               :butt $ .-BUTT PIXI/LINE_CAP
               :round $ .-ROUND PIXI/LINE_CAP
               :square $ .-SQUARE PIXI/LINE_CAP
+              _ $ println "|unknown line-cap:" x
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'read-line-join $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-line-join (x)
-            case-default x
-              do $ println "|unknown line-join value:" x
+            match x
               nil $ .-MITER PIXI/LINE_JOIN
               :bevel $ .-BEVEL PIXI/LINE_JOIN
               :miter $ .-MITER PIXI/LINE_JOIN
               :round $ .-ROUND PIXI/LINE_JOIN
+              _ $ do $ println "|unknown line-join value:" x
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic
@@ -4163,17 +4275,23 @@
             :features $ #{} :js-ffi
         'update-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-events (target events old-events dispatch!)
-            when (some? old-events)
-              &doseq
-                pair $ to-pairs old-events
-                let[] (k listener) pair $ .!off target $ turn-string k
-            when (some? events)
-              &doseq
-                pair $ to-pairs events
-                let[] (k listener) pair $ .!on target (turn-string k)
-                  fn (event)
-                    when (fn? listener) (listener event dispatch!)
-            if (some? events)
+            when (non-nil? old-events)
+              let
+                  checked-events $ decode-map-as old-events $ :: 'Map 'Tag 'Dynamic
+                &doseq
+                  k $ keys checked-events
+                  .!off target $ to-string k
+            when (non-nil? events)
+              let
+                  checked-events $ decode-map-as events $ :: 'Map 'Tag 'Dynamic
+                &doseq
+                  k $ keys checked-events
+                  let
+                      listener $ option:unwrap $ get checked-events k
+                    .!on target (to-string k)
+                      fn (event)
+                        when (fn? listener) (listener event dispatch!)
+            if (non-nil? events)
               do
                 set! (.-buttonMode target) true
                 set! (.-eventMode target) |dynamic
@@ -4190,11 +4308,15 @@
             when (not= pivot pivot0)
               phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
                 if (list? pivot)
-                  option:unwrap-or (first pivot) 0
+                  decode-map-as
+                    option:unwrap-or (first pivot) 0
+                    , Number
                   , 0
               phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
                 if (list? pivot)
-                  option:unwrap-or (last pivot) 0
+                  decode-map-as
+                    option:unwrap-or (last pivot) 0
+                    , Number
                   , 0
             , &unit
           :examples $ []
@@ -4206,11 +4328,15 @@
             when (not= point point0)
               phlox.core/ffi-set-x! (phlox.core/ffi-position target)
                 if (list? point)
-                  option:unwrap-or (first point) 0
+                  decode-map-as
+                    option:unwrap-or (first point) 0
+                    , Number
                   , 0
               phlox.core/ffi-set-y! (phlox.core/ffi-position target)
                 if (list? point)
-                  option:unwrap-or (last point) 0
+                  decode-map-as
+                    option:unwrap-or (last point) 0
+                    , Number
                   , 0
             , &unit
           :examples $ []
@@ -4241,52 +4367,10 @@
           :schema $ :: 'Enum
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.schema
-    'phlox.test $ %{} 'FileEntry
-      :defs $ {} $ 'test-lcs
-        %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftest test-lcs
-            testing "|Find simple changes"
-              is $ =
-                find-minimal-ops lcs-state-0 (list |a) (list |b)
-                {}
-                  :acc $ [] ([] :remove |a) ([] :add |b)
-                  :step 2
-              is $ =
-                find-minimal-ops lcs-state-0 (list |a) (list |a)
-                {}
-                  :acc $ [] $ [] :remains |a
-                  :step 0
-              is $ =
-                find-minimal-ops lcs-state-0 (list) (list |a)
-                {}
-                  :acc $ [] $ [] :add |a
-                  :step 1
-              is $ =
-                find-minimal-ops lcs-state-0 (list |a |b |c) (list |a |c)
-                {}
-                  :acc $ [] ([] :remains |a) ([] :remove |b) ([] :remains |c)
-                  :step 1
-              is $ =
-                find-minimal-ops lcs-state-0 (list |a |b |c) (list |a |c |c)
-                {}
-                  :acc $ [] ([] :remains |a) ([] :remove |b) ([] :remains |c) ([] :add |c)
-                  :step 2
-              is $ =
-                find-minimal-ops lcs-state-0 (list |a |c) (list |a |b1 |b2 |b3 |c)
-                {}
-                  :acc $ [] ([] :remains |a) ([] :add |b1) ([] :add |b2) ([] :add |b3) ([] :remains |c)
-                  :step 3
-          :examples $ []
-          :schema $ :: 'Dynamic
-      :ns $ %{} 'NsEntry (:doc |)
-        :code $ quote $ ns phlox.test
-          :require
-            [] cljs.test :refer $ [] deftest is testing run-tests
-            [] phlox.util.lcs :refer $ [] find-minimal-ops lcs-state-0
     'phlox.util $ %{} 'FileEntry
       :defs $ {}
         '*ctx-instance $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *ctx-instance nil
+          :code $ quote $ defref *ctx-instance nil
           :examples $ []
           :schema $ :: 'Ref 'Dynamic
         'camel-case $ %{} 'CodeEntry (:doc |)
@@ -4314,29 +4398,27 @@
           :code $ quote $ defn convert-line-style (props)
             -> props (to-pairs)
               map $ fn (pair)
-                let-sugar
-                      [] k v
-                      , pair
+                let[] (k v) pair $ let
                     key-name $ camel-case $ cond
                         tag? k
-                        turn-string k
+                        to-string k
                       (string? k) k
                       true $ str k
-                  [] key-name $ case-default k
-                    cond
+                  [] key-name $ match k
+                    :fill-gradient-type $ match v
+                      :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
+                      :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
+                      :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                      :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
+                      _ $ do (println "|unknown gradient type:") v
+                    _ $ cond
                         tag? v
-                        turn-string v
+                        to-string v
                       (string? v) v
                       (number? v) v
                       (bool? v) v
                       (list? v) v
                       true $ do (println "|Unknown style value:" v) v
-                    :fill-gradient-type $ case-default v
-                      do (println "|unknown gradient type:") v
-                      :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                      :horizontal $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
-                      :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
-                      :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
               &set:to-list
               pairs-map
               to-js-data
@@ -4368,8 +4450,9 @@
           :code $ quote $ defn index-items (xs)
             -> xs $ map-indexed $ fn (idx x) ([] idx x)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {}
             :args $ [] $ :: 'List 'Dynamic
+            :return $ :: 'List $ :: 'List 'Dynamic
         'measure-text-width! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn measure-text-width! (text size font-family)
             when
@@ -4393,10 +4476,15 @@
         'remove-nil-values $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-nil-values (dict)
             -> dict $ filter $ fn (pair)
-              option:some? $ last pair
+              non-nil? $ option:unwrap-or (last pair) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'List 'Dynamic
+          :schema $ :: 'Fn $ {}
+            :args $ [] $ :: 'List (:: 'List 'Dynamic)
+            :return $ :: 'List $ :: 'List 'Dynamic
+          :tests $ [] $ %{} 'TestEntry (:name |nil-filter-keeps-false-and-keys)
+            :code $ quote $ assert=
+              [] ([] 1 false) ([] 2 |a)
+              remove-nil-values $ index-items $ [] nil false |a
         'use-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn use-number (x)
             if
@@ -4415,99 +4503,98 @@
             phlox.schema :as schema
     'phlox.util.lcs $ %{} 'FileEntry
       :defs $ {}
+        'append-op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn append-op (state kind key cost)
+            -> state
+              assoc :acc $ conj
+                decode-map-as
+                  option:unwrap $ get state :acc
+                  :: 'List $ :: 'List 'Dynamic
+                [] kind key
+              assoc :step $ + cost $ decode-map-as
+                option:unwrap $ get state :step
+                , Number
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Tag 'Dynamic 'Number
+            :return $ :: 'Map 'Tag 'Dynamic
         'find-minimal-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn find-minimal-ops (state xs ys)
-            ; println "|find ops" state (count xs) (count ys)
             cond
                 and (empty? xs) (empty? ys)
                 , state
-              (and (empty? xs) (not (empty? ys)))
+              (empty? xs)
                 recur
-                  -> state
-                    update :acc $ fn (acc)
-                      conj
-                        assert-type acc $ :: 'List 'Dynamic
-                        [] :add $ first ys
-                    update :step $ fn (step)
-                      inc $ assert-type step Number
-                  []
-                  rest ys
-              (and (empty? ys) (not (empty? xs)))
+                  append-op state :add
+                    option:unwrap $ first ys
+                    , 1
+                  , xs $ rest ys
+              (empty? ys)
                 recur
-                  -> state
-                    update :acc $ fn (acc)
-                      conj
-                        assert-type acc $ :: 'List 'Dynamic
-                        [] :remove $ first xs
-                    update :step $ fn (step)
-                      inc $ assert-type step Number
+                  append-op state :remove
+                    option:unwrap $ first xs
+                    , 1
                   rest xs
-                  []
+                  , ys
               true $ let
-                  x0 $ first xs
-                  y0 $ first ys
+                  x0 $ option:unwrap $ first xs
+                  y0 $ option:unwrap $ first ys
                 cond
                     identical? x0 y0
-                    recur
-                      -> state
-                        update :acc $ fn (acc)
-                          conj
-                            assert-type acc $ :: 'List 'Dynamic
-                            [] :remains x0
-                        update :step $ fn (step)
-                          inc $ assert-type step Number
-                      rest xs
-                      rest ys
-                  (any? ys (fn (y) (identical? x0 y)))
-                    recur
-                      -> state
-                        update :acc $ fn (acc)
-                          conj
-                            assert-type acc $ :: 'List 'Dynamic
-                            [] :remove x0
-                        update :step $ fn (step)
-                          inc $ assert-type step Number
-                      rest xs
-                      , ys
-                  (any? ys (fn (x) (identical? y0 x)))
-                    recur
-                      -> state
-                        update :acc $ fn (acc)
-                          conj
-                            assert-type acc $ :: 'List 'Dynamic
-                            [] :add y0
-                        update :step $ fn (step)
-                          inc $ assert-type step Number
-                      , xs $ rest ys
+                    recur (append-op state :remains x0 0) (rest xs) (rest ys)
+                  (not (any? ys (fn (y) (identical? x0 y))))
+                    recur (append-op state :remove x0 1) (rest xs) ys
+                  (not (any? xs (fn (x) (identical? y0 x))))
+                    recur (append-op state :add y0 1) xs $ rest ys
                   true $ let
-                      solution-a $ find-minimal-ops
-                        -> state
-                          update :acc $ fn (acc)
-                            conj
-                              assert-type acc $ :: 'List 'Dynamic
-                              [] :remove $ first xs
-                          update :step $ fn (step)
-                            inc $ assert-type step Number
-                        rest xs
-                        , ys
-                      solution-b $ find-minimal-ops
-                        -> state
-                          update :acc $ fn (acc)
-                            conj
-                              assert-type acc $ :: 'List 'Dynamic
-                              [] :add $ first ys
-                          update :step $ fn (step)
-                            inc $ assert-type step Number
-                        , xs $ rest ys
+                      solution-a $ find-minimal-ops (append-op state :remove x0 1) (rest xs) ys
+                      solution-b $ find-minimal-ops (append-op state :add y0 1) xs $ rest ys
                     if
                       <=
-                        option:unwrap-or (get solution-a :step) 0
-                        option:unwrap-or (get solution-b :step) 0
+                        decode-map-as
+                          option:unwrap $ get solution-a :step
+                          , Number
+                        decode-map-as
+                          option:unwrap $ get solution-b :step
+                          , Number
                       , solution-a solution-b
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'Dynamic) (:: 'List 'Dynamic)
             :return $ :: 'Map 'Tag 'Dynamic
+          :tests $ [] $ %{} 'TestEntry (:name |legacy-simple-changes)
+            :code $ quote $ do
+              assert=
+                {}
+                  :acc $ [] ([] :remove |a) ([] :add |b)
+                  :step 2
+                find-minimal-ops lcs-state-0 ([] |a) ([] |b)
+              assert=
+                {}
+                  :acc $ [] $ [] :remains |a
+                  :step 0
+                find-minimal-ops lcs-state-0 ([] |a) ([] |a)
+              assert=
+                {}
+                  :acc $ [] $ [] :add |a
+                  :step 1
+                find-minimal-ops lcs-state-0 ([]) ([] |a)
+              assert=
+                {}
+                  :acc $ [] ([] :remains |a) ([] :remove |b) ([] :remains |c)
+                  :step 1
+                find-minimal-ops lcs-state-0 ([] |a |b |c) ([] |a |c)
+              assert=
+                {}
+                  :acc $ [] ([] :remains |a) ([] :remove |b) ([] :remains |c) ([] :add |c)
+                  :step 2
+                find-minimal-ops lcs-state-0 ([] |a |b |c) ([] |a |c |c)
+              assert=
+                {}
+                  :acc $ [] ([] :remains |a) ([] :add |b1) ([] :add |b2) ([] :add |b3) ([] :remains |c)
+                  :step 3
+                find-minimal-ops lcs-state-0 ([] |a |c) ([] |a |b1 |b2 |b3 |c)
+            :tags $ #{} :unit
         'lcs-state-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lcs-state-0
             {}

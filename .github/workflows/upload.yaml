@@ -56,7 +56,7 @@ jobs:
         calcit edit format
         git diff --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only
-        calcit calcit.cirru analyze check-public \
+        calcit calcit.cirru --check-only \
           --ns phlox.app.comp.drafts \
           --ns phlox.app.comp.keyboard \
           --ns phlox.app.comp.slider-demo \
@@ -87,8 +87,8 @@ jobs:
           --ns phlox.util.styles \
           --summary-only --format json
         calcit calcit.cirru test --require-match
-        calcit calcit.cirru analyze dynamic-methods --summary-only --format json
-        calcit calcit.cirru analyze deprecated --summary-only --format json
+        calcit calcit.cirru analyze weak-types --only dynamic-method --summary-only --format json
+        calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
 
     - name: Select CDN asset path
       id: asset-path
