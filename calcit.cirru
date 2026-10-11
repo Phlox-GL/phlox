@@ -24,7 +24,8 @@
                   :alpha 1
                 :fill $ hslx 160 80 70
                 :on $ {} $ :pointertap
-                  fn (event dispatch!) (dispatch! :add-x nil)
+                  fn (event dispatch!)
+                    dispatch! $ :: :add-x
               rect
                 {}
                   :position $ [] 40 40
@@ -34,7 +35,8 @@
                     :alpha 1
                   :fill $ hslx 200 80 80
                   :on $ {} $ :pointertap
-                    fn (e dispatch!) (dispatch! :add-x nil)
+                    fn (e dispatch!)
+                      dispatch! $ :: :add-x
                   :rotation $ + 1 $ * 0.1 x
                   :pivot $ [] 0 0
                 text $ {}
@@ -113,7 +115,8 @@
                   :size $ [] 160 40
                   :fill $ hslx 0 0 50
                   :on $ {} $ :pointertap
-                    fn (e d!) (d! :toggle-keyboard nil)
+                    fn (e d!)
+                      d! $ :: :toggle-keyboard
                 text $ {}
                   :text $ str "|Toggle: " on?
                   :position $ [] 4 8
@@ -126,7 +129,8 @@
                   :fill $ hslx 0 0 100
                 :on-keyboard $ if on?
                   {}
-                    :down $ fn (e d!) (d! :counted nil)
+                    :down $ fn (e d!)
+                      d! $ :: :counted
                     :up $ fn (e d!) (println :up)
                   {}
           :examples $ []
@@ -917,6 +921,16 @@
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic 'String 'Number
             :return $ :: 'Map 'Tag 'Dynamic
+          :tests $ [] $ %{} 'TestEntry (:name |payload-free-demo-operations)
+            :code $ quote $ let
+                store $ {} (:x 0) (:keyboard-on? false) (:counted 0)
+                toggled $ updater store (:: :toggle-keyboard) |test 0
+                counted $ updater toggled (:: :counted) |test 0
+                incremented $ updater counted (:: :add-x) |test 0
+              assert= (Option :some true) (get toggled :keyboard-on?)
+              assert= (Option :some 1) (get counted :counted)
+              assert= (Option :some 1) (get incremented :x)
+            :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.updater
           :require $ [] phlox.cursor :refer $ [] update-states
@@ -3125,23 +3139,41 @@
           :code $ quote $ defn handle-event (kind tree event dispatch!)
             when (non-nil? tree)
               if (element? tree)
-                do
-                  let
-                      listener $ option:unwrap-or
-                        get-in tree $ [] :props :on-keyboard kind
-                        , nil
-                    when (fn? listener) (listener event dispatch!)
+                let
+                    element $ assert-type tree 'phlox.schema/PhloxElement
+                    listener $
+                      get-in (:props element) ([] :on-keyboard kind)
+                      , .unwrap-or nil
+                  when (fn? listener) (listener event dispatch!)
                   ->
-                    decode-map-as
-                      option:unwrap-or (get tree :children) ([])
+                    decode-map-as (:children element)
                       :: 'List $ :: 'List 'Dynamic
-                    map $ fn (pair)
+                    .each $ fn (pair)
                       let[] (k child) pair $ handle-event kind child event dispatch!
-                do $ js/console.log "|unknown tree for handling event:" tree
+                js/console.log "|unknown tree for handling event:" tree
+            , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Tag 'Dynamic 'Dynamic 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ [] 'Tag 'Dynamic (:: 'Map 'Tag 'Dynamic) 'Dynamic
             :features $ #{} :js-ffi
+          :tests $ [] $ %{} 'TestEntry (:name |struct-tree-parent-child-keyboard-dispatch)
+            :code $ quote $ let
+                calls $ ref $ [] :start
+                event $ {} (:key |Enter) (:key-code 13)
+                dispatch! $ fn (op) &unit
+                child $ phlox.schema/PhloxElement :name :text :props
+                  {} $ :on-keyboard $ {}
+                    :down $ fn (e d!) (assert= event e)
+                      reset! calls $ append @calls :child
+                  , :children $ []
+                root $ phlox.schema/PhloxElement :name :group :props
+                  {} $ :on-keyboard $ {}
+                    :down $ fn (e d!) (assert= event e)
+                      reset! calls $ append @calls :root
+                  , :children $ [] ([] :child child)
+              assert= &unit $ handle-event :down root event dispatch!
+              assert= ([] :start :root :child) @calls
+            :tags $ #{} :unit
         'handle-keyboard-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-keyboard-events (*tree-element dispatch!)
             phlox.core/ffi-add-event-listener js/window |keydown $ fn (event)
@@ -4364,7 +4396,7 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct PhloxElement (:name 'Dynamic) (:props 'Dynamic) (:children 'Dynamic)
           :examples $ []
-          :schema $ :: 'Enum
+          :schema $ :: 'StructDef
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.schema
     'phlox.util $ %{} 'FileEntry

@@ -10,7 +10,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
 
-同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。保留完整公开定义、附带测试和严格类型门禁。0.7.12 使用 Calcit/procs 0.29.0-alpha.30，配套已发布的 touch-control 0.0.24、pointed-prompt 0.0.14 和 js-ffi 0.2.1-alpha.16；当前浏览器 FFI 依赖需要这一编译器版本。
+同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。保留完整公开定义、附带测试和严格类型门禁。0.7.13 使用稳定版 Calcit/procs 0.29.0，配套已发布的 touch-control 0.0.25、pointed-prompt 0.0.15 和 js-ffi 0.2.1-alpha.16；Pointed Prompt 的正则回调修复已包含在依赖中。
 
 ### Usage
 
