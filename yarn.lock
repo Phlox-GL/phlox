@@ -12,15 +12,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@calcit/procs@npm:0.29.0-alpha.30":
-  version: 0.29.0-alpha.30
-  resolution: "@calcit/procs@npm:0.29.0-alpha.30"
+"@calcit/procs@npm:0.29.0":
+  version: 0.29.0
+  resolution: "@calcit/procs@npm:0.29.0"
   dependencies:
     "@calcit/finger-vec": "npm:0.1.1"
     "@calcit/ternary-tree": "npm:0.0.26"
     "@cirru/parser.ts": "npm:0.0.10"
     "@cirru/writer.ts": "npm:^0.1.9"
-  checksum: 10c0/63fc7d8febe9ba496dc1aecc14dc6e72023d50a02b113f159985ce7a5a586eb4afef7fd23e0d87509ed8050394d5609bd2cdf535f20b03f08b5c6845f27348c2
+  checksum: 10c0/ff03d002491fff92af286abd0a9b6ad9e7dea4ffd5465465d81217fdac84cb383c93b861b7a6d7395ea7f9b84342dd6e012da10196ca471f667903a09ec920f2
   languageName: node
   linkType: hard
 
@@ -1567,7 +1567,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
-    "@calcit/procs": "npm:0.29.0-alpha.30"
+    "@calcit/procs": "npm:0.29.0"
     "@pixi/filter-drop-shadow": "npm:^5.2.0"
     "@quamolit/phlox-utils": "npm:^0.0.2"
     "@triadica/touch-control": "npm:^0.0.4-a1"

@@ -45,9 +45,7 @@ jobs:
 
     - name: Resolve immutable dependencies
       run: |
-        # js-ffi is selected through transitive ranges, so let Caps resolve the
-        # compatible graph while keeping the committed result deterministic.
-        caps --ci
+        caps --strict --ci
         yarn install --immutable
         caps verify --toolchain
 
@@ -55,7 +53,7 @@ jobs:
       run: |
         calcit edit format
         git diff --exit-code -- calcit.cirru
-        calcit calcit.cirru --check-only
+        calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru --check-only \
           --ns phlox.app.comp.drafts \
           --ns phlox.app.comp.keyboard \
