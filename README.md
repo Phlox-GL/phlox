@@ -14,6 +14,8 @@ COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访�
 
 宿主标量返回值及开放数据现在通过既有检查器进入 Number/Bool/String/List/Map 合同；不合法的数据将尽早报错，不再靠伪断言或标量强转蒙混通过。仍保留真实异构 props、宿主对象和回调边界，不宣称零 Dynamic/unsafe。Demo 时钟修正为调用 `Date.now()`，而不是把函数对象当作时间；样式的 camel-case 修正为使用字符串索引，仍仅替换第一个匹配项。
 
+元素构造函数现在准确返回已有 `phlox.schema/PhloxElement`（包括 create-element/create-list 和各 DSL 构造器），不再把名义类型擦成 Dynamic。消费者可直接在返回 schema 中使用此类型，无需创建 `def ... &unit` 占位类型或对返回值添加断言；元素运行时结构不变。
+
 同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。CI 保留原 28 个公开 namespace、全定义检查、原有 7 项测试，并增加完整 `fix --workflow strict --verify`；脚本错误必须立即失败。没有新增固定改写规则、验证 runner、baseline 或 COS 探测脚本。开发另运行 `calcit calcit.cirru js -w`；只提交 `calcit.cirru` / `deps.cirru`，不提交 js-out 或临时通知文件。
 
 ### Usage
