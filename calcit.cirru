@@ -101,7 +101,7 @@
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.drafts
-          :require $ [] phlox.core :refer $ [] g hslx hclx rect circle text container graphics create-list image
+          :require $ phlox.core :refer $ g hslx hclx rect circle text container graphics create-list image
     'phlox.app.comp.keyboard $ %{} 'FileEntry
       :defs $ {} $ 'comp-keyboard
         %{} 'CodeEntry (:doc |)
@@ -139,7 +139,7 @@
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.keyboard
-          :require $ [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list
+          :require $ phlox.core :refer $ g hslx rect circle text container graphics create-list
     'phlox.app.comp.slider-demo $ %{} 'FileEntry
       :defs $ {}
         'comp-slider-demo $ %{} 'CodeEntry (:doc |)
@@ -289,8 +289,8 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.slider-demo
           :require
-            [] phlox.core :refer $ [] g hslx rect circle text container graphics create-list >>
-            [] phlox.comp.slider :refer $ [] comp-slider comp-slider-point comp-spin-slider
+            phlox.core :refer $ g hslx rect circle text container graphics create-list >>
+            phlox.comp.slider :refer $ comp-slider comp-slider-point comp-spin-slider
     'phlox.app.container $ %{} 'FileEntry
       :defs $ {}
         'comp-arrows-demo $ %{} 'CodeEntry (:doc |)
@@ -833,7 +833,7 @@
               js/console.log |dispatch! op
             let
                 op-id $ nanoid
-                op-time $ phlox.core/ffi-number js/Date.now
+                op-time $ phlox.core/ffi-number $ js/Date.now
               reset! *store $ updater @*store op op-id op-time
               , &unit
           :examples $ []
@@ -905,17 +905,21 @@
               (:add-x)
                 update store :x $ fn (x)
                   let
-                      x0 $ assert-type x Number
+                      x0 $ decode-map-as x Number
                     if (> x0 10) 0 $ + x0 1
               (:tab t) (assoc store :tab t)
               (:toggle-keyboard)
                 update store :keyboard-on? $ fn (x)
-                  not $ assert-type x Bool
+                  not $ decode-map-as x Bool
               (:counted)
                 update store :counted $ fn (x)
-                  inc $ assert-type x Number
-              (:states cursor s) (update-states store cursor s)
-              (:hydrate-storage d) d
+                  inc $ decode-map-as x Number
+              (:states cursor s)
+                update-states store
+                  decode-map-as cursor $ :: 'List 'Dynamic
+                  , s
+              (:hydrate-storage d)
+                decode-map-as d $ :: 'Map 'Tag 'Dynamic
               _ $ do (eprintln "|unknown op" op) store
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -933,7 +937,7 @@
             :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.updater
-          :require $ [] phlox.cursor :refer $ [] update-states
+          :require $ phlox.cursor :refer $ update-states
     'phlox.check $ %{} 'FileEntry
       :defs $ {}
         'dev-check $ %{} 'CodeEntry (:doc |)
@@ -1058,7 +1062,7 @@
         :code $ quote $ ns phlox.comp.arrow
           :require
             phlox.core :refer $ g hslx rect circle text container graphics create-list >>
-            [] phlox.check :refer $ [] lilac-event-map dev-check
+            phlox.check :refer $ lilac-event-map dev-check
             phlox.complex :as complex
             phlox.comp.drag-point :refer $ comp-drag-point
             phlox.math :refer $ vec-length
@@ -1869,13 +1873,13 @@
           :code $ quote $ defn >> (states k)
             let
                 parent-cursor $ option:unwrap-or (get states :cursor) ([])
-                branch $ assert-type
+                branch $ decode-map-as
                   let
                       value $ option:unwrap-or (get states k) ({})
                     if (map? value) value $ raise |expected-child-state-map
                   :: 'Map 'Tag 'Dynamic
               assoc branch :cursor $ conj
-                assert-type parent-cursor $ :: 'List 'Dynamic
+                decode-map-as parent-cursor $ :: 'List 'Dynamic
                 , k
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -2166,7 +2170,7 @@
             :required $ [] 'SyntaxSymbol 'SyntaxList
         'ffi-abs $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-abs (value)
-            unsafe-coerce (js/Math.abs value) Number
+            js-ffi.contract/expect-number |Math.abs $ js/Math.abs value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number
@@ -2232,20 +2236,20 @@
             :features $ #{} :js-ffi
         'ffi-atan2 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-atan2 (y x)
-            unsafe-coerce (js/Math.atan2 y x) Number
+            js-ffi.contract/expect-number |Math.atan2 $ js/Math.atan2 y x
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number
             :features $ #{} :js-ffi
         'ffi-bool $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-bool (value) (unsafe-coerce value Bool)
+          :code $ quote $ defn ffi-bool (value) (js-ffi.contract/expect-bool |Phlox.boolean value)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'ffi-cos $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-cos (value)
-            unsafe-coerce (js/Math.cos value) Number
+            js-ffi.contract/expect-number |Math.cos $ js/Math.cos value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number
@@ -2429,7 +2433,7 @@
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'ffi-number $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-number (value) (unsafe-coerce value Number)
+          :code $ quote $ defn ffi-number (value) (js-ffi.contract/expect-number |Phlox.number value)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Dynamic
@@ -2477,16 +2481,13 @@
             :features $ #{} :js-ffi
         'ffi-push-array! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-push-array! (xs x)
-            unsafe-coerce
-              .!push (unsafe-coerce xs JsArrayHost) x
-              , Number
+            js-ffi.contract/expect-number |Array.push $ .!push (unsafe-coerce xs JsArrayHost) x
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'ffi-random $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-random ()
-            unsafe-coerce (js/Math.random) Number
+          :code $ quote $ defn ffi-random () (browser/random)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ []
@@ -2541,6 +2542,7 @@
             set!
               .-font $ unsafe-coerce context CanvasContextHost
               , font
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'String
@@ -2559,6 +2561,7 @@
             set!
               .-x $ unsafe-coerce target PixiVectorHost
               , value
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Number
@@ -2568,6 +2571,7 @@
             set!
               .-y $ unsafe-coerce target PixiVectorHost
               , value
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Number
@@ -2583,7 +2587,7 @@
             :features $ #{} :js-ffi
         'ffi-sin $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-sin (value)
-            unsafe-coerce (js/Math.sin value) Number
+            js-ffi.contract/expect-number |Math.sin $ js/Math.sin value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number
@@ -2722,7 +2726,7 @@
                   swap! *stage-config update :move $ fn (prev)
                     unsafe-coerce
                       complex/add
-                        assert-type prev $ :: 'List 'Number
+                        decode-map-as prev $ :: 'List 'Number
                         , delta
                       , Dynamic
                   render-stage-for-viewer!
@@ -2747,13 +2751,13 @@
                       swap! *stage-config update :move $ fn (pos)
                         unsafe-coerce
                           let
-                              pos0 $ assert-type pos $ :: 'List 'Number
+                              pos0 $ decode-map-as pos $ :: 'List 'Number
                               shift $ complex/minus pointer pos0
                             complex/minus pos0 $ complex/times shift $ [] (/ dy scale) 0
                           , Dynamic
                       swap! *stage-config update :scale $ fn (x)
                         unsafe-coerce
-                          + (assert-type x Number) dy
+                          + (decode-map-as x Number) dy
                           , Dynamic
                       render-stage-for-viewer!
               js-object $ :passive true
@@ -2763,11 +2767,9 @@
             :features $ #{} :js-ffi
         'hclx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hclx (h c l)
-            unsafe-coerce
-              .!toNumber $ unsafe-coerce
-                new Color $ hcl-to-hex h c l
-                , ColorHost
-              , Number
+            js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+              new Color $ hcl-to-hex h c l
+              , ColorHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number 'Number
@@ -2780,22 +2782,18 @@
               set! (.-hsluv_s conv) c
               set! (.-hsluv_l conv) l
               do (.!hsluvToRgb conv)
-                unsafe-coerce
-                  .!toNumber $ unsafe-coerce
-                    new Color $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
-                    , ColorHost
-                  , Number
+                js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+                  new Color $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
+                  , ColorHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number 'Number
             :features $ #{} :js-ffi
         'hslx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hslx (h s l)
-            unsafe-coerce
-              .!toNumber $ unsafe-coerce
-                new Color $ js-object (:h h) (:s s) (:l l) (:a 1)
-                , ColorHost
-              , Number
+            js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+              new Color $ js-object (:h h) (:s s) (:l l) (:a 1)
+              , ColorHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number 'Number
@@ -2868,7 +2866,7 @@
         'line-segment->ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segment->ops (pair)
             let
-                pair0 $ assert-type pair $ :: 'List 'Dynamic
+                pair0 $ decode-map-as pair $ :: 'List 'Dynamic
               []
                 g :move-to $ option:unwrap $ nth pair0 0
                 g :line-to $ option:unwrap $ nth pair0 1
@@ -2876,22 +2874,18 @@
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
-            :return $ :: 'List 'Dynamic
+            :return $ :: 'List $ :: 'List 'Dynamic
         'line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segments (props & children) (dev-check props lilac-line-segments)
             let
                 line-style $ option:unwrap-or (get props :style) nil
-                segments $ option:unwrap-or (get props :segments) ([])
+                segments $ decode-map-as
+                  option:unwrap-or (get props :segments) ([])
+                  :: 'List 'Dynamic
               create-element :graphics
                 assoc props :ops $ concat
-                  assert-type
-                    [] $ g :line-style line-style
-                    :: 'List 'Dynamic
-                  assert-type
-                    ->
-                      assert-type segments $ :: 'List 'Dynamic
-                      mapcat line-segment->ops
-                    :: 'List 'Dynamic
+                  [] $ g :line-style line-style
+                  mapcat segments line-segment->ops
                 , children
           :examples $ []
           :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'Dynamic)
@@ -2927,15 +2921,14 @@
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
                 line-style $ option:unwrap-or (get props :style) nil
-                points $ option:unwrap-or (get props :points) ([])
+                points $ decode-map-as
+                  option:unwrap-or (get props :points) ([])
+                  :: 'List 'Dynamic
               create-element :graphics
                 assoc props :ops $ concat
                   [] (g :line-style line-style)
                     g :move-to $ option:unwrap $ nth points 0
-                  ->
-                    assert-type points $ :: 'List 'Dynamic
-                    rest
-                    map $ fn (p) (g :line-to p)
+                  -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
           :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'Dynamic)
@@ -3018,7 +3011,7 @@
                   swap! *stage-config update :move $ fn (prev)
                     unsafe-coerce
                       let
-                          prev0 $ assert-type prev $ :: 'List 'Number
+                          prev0 $ decode-map-as prev $ :: 'List 'Number
                           l $ vec-length prev0
                         if (< l 4) ([] 0 0)
                           &let
@@ -3030,7 +3023,7 @@
                     unsafe-coerce
                       let
                           delta $ - scale0 1
-                          prev0 $ assert-type prev Number
+                          prev0 $ decode-map-as prev Number
                         if
                           > 0.01 $ ffi-abs delta
                           , 1 $ + prev0 $ if (> delta 0) -0.01 0.01
@@ -3059,7 +3052,7 @@
                 swap! *stage-config update :move $ fn (prev)
                   unsafe-coerce
                     let
-                        prev0 $ assert-type prev $ :: 'List 'Number
+                        prev0 $ decode-map-as prev $ :: 'List 'Number
                       complex/add
                         complex/minus prev0 $ complex/scale (complex/conjugate move) 0.05
                         complex/scale prev0 $ / (* 0.01 scale-change) scale0
@@ -3067,7 +3060,7 @@
                 swap! *stage-config update :scale $ fn (prev)
                   unsafe-coerce
                     let
-                        prev0 $ assert-type prev Number
+                        prev0 $ decode-map-as prev Number
                         next $ &+ prev0 $ * 0.01 scale-change
                       &max 0.2 $ &min next 8
                     , Dynamic
@@ -3094,10 +3087,9 @@
       :defs $ {} $ 'update-states
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-states (store cursor data)
-            assoc-in store
-              concat ([] :states)
-                assert-type cursor $ :: 'List 'Dynamic
-                [] :data
+            assoc store :states $ assoc-in
+              option:unwrap-or (get store :states) nil
+              conj cursor :data
               , data
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -3138,18 +3130,19 @@
         'handle-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-event (kind tree event dispatch!)
             when (non-nil? tree)
-              if (element? tree)
-                let
-                    element $ assert-type tree 'phlox.schema/PhloxElement
-                    listener $
-                      get-in (:props element) ([] :on-keyboard kind)
-                      , .unwrap-or nil
-                  when (fn? listener) (listener event dispatch!)
-                  ->
-                    decode-map-as (:children element)
-                      :: 'List $ :: 'List 'Dynamic
-                    .each $ fn (pair)
-                      let[] (k child) pair $ handle-event kind child event dispatch!
+              if (struct? tree)
+                struct-match tree
+                  phlox.schema/PhloxElement element $ let
+                      listener $ option:unwrap-or
+                        get-in (:props element) ([] :on-keyboard kind)
+                        , nil
+                    when (fn? listener) (listener event dispatch!)
+                    ->
+                      decode-map-as (:children element)
+                        :: 'List $ :: 'List 'Dynamic
+                      .each $ fn (pair)
+                        let[] (k child) pair $ handle-event kind child event dispatch!
+                  _ _ $ js/console.log "|unknown tree for handling event:" tree
                 js/console.log "|unknown tree for handling event:" tree
             , &unit
           :examples $ []
@@ -3200,7 +3193,7 @@
             :return $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.keyboard
-          :require $ [] phlox.util :refer $ [] element?
+          :require $ phlox.util :refer $ element?
     'phlox.math $ %{} 'FileEntry
       :defs $ {}
         'angle->radian $ %{} 'CodeEntry (:doc |)
@@ -3210,10 +3203,8 @@
             :args $ [] 'Number
         'bound-x $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn bound-x (x lower higher)
-            unsafe-coerce
-              js/Math.min (either higher js/+Infinity)
-                js/Math.max (either lower js/-Infinity) x
-              , Number
+            js-ffi.contract/expect-number |Math.min $ js/Math.min (either higher js/+Infinity)
+              js/Math.max (either lower js/-Infinity) x
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Dynamic 'Dynamic
@@ -3228,9 +3219,8 @@
           :schema $ :: 'Number
         'vec-length $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn vec-length (point)
-            let[] (x y) point $ unsafe-coerce
-              js/Math.sqrt $ &+ (&* x x) (&* y y)
-              , Number
+            let[] (x y) point $ js-ffi.contract/expect-number |Math.sqrt $ js/Math.sqrt
+              &+ (&* x x) (&* y y)
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] $ :: 'List 'Number
@@ -3254,6 +3244,7 @@
                   option:unwrap $ nth size 0
                 set! (.-height target)
                   option:unwrap $ nth size 1
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -3280,6 +3271,7 @@
                     let[] (ctor options) ft $ phlox.core/ffi-push-array! filters-arr $ new ctor (to-js-data options)
                     js/console.warn "|Unknown filter:" ft
                 set! (.-filters target) filters-arr
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -3323,6 +3315,7 @@
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target) 1
                     phlox.core/ffi-set-y! (phlox.core/ffi-scale target) 1
                 true $ js/console.error "|unknown scale" scale
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -3572,6 +3565,7 @@
           :code $ quote $ defn update-angle (target v v0)
             when (not= v v0)
               set! (.-angle target) v
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -3589,6 +3583,7 @@
                 do
                   set! (.-width target) js/undefined
                   set! (.-height target) js/undefined
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -3731,6 +3726,7 @@
                   m $ read-draw-mode-alias draw-mode
                 if (nil? m) (eprintln "|updating draw-mode to nil")
                 set! (.-drawMode target) m
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -3782,6 +3778,7 @@
                 if (empty? next-filters)
                   set! (.-filters target) nil
                   init-filters target next-filters
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -3790,6 +3787,7 @@
           :code $ quote $ defn update-geometry (target geo geo')
             when (not= geo geo')
               -> target .-geometry $ set! $ init-geometry geo
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -4006,6 +4004,7 @@
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target) 1
                     phlox.core/ffi-set-y! (phlox.core/ffi-scale target) 1
                 true $ js/console.error "|unknown scale:" scale
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -4014,6 +4013,7 @@
           :code $ quote $ defn update-shader (target shader shader' uniforms)
             when (not= shader shader')
               -> target .-shader $ set! $ init-shader shader uniforms
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
@@ -4182,6 +4182,7 @@
           :code $ quote $ defn init-alpha (target alpha)
             when (non-nil? alpha)
               set! (-> target .-alpha) alpha
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -4190,6 +4191,7 @@
           :code $ quote $ defn init-angle (target v)
             when (non-nil? v)
               set! (.-angle target) v
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -4269,6 +4271,7 @@
           :code $ quote $ defn init-rotation (target v)
             when (non-nil? v)
               set! (.-rotation target) v
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -4301,6 +4304,7 @@
           :code $ quote $ defn update-alpha (target alpha alpha0)
             when (not= alpha alpha0)
               set! (-> target .-alpha) alpha
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -4379,6 +4383,7 @@
           :code $ quote $ defn update-rotation (target v v0)
             when (not= v v0)
               set! (.-rotation target) v
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -4407,11 +4412,11 @@
           :schema $ :: 'Ref 'Dynamic
         'camel-case $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn camel-case (x)
-            unsafe-coerce
-              .!replace x (new js/RegExp |-[a-z])
-                fn (x idx full-text)
-                  .!toUpperCase $ option:unwrap-or (get x 1) |
-              , String
+            js-ffi.contract/expect-string |String.replace $ .!replace x (new js/RegExp |-[a-z])
+              fn (matched idx full-text)
+                js-ffi.contract/expect-string |String.toUpperCase $ .!toUpperCase $ option:unwrap-or
+                  nth (js-ffi.contract/expect-string |String.replace-match matched) 1
+                  , |
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'String
@@ -4474,7 +4479,9 @@
         'element? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn element? (x)
             and (struct? x)
-              = (&struct:definition x) schema/PhloxElement
+              match (struct-definition x)
+                (:some definition) (= definition schema/PhloxElement)
+                (:none) false
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] 'Dynamic
