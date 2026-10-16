@@ -514,7 +514,8 @@
                 comp-button $ {} (:text |Tick)
                   :position $ [] 200 -40
                   :on-pointertap $ fn (e d!)
-                    d! cursor $ update state :x inc
+                    d! cursor $ update state :x $ fn (current)
+                      inc $ decode-map-as current 'Number
                 container
                   {} $ :position $ [] 600 400
                   mesh $ {} (:scale 1)
@@ -590,7 +591,7 @@
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
                         conj
-                          assert-type xs $ :: 'List 'Dynamic
+                          decode-map-as xs $ :: 'List 'Dynamic
                           let
                               id $ nanoid
                             {} (:id id)
@@ -601,7 +602,8 @@
                   :title "|At bottom"
                   :position $ [] 200 280
                   :on-change $ fn (e d!)
-                    d! cursor $ update state :bottom? not
+                    d! cursor $ update state :bottom? $ fn (current)
+                      not $ decode-map-as current 'Bool
                 comp-messages $ {}
                   :messages $ option:unwrap-or (get state :messages) nil
                   :bottom? $ option:unwrap-or (get state :bottom?) nil
@@ -609,7 +611,7 @@
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
                         ->
-                          assert-type xs $ :: 'List 'Dynamic
+                          decode-map-as xs $ :: 'List 'Dynamic
                           filter-not $ fn (x)
                             identical?
                               option:unwrap-or (get x :id) nil
@@ -736,6 +738,7 @@
                             :style $ {} $ :color |blue
                           fn (result)
                             d! cursor $ assoc state :text result
+                            , &unit
                   text $ {}
                     :text $ option:unwrap-or (get state :text) nil
                     :position $ [] 6 4
@@ -755,6 +758,7 @@
                             :textarea? true
                           fn (result)
                             d! cursor $ assoc state :long-text result
+                            , &unit
                   text $ {}
                     :text $ option:unwrap-or (get state :long-text) nil
                     :position $ [] 6 4
@@ -823,7 +827,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when
@@ -832,7 +836,7 @@
                 , :states
               js/console.log |dispatch! op
             let
-                op-id $ nanoid
+                op-id $ js-ffi.contract/expect-string |nanoid $ nanoid
                 op-time $ phlox.core/ffi-number $ js/Date.now
               reset! *store $ updater @*store op op-id op-time
               , &unit
@@ -862,6 +866,7 @@
                 when true $ replace-control-loop! 8 on-control-event
                 hud! |ok~ |OK
               hud! |error build-errors
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -894,7 +899,7 @@
               :states $ {}
               :cursor $ []
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.schema
     'phlox.app.updater $ %{} 'FileEntry
@@ -1140,7 +1145,7 @@
             dev-check props lilac-drag-point
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ assert-type
+                state $ decode-map-as
                   either
                     option:unwrap-or (get states :data) nil
                     {} (:dragging? false)
@@ -1255,7 +1260,7 @@
         'comp-messages $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages (options) (dev-check options lilac-messages)
             let
-                messages $ assert-type
+                messages $ decode-map-as
                   option:unwrap-or (get options :messages) ([])
                   :: 'List 'Dynamic
                 bottom? $ option:unwrap-or (get options :bottom?) nil
@@ -1695,21 +1700,23 @@
                   , "|Josefin Sans, sans-serif"
               create-list :container ({})
                 -> tabs $ map-indexed $ fn (idx info)
-                  let[] (tab title) info $ [] idx $ container
-                    {} $ :position $ complex/add position
-                      [] 0 $ * idx step
-                    rect $ {}
-                      :position $ [] 0 0
-                      :size $ [] 100 30
-                      :fill $ if (= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
-                      :on $ {} $ :pointertap
-                        fn (event d!) (on-select tab d!)
-                    text $ {} (:text title)
-                      :style $ {}
-                        :fill $ hslx 200 90 100
-                        :font-size 20
-                        :font-family font-family
-                      :position $ [] 10 2
+                  let[] (tab title)
+                    decode-map-as info $ :: 'List 'Dynamic
+                    [] idx $ container
+                      {} $ :position $ complex/add position
+                        [] 0 $ * idx step
+                      rect $ {}
+                        :position $ [] 0 0
+                        :size $ [] 100 30
+                        :fill $ if (= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
+                        :on $ {} $ :pointertap
+                          fn (event d!) (on-select tab d!)
+                      text $ {} (:text title)
+                        :style $ {}
+                          :fill $ hslx 200 90 100
+                          :font-size 20
+                          :font-family font-family
+                        :position $ [] 10 2
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] (:: 'List 'Dynamic) 'Dynamic 'Dynamic 'Dynamic
@@ -1864,7 +1871,7 @@
               :move $ [] 0 0
               :scale 1
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
         '*tree-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *tree-element nil
           :examples $ []
@@ -2147,16 +2154,14 @@
             :args $ [] 'Dynamic
         'create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-element (tag props children)
-            %{} schema/PhloxElement (:name tag) (:props props)
-              :children $ remove-nil-values $ index-items children
+            schema/PhloxElement :name tag :props props :children $ remove-nil-values $ index-items children
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Tag 'Dynamic $ :: 'List 'Dynamic
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
-            %{} schema/PhloxElement (:name tag) (:props props)
-              :children $ remove-nil-values $ decode-map-as children
-                :: 'List $ :: 'List 'Dynamic
+            schema/PhloxElement :name tag :props props :children $ remove-nil-values $ decode-map-as children
+              :: 'List $ :: 'List 'Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Tag 'Dynamic $ :: 'List 'Dynamic
@@ -2186,18 +2191,16 @@
             :features $ #{} :js-ffi
         'ffi-add-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-child (parent child)
-            do
-              .!addChild (unsafe-coerce parent PixiContainerHost) child
-              , &unit
+            .!addChild (unsafe-coerce parent PixiContainerHost) child
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'ffi-add-event-listener $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-event-listener (target event callback)
-            do
-              .!addEventListener (unsafe-coerce target EventTargetHost) event callback
-              , &unit
+            .!addEventListener (unsafe-coerce target EventTargetHost) event callback
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'String $ :: 'Fn
@@ -2206,9 +2209,8 @@
             :features $ #{} :js-ffi
         'ffi-add-event-listener-options $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-event-listener-options (target event callback options)
-            do
-              .!addEventListener (unsafe-coerce target EventTargetWithOptionsHost) event callback options
-              , &unit
+            .!addEventListener (unsafe-coerce target EventTargetWithOptionsHost) event callback options
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'String
@@ -2227,9 +2229,8 @@
             :features $ #{} :js-ffi
         'ffi-append-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-append-child (parent child)
-            do
-              .!appendChild (unsafe-coerce parent AppendableHost) child
-              , &unit
+            .!appendChild (unsafe-coerce parent AppendableHost) child
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -2265,9 +2266,8 @@
             :features $ #{} :js-ffi
         'ffi-destroy $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-destroy (target)
-            do
-              .!destroy $ unsafe-coerce target DestroyableHost
-              , &unit
+            .!destroy $ unsafe-coerce target DestroyableHost
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic
@@ -2364,9 +2364,8 @@
             :features $ #{} :js-ffi
         'ffi-for-each $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-for-each (items callback)
-            do
-              .!forEach (unsafe-coerce items JsArrayHost) callback
-              , &unit
+            .!forEach (unsafe-coerce items JsArrayHost) callback
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic $ :: 'Fn
@@ -2375,18 +2374,16 @@
             :features $ #{} :js-ffi
         'ffi-geometry-add-attribute! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-geometry-add-attribute! (target id buffer size)
-            do
-              .!addAttribute (unsafe-coerce target PixiGeometryHost) id buffer size
-              , &unit
+            .!addAttribute (unsafe-coerce target PixiGeometryHost) id buffer size
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'ffi-geometry-add-index! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-geometry-add-index! (target index)
-            do
-              .!addIndex (unsafe-coerce target PixiGeometryHost) index
-              , &unit
+            .!addIndex (unsafe-coerce target PixiGeometryHost) index
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -2494,9 +2491,8 @@
             :features $ #{} :js-ffi
         'ffi-render $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-render (renderer stage)
-            do
-              .!render (unsafe-coerce renderer PixiRendererHost) stage
-              , &unit
+            .!render (unsafe-coerce renderer PixiRendererHost) stage
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -2512,9 +2508,8 @@
             :features $ #{} :js-ffi
         'ffi-resize $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-resize (renderer width height)
-            do
-              .!resize (unsafe-coerce renderer PixiRendererHost) width height
-              , &unit
+            .!resize (unsafe-coerce renderer PixiRendererHost) width height
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Number 'Number
@@ -2530,9 +2525,8 @@
             :features $ #{} :js-ffi
         'ffi-set-anchor! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-anchor! (anchor value)
-            do
-              .!set (unsafe-coerce anchor PixiAnchorHost) value
-              , &unit
+            .!set (unsafe-coerce anchor PixiAnchorHost) value
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -2549,9 +2543,8 @@
             :features $ #{} :js-ffi
         'ffi-set-scale! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-scale! (target x y)
-            do
-              .!set (unsafe-coerce target PixiScaleHost) x y
-              , &unit
+            .!set (unsafe-coerce target PixiScaleHost) x y
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Number 'Number
@@ -2603,9 +2596,8 @@
             :features $ #{} :js-ffi
         'ffi-stop $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-stop (target)
-            do
-              .!stop $ unsafe-coerce target PixiTickerHost
-              , &unit
+            .!stop $ unsafe-coerce target PixiTickerHost
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic
@@ -2719,7 +2711,7 @@
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
                   non-nil? @*drag-moving-cache
                 let
-                    prev @*drag-moving-cache
+                    prev $ decode-map-as @*drag-moving-cache $ :: 'List 'Number
                     current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
                     delta $ complex/minus current prev
                   reset! *drag-moving-cache current
@@ -2736,7 +2728,9 @@
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
                   let
                       dy $ * 0.001 $ ffi-event-delta-y event
-                      scale $ option:unwrap-or (get @*stage-config :scale) 1
+                      scale $ decode-map-as
+                        option:unwrap-or (get @*stage-config :scale) 1
+                        , 'Number
                       pointer $ complex/minus
                         [] (ffi-event-client-x event) (ffi-event-client-y event)
                         []
@@ -2781,10 +2775,10 @@
               set! (.-hsluv_h conv) h
               set! (.-hsluv_s conv) c
               set! (.-hsluv_l conv) l
-              do (.!hsluvToRgb conv)
-                js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
-                  new Color $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
-                  , ColorHost
+              .!hsluvToRgb conv
+              js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+                new Color $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
+                , ColorHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number 'Number
@@ -2968,8 +2962,12 @@
         'render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-stage-for-viewer! ()
             let
-                scale $ option:unwrap-or (get @*stage-config :scale) nil
-                move $ option:unwrap-or (get @*stage-config :move) nil
+                scale $ decode-map-as
+                  option:unwrap-or (get @*stage-config :scale) nil
+                  , 'Number
+                move $ decode-map-as
+                  option:unwrap-or (get @*stage-config :move) nil
+                  :: 'List 'Number
               ffi-set-x!
                 ffi-position $ ffi-stage @*app
                 +
@@ -3000,8 +2998,12 @@
         'reset-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reset-stage-config! ()
             let
-                move0 $ option:unwrap-or (get @*stage-config :move) nil
-                scale0 $ option:unwrap-or (get @*stage-config :scale) 1
+                move0 $ decode-map-as
+                  option:unwrap-or (get @*stage-config :move) nil
+                  :: 'List 'Number
+                scale0 $ decode-map-as
+                  option:unwrap-or (get @*stage-config :scale) 1
+                  , 'Number
               when
                 or
                   not= ([] 0 0) move0
@@ -3042,7 +3044,9 @@
         'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
-                scale0 $ option:unwrap-or (get @*stage-config :scale) 1
+                scale0 $ decode-map-as
+                  option:unwrap-or (get @*stage-config :scale) 1
+                  , 'Number
               when
                 and
                   or
@@ -3137,11 +3141,10 @@
                         get-in (:props element) ([] :on-keyboard kind)
                         , nil
                     when (fn? listener) (listener event dispatch!)
-                    ->
-                      decode-map-as (:children element)
+                    &doseq
+                      pair $ decode-map-as (:children element)
                         :: 'List $ :: 'List 'Dynamic
-                      .each $ fn (pair)
-                        let[] (k child) pair $ handle-event kind child event dispatch!
+                      let[] (k child) pair $ handle-event kind child event dispatch!
                   _ _ $ js/console.log "|unknown tree for handling event:" tree
                 js/console.log "|unknown tree for handling event:" tree
             , &unit
@@ -3421,7 +3424,7 @@
                 _ $ do
                   println "|unknown tag:" $ option:unwrap-or (get element :tag) nil
                   {}
-              do $ js/console.error "|Unknown element:" element
+              js/console.error "|Unknown element:" element
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic 'Dynamic
@@ -3634,7 +3637,7 @@
                             first-value $ first-value ys
                           .!removeChildAt parent-container idx
                           recur idx (rest ops) xs $ rest ys
-                        _ $ do $ println "|Unknown op:" op
+                        _ $ println "|Unknown op:" op
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -3749,8 +3752,7 @@
                       :graphics $ update-graphics element old-element target dispatch!
                       :mesh $ update-mesh element old-element target dispatch!
                       :image $ update-image element old-element target dispatch!
-                      _ $ do $ eprintln "|not implement yet for updating:"
-                        option:unwrap-or (get element :name) nil
+                      _ $ eprintln "|not implement yet for updating:" $ option:unwrap-or (get element :name) nil
                   update-children
                     option:unwrap-or (get element :children) nil
                     option:unwrap-or (get old-element :children) nil
@@ -3760,6 +3762,7 @@
                 do (.!removeChildAt parent-element idx)
                   .!addChildAt parent-element (render-element element dispatch!) idx
               true $ js/console.warn "|Unknown case:" element old-element
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Number 'Dynamic $ :: 'Map 'Tag 'Dynamic
@@ -4082,71 +4085,73 @@
           :code $ quote $ defn call-graphics-ops (target ops)
             &doseq (pair ops)
               when (non-nil? pair)
-                let[] (op data) pair $ match op
-                  :move-to $ .!moveTo target
-                    option:unwrap $ first data
-                    option:unwrap $ last data
-                  :line-to $ .!lineTo target
-                    option:unwrap $ first data
-                    option:unwrap $ last data
-                  :line-style $ init-line-style target data
-                  :begin-fill $ .!beginFill target
-                    option:unwrap-or (get data :color) nil
-                    either
-                      option:unwrap-or (get data :alpha) nil
-                      , 1
-                  :end-fill $ .!endFill target
-                  :close-path $ .!closePath target
-                  :arc $ let
-                      center $ option:unwrap-or (get data :center) nil
-                      radian $ cond
-                          non-nil? $ option:unwrap-or (get data :radian) nil
-                          option:unwrap-or (get data :radian) nil
-                        (non-nil? (option:unwrap-or (get data :angle) nil))
-                          map
-                            decode-map-as
-                              option:unwrap-or (get data :angle) ([])
-                              :: 'List 'Number
-                            , angle->radian
-                        true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
-                    .!arc target
-                      option:unwrap $ first center
-                      option:unwrap $ last center
-                      option:unwrap-or (get data :radius) nil
-                      option:unwrap $ first radian
-                      option:unwrap $ last radian
-                      option:unwrap-or (get data :anticlockwise?) nil
-                  :arc-to $ let
-                      p1 $ option:unwrap-or (get data :p1) nil
-                      p2 $ option:unwrap-or (get data :p2) nil
-                    .!arcTo target
-                      option:unwrap $ first p1
-                      option:unwrap $ last p1
-                      option:unwrap $ first p2
-                      option:unwrap $ last p2
-                      option:unwrap-or (get data :radius) nil
-                  :bezier-to $ let
-                      p1 $ option:unwrap-or (get data :p1) nil
-                      p2 $ option:unwrap-or (get data :p2) nil
-                      to-p $ option:unwrap-or (get data :to-p) nil
-                    .!bezierCurveTo target
-                      option:unwrap $ first p1
-                      option:unwrap $ last p1
-                      option:unwrap $ first p2
-                      option:unwrap $ last p2
-                      option:unwrap $ first to-p
-                      option:unwrap $ last to-p
-                  :quadratic-to $ let
-                      p1 $ option:unwrap-or (get data :p1) nil
-                      to-p $ option:unwrap-or (get data :to-p) nil
-                    .!quadraticCurveTo target
-                      option:unwrap $ first p1
-                      option:unwrap $ last p1
-                      option:unwrap $ first to-p
-                      option:unwrap $ last to-p
-                  :begin-hole $ .!beginHole target
-                  :end-hole $ .!endHole target
-                  _ $ js/console.warn "|not supported op:" op data
+                let[] (op data)
+                  decode-map-as pair $ :: 'List 'Dynamic
+                  match op
+                    :move-to $ .!moveTo target
+                      option:unwrap $ first data
+                      option:unwrap $ last data
+                    :line-to $ .!lineTo target
+                      option:unwrap $ first data
+                      option:unwrap $ last data
+                    :line-style $ init-line-style target data
+                    :begin-fill $ .!beginFill target
+                      option:unwrap-or (get data :color) nil
+                      either
+                        option:unwrap-or (get data :alpha) nil
+                        , 1
+                    :end-fill $ .!endFill target
+                    :close-path $ .!closePath target
+                    :arc $ let
+                        center $ option:unwrap-or (get data :center) nil
+                        radian $ cond
+                            non-nil? $ option:unwrap-or (get data :radian) nil
+                            option:unwrap-or (get data :radian) nil
+                          (non-nil? (option:unwrap-or (get data :angle) nil))
+                            map
+                              decode-map-as
+                                option:unwrap-or (get data :angle) ([])
+                                :: 'List 'Number
+                              , angle->radian
+                          true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
+                      .!arc target
+                        option:unwrap $ first center
+                        option:unwrap $ last center
+                        option:unwrap-or (get data :radius) nil
+                        option:unwrap $ first radian
+                        option:unwrap $ last radian
+                        option:unwrap-or (get data :anticlockwise?) nil
+                    :arc-to $ let
+                        p1 $ option:unwrap-or (get data :p1) nil
+                        p2 $ option:unwrap-or (get data :p2) nil
+                      .!arcTo target
+                        option:unwrap $ first p1
+                        option:unwrap $ last p1
+                        option:unwrap $ first p2
+                        option:unwrap $ last p2
+                        option:unwrap-or (get data :radius) nil
+                    :bezier-to $ let
+                        p1 $ option:unwrap-or (get data :p1) nil
+                        p2 $ option:unwrap-or (get data :p2) nil
+                        to-p $ option:unwrap-or (get data :to-p) nil
+                      .!bezierCurveTo target
+                        option:unwrap $ first p1
+                        option:unwrap $ last p1
+                        option:unwrap $ first p2
+                        option:unwrap $ last p2
+                        option:unwrap $ first to-p
+                        option:unwrap $ last to-p
+                    :quadratic-to $ let
+                        p1 $ option:unwrap-or (get data :p1) nil
+                        to-p $ option:unwrap-or (get data :to-p) nil
+                      .!quadraticCurveTo target
+                        option:unwrap $ first p1
+                        option:unwrap $ last p1
+                        option:unwrap $ first to-p
+                        option:unwrap $ last to-p
+                    :begin-hole $ .!beginHole target
+                    :end-hole $ .!endHole target
+                    _ $ js/console.warn "|not supported op:" op data
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic
@@ -4295,7 +4300,7 @@
               :bevel $ .-BEVEL PIXI/LINE_JOIN
               :miter $ .-MITER PIXI/LINE_JOIN
               :round $ .-ROUND PIXI/LINE_JOIN
-              _ $ do $ println "|unknown line-join value:" x
+              _ $ println "|unknown line-join value:" x
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic
@@ -4433,7 +4438,9 @@
             :return $ :: 'List 'Number
         'convert-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn convert-line-style (props)
-            -> props (to-pairs)
+            ->
+              decode-map-as props $ :: 'Map 'Dynamic 'Dynamic
+              to-pairs
               map $ fn (pair)
                 let[] (k v) pair $ let
                     key-name $ camel-case $ cond

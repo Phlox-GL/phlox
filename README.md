@@ -10,7 +10,11 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
 
-同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。保留完整公开定义、附带测试和严格类型门禁。0.7.13 使用稳定版 Calcit/procs 0.29.0，配套已发布的 touch-control 0.0.25、pointed-prompt 0.0.15 和 js-ffi 0.2.1-alpha.16；Pointed Prompt 的正则回调修复已包含在依赖中。
+使用者注意：本轮配对升级到已发布的 Calcit/procs **0.30.1-alpha.4**，不是尚未发布的 0.30.1 稳定版；CLI 与 procs 必须同步。配套正式模块 touch-control 0.0.31、pointed-prompt 0.0.19、js-ffi 0.2.3，不再固定旧 JS-FFI alpha。元素、操作和状态 Map 的外部数据形状、Pixi 7、生产部署路径不变。
+
+宿主标量返回值及开放数据现在通过既有检查器进入 Number/Bool/String/List/Map 合同；不合法的数据将尽早报错，不再靠伪断言或标量强转蒙混通过。仍保留真实异构 props、宿主对象和回调边界，不宣称零 Dynamic/unsafe。Demo 时钟修正为调用 `Date.now()`，而不是把函数对象当作时间；样式的 camel-case 修正为使用字符串索引，仍仅替换第一个匹配项。
+
+同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。CI 保留原 28 个公开 namespace、全定义检查、原有 7 项测试，并增加完整 `fix --workflow strict --verify`；脚本错误必须立即失败。没有新增固定改写规则、验证 runner、baseline 或 COS 探测脚本。开发另运行 `calcit calcit.cirru js -w`；只提交 `calcit.cirru` / `deps.cirru`，不提交 js-out 或临时通知文件。
 
 ### Usage
 
