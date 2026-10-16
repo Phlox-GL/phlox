@@ -16,7 +16,9 @@ COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访�
 
 元素构造函数现在准确返回已有 `phlox.schema/PhloxElement`（包括 create-element/create-list 和各 DSL 构造器），不再把名义类型擦成 Dynamic。消费者可直接在返回 schema 中使用此类型，无需创建 `def ... &unit` 占位类型或对返回值添加断言；元素运行时结构不变。
 
-同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。CI 保留原 28 个公开 namespace、全定义检查、原有 7 项测试，并增加完整 `fix --workflow strict --verify`；脚本错误必须立即失败。没有新增固定改写规则、验证 runner、baseline 或 COS 探测脚本。开发另运行 `calcit calcit.cirru js -w`；只提交 `calcit.cirru` / `deps.cirru`，不提交 js-out 或临时通知文件。
+列表控件的状态游标可以包含数字、字符串和 Tag，key 不会被改名或序列化成其他类型。`>>` 的状态树输入/返回明确为 `Map<Dynamic, Dynamic>`：同一节点包含 Tag 元数据和数字/字符串子分支，不能伪称所有 key 都是 Tag。它仍检查分支是 Map、父游标是 List；非 Map 分支仍报错。Arrow、Spin Slider 与 Demo 的对应 states 参数遵循同一合同，业务 `:data`、store、props 合同不扩大。消费者不应对 `>>` 伪造 Fn 签名；相应状态树参数也须反映真实异构 key，不宣称因此消除了 Dynamic。
+
+同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。CI 保留原 28 个公开 namespace、全定义检查、原有 7 项测试，并运行完整 `fix --workflow strict --verify`；另外两个定义附带测试覆盖数字游标状态写入/读取及字符串 key 与数字兄弟分支共存，脚本错误必须立即失败。没有新增固定改写规则、验证 runner、baseline 或 COS 探测脚本。开发另运行 `calcit calcit.cirru js -w`；只提交 `calcit.cirru` / `deps.cirru`，不提交 js-out 或临时通知文件。
 
 ### Usage
 

@@ -201,7 +201,7 @@
                     :max 10
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point-demo (states)
@@ -258,7 +258,7 @@
                     :max 10
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider-demo (states)
@@ -284,7 +284,7 @@
                     :label |dgemo
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.slider-demo
@@ -312,7 +312,7 @@
                     d! cursor $ assoc (assoc state :from from) :to to
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-buttons $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-buttons ()
@@ -573,7 +573,7 @@
                       d! cursor $ assoc state :zoom value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages-demo (states)
@@ -670,7 +670,7 @@
                       d! cursor $ assoc state :p5 position
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-shadow-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-shadow-demo ()
@@ -1061,7 +1061,7 @@
                     g :line-to $ complex/add to arm-right
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic
+            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.arrow
@@ -1605,7 +1605,7 @@
                       :style $ {} (:fill color) (:font-size 13) (:font-family "|Josefin Sans, sans-serif")
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic
+            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic
             :features $ #{} :js-ffi
         'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-cursor nil
@@ -1884,14 +1884,14 @@
                   let
                       value $ option:unwrap-or (get states k) ({})
                     if (map? value) value $ raise |expected-child-state-map
-                  :: 'Map 'Tag 'Dynamic
+                  :: 'Map 'Dynamic 'Dynamic
               assoc branch :cursor $ conj
                 decode-map-as parent-cursor $ :: 'List 'Dynamic
                 , k
           :examples $ []
           :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Tag
-            :return $ :: 'Map 'Tag 'Dynamic
+            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic
+            :return $ :: 'Map 'Dynamic 'Dynamic
           :tests $ []
             %{} 'TestEntry (:name |missing-branch)
               :code $ quote $ assert= ([] :root :child)
@@ -1917,6 +1917,37 @@
                     {} $ :child 7
                     , :child
                   fn (e) true
+            %{} 'TestEntry (:name |numeric-child-state-roundtrip)
+              :code $ quote $ let
+                  store $ phlox.cursor/update-states
+                    {} $ :states $ {}
+                    [] :demo 0 :drag
+                    {} $ :dragging? true
+                  root $ >>
+                    option:unwrap $ get store :states
+                    , :demo
+                  row $ >> root 0
+                  drag $ >> row :drag
+                assert= ([] :demo 0 :drag)
+                  option:unwrap $ get drag :cursor
+                assert=
+                  {} $ :dragging? true
+                  option:unwrap $ get drag :data
+              :tags $ #{} :unit
+            %{} 'TestEntry (:name |string-child-state-and-numeric-sibling)
+              :code $ quote $ let
+                  states $ {}
+                    :cursor $ [] :demo
+                    |frequency:0 $ {} $ :data 3
+                    0 $ {} $ :data 8
+                  child $ >> states |frequency:0
+                assert= ([] :demo |frequency:0)
+                  option:unwrap $ get child :cursor
+                assert= 3 $ option:unwrap $ get child :data
+                assert=
+                  {} $ :data 8
+                  option:unwrap $ get states 0
+              :tags $ #{} :unit
         'AppendableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait AppendableHost
             .appendChild $ :: 'Fn $ {}
