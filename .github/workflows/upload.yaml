@@ -51,6 +51,7 @@ jobs:
 
     - name: Validate Calcit upgrade
       run: |
+        set -euo pipefail
         calcit edit format
         git diff --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs --format json
@@ -84,6 +85,7 @@ jobs:
           --ns phlox.util.lcs \
           --ns phlox.util.styles \
           --summary-only --format json
+        calcit calcit.cirru fix --workflow strict --verify
         calcit calcit.cirru test --require-match
         calcit calcit.cirru analyze weak-types --only dynamic-method --summary-only --format json
         calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
