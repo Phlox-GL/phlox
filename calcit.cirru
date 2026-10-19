@@ -146,8 +146,7 @@
           :code $ quote $ defn comp-slider-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
                 {} $ :position $ [] 100 100
@@ -207,8 +206,7 @@
           :code $ quote $ defn comp-slider-point-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
                 {} $ :position $ [] 120 100
@@ -264,8 +262,7 @@
           :code $ quote $ defn comp-spin-slider-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} (:v1 10)
                     :pos $ [] 240 240
               container ({})
@@ -297,8 +294,7 @@
           :code $ quote $ defn comp-arrows-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {}
                     :from $ [] 100 100
                     :to $ [] 200 200
@@ -579,8 +575,7 @@
           :code $ quote $ defn comp-messages-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {}
                     :messages $ []
                     :bottom? false
@@ -625,8 +620,7 @@
           :code $ quote $ defn comp-points-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {}
                     :p1 $ [] 0 0
                     :p2 $ [] 0 40
@@ -697,8 +691,7 @@
           :code $ quote $ defn comp-switch-demo (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} $ :value false
               container
                 {} $ :position $ [] 120 300
@@ -721,8 +714,7 @@
           :code $ quote $ defn comp-text-input (states)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} (:text "|initial text") (:long-text |long..)
               container ({})
                 rect
@@ -1014,22 +1006,16 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-arrow (states props) (; dev-check props lilac-arrow)
             let
-                color $ either
-                  option:unwrap-or (get props :color) nil
-                  hslx 0 0 100
+                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
                 from $ decode-map-as
                   option:unwrap-or (get props :from) nil
                   :: 'List 'Number
                 to $ decode-map-as
                   option:unwrap-or (get props :to) nil
                   :: 'List 'Number
-                width $ either
-                  option:unwrap-or (get props :width) nil
-                  , 1
+                width $ option:unwrap-or (get props :width) 1
                 arg-length $ decode-map-as
-                  either
-                    option:unwrap-or (get props :arm-length) nil
-                    , 10
+                  option:unwrap-or (get props :arm-length) 10
                   , Number
                 on-change $ option:unwrap-or (get props :on-change) nil
                 reversed-vec $ complex/minus from to
@@ -1077,26 +1063,16 @@
           :code $ quote $ defn comp-button (props) (dev-check props lilac-button)
             let
                 button-text $ decode-map-as
-                  either
-                    option:unwrap-or (get props :text) nil
-                    , |BUTTON
+                  option:unwrap-or (get props :text) |BUTTON
                   , String
                 size $ decode-map-as
-                  either
-                    option:unwrap-or (get props :font-size) nil
-                    , 14
+                  option:unwrap-or (get props :font-size) 14
                   , Number
                 font-family $ decode-map-as
-                  either
-                    option:unwrap-or (get props :font-family) nil
-                    , "|Josefin Sans, sans-serif"
+                  option:unwrap-or (get props :font-family) "|Josefin Sans, sans-serif"
                   , String
-                fill $ either
-                  option:unwrap-or (get props :fill) nil
-                  hslx 0 0 20
-                color $ either
-                  option:unwrap-or (get props :color) nil
-                  hslx 0 0 100
+                fill $ option:unwrap-or (get props :fill) (hslx 0 0 20)
+                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
                 position $ decode-map-as
                   option:unwrap-or (get props :position) ([] 0 0)
                   :: 'List 'Number
@@ -1146,37 +1122,24 @@
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
                 state $ decode-map-as
-                  either
-                    option:unwrap-or (get states :data) nil
+                  option:unwrap-or (get states :data)
                     {} (:dragging? false)
                       :x0 $ [] 0 0
                   :: 'Map 'Tag 'Dynamic
                 unit $ decode-map-as
-                  either
-                    option:unwrap-or (get props :unit) nil
-                    , 1
+                  option:unwrap-or (get props :unit) 1
                   , Number
                 radius $ decode-map-as
-                  either
-                    option:unwrap-or (get props :radius) nil
-                    , 8
+                  option:unwrap-or (get props :radius) 8
                   , Number
-                color $ either
-                  option:unwrap-or (get props :color) nil
-                  hslx 0 0 100
-                fill $ either
-                  option:unwrap-or (get props :fill) nil
-                  hslx 0 0 60
+                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
+                fill $ option:unwrap-or (get props :fill) (hslx 0 0 60)
                 alpha $ decode-map-as
-                  either
-                    option:unwrap-or (get props :alpha) nil
-                    , 1
+                  option:unwrap-or (get props :alpha) 1
                   , Number
                 on-change $ option:unwrap-or (get props :on-change)
                   fn (pos d!) nil
-                hide-text? $ either
-                  option:unwrap-or (get props :hide-text?) nil
-                  , false
+                hide-text? $ option:unwrap-or (get props :hide-text?) false
               let
                   position $ option:unwrap-or (get props :position) nil
                 container
@@ -1264,8 +1227,7 @@
                   option:unwrap-or (get options :messages) ([])
                   :: 'List 'Dynamic
                 bottom? $ option:unwrap-or (get options :bottom?) nil
-                base-position $ either
-                  option:unwrap-or (get options :position) nil
+                base-position $ option:unwrap-or (get options :position)
                   if bottom?
                     []
                       -
@@ -1279,8 +1241,7 @@
                         * 0.5 $ phlox.core/ffi-number js/window.innerWidth
                         , 16
                       - 16 $ * 0.5 $ phlox.core/ffi-number js/window.innerWidth
-                on-pointertap $ either
-                  option:unwrap-or (get options :on-pointertap) nil
+                on-pointertap $ option:unwrap-or (get options :on-pointertap)
                   fn (x d!) (println "|missing message handler:" x)
               create-list :container
                 {} $ :position base-position
@@ -1333,26 +1294,17 @@
             dev-check props lilac-slider
             let
                 value $ decode-map-as
-                  either
-                    option:unwrap-or (get props :value) nil
-                    , 1
+                  option:unwrap-or (get props :value) 1
                   , Number
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} (:v0 value) (:x0 0) (:dragging? false)
                 title $ option:unwrap-or (get props :title) nil
                 unit $ decode-map-as
-                  either
-                    option:unwrap-or (get props :unit) nil
-                    , 0.1
+                  option:unwrap-or (get props :unit) 0.1
                   , Number
-                fill $ either
-                  option:unwrap-or (get props :fill) nil
-                  hslx 0 0 30
-                color $ either
-                  option:unwrap-or (get props :color) nil
-                  hslx 0 0 100
+                fill $ option:unwrap-or (get props :fill) (hslx 0 0 30)
+                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
                 on-change $ option:unwrap-or (get props :on-change) nil
                 rounded? $ option:unwrap-or (get props :round?) nil
               container
@@ -1419,25 +1371,16 @@
             dev-check props lilac-slider-point
             let
                 value $ decode-map-as
-                  either
-                    option:unwrap-or (get props :value) nil
-                    , 1
+                  option:unwrap-or (get props :value) 1
                   , Number
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} (:v0 value) (:x0 0) (:dragging? false)
                 unit $ decode-map-as
-                  either
-                    option:unwrap-or (get props :unit) nil
-                    , 0.1
+                  option:unwrap-or (get props :unit) 0.1
                   , Number
-                fill $ either
-                  option:unwrap-or (get props :fill) nil
-                  hslx 0 0 30
-                color $ either
-                  option:unwrap-or (get props :color) nil
-                  hslx 0 0 100
+                fill $ option:unwrap-or (get props :fill) (hslx 0 0 30)
+                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
                 on-change $ option:unwrap-or (get props :on-change) nil
                 rounded? $ option:unwrap-or (get props :round?) nil
               container
@@ -1490,36 +1433,21 @@
           :code $ quote $ defn comp-spin-slider (states props)
             let
                 cursor $ option:unwrap-or (get states :cursor) nil
-                state $ either
-                  option:unwrap-or (get states :data) nil
+                state $ option:unwrap-or (get states :data)
                   {} $ :dragging? false
                 unit $ decode-map-as
-                  either
-                    option:unwrap-or (get props :unit) nil
-                    , 1
+                  option:unwrap-or (get props :unit) 1
                   , Number
                 radius $ decode-map-as
-                  either
-                    option:unwrap-or (get props :radius) nil
-                    , 44
+                  option:unwrap-or (get props :radius) 44
                   , Number
-                color $ either
-                  option:unwrap-or (get props :color) nil
-                  hslx 0 0 100
-                fill $ either
-                  option:unwrap-or (get props :fill) nil
-                  hslx 0 0 0
-                font-size $ either
-                  option:unwrap-or (get props :font-size) nil
-                  &* radius 0.44
-                alpha $ either
-                  option:unwrap-or (get props :alpha) nil
-                  , 1
+                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
+                fill $ option:unwrap-or (get props :fill) (hslx 0 0 0)
+                font-size $ option:unwrap-or (get props :font-size) (&* radius 0.44)
+                alpha $ option:unwrap-or (get props :alpha) 1
                 on-change $ option:unwrap-or (get props :on-change) nil
                 position $ decode-map-as
-                  either
-                    option:unwrap-or (get props :position) nil
-                    [] 0 0
+                  option:unwrap-or (get props :position) ([] 0 0)
                   :: 'List 'Number
                 on-move $ option:unwrap-or (get props :on-move)
                   fn (pos d!) nil
@@ -1583,9 +1511,7 @@
                   :text $ str $ let
                       v $ option:unwrap-or (get props :value) nil
                     if (number? v)
-                      .!toFixed v $ either
-                        option:unwrap-or (get props :fraction) nil
-                        , 1
+                      .!toFixed v $ option:unwrap-or (get props :fraction) 1
                       , |-
                   :position $ complex/add position $ [] 0 -10
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "|Source code pro, Menlo, Roboto Mono, monospace")
@@ -1636,9 +1562,7 @@
                 value $ option:unwrap-or (get props :value) nil
                 on-change $ option:unwrap-or (get props :on-change) nil
               container
-                {} $ :position $ either
-                  option:unwrap-or (get props :position) nil
-                  [] 0 0
+                {} $ :position $ option:unwrap-or (get props :position) ([] 0 0)
                 rect $ {}
                   :size $ [] 56 20
                   :fill $ if value (hslx 0 0 92) (hslx 0 0 50)
@@ -1658,9 +1582,7 @@
                     :font-weight 500
                   :alpha $ if value 1 0.4
                 text $ {}
-                  :text $ either
-                    option:unwrap-or (get props :title) nil
-                    , |Switch
+                  :text $ option:unwrap-or (get props :title) |Switch
                   :position $ [] 0 -20
                   :style $ {}
                     :fill $ hslx 0 0 80
@@ -2834,15 +2756,9 @@
                 pixi-app $ new PIXI/Application $ js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2)
                   :width $ ffi-window-width
                   :height $ ffi-window-height
-                  :backgroundColor $ either
-                    option:unwrap-or (get options :background-color) nil
-                    hslx 0 0 0
-                  :interactive $ either
-                    option:unwrap-or (get options :interactive) nil
-                    , true
-                  :backgroundAlpha $ either
-                    option:unwrap-or (get options :background-alpha) nil
-                    , 1
+                  :backgroundColor $ option:unwrap-or (get options :background-color) (hslx 0 0 0)
+                  :interactive $ option:unwrap-or (get options :interactive) true
+                  :backgroundAlpha $ option:unwrap-or (get options :background-alpha) 1
               ffi-stop $ ffi-ticker pixi-app
               -> PIXI/Ticker .-shared $ ffi-stop
               -> PIXI/Ticker .-system $ ffi-stop
@@ -4128,9 +4044,7 @@
                     :line-style $ init-line-style target data
                     :begin-fill $ .!beginFill target
                       option:unwrap-or (get data :color) nil
-                      either
-                        option:unwrap-or (get data :alpha) nil
-                        , 1
+                      option:unwrap-or (get data :alpha) 1
                     :end-fill $ .!endFill target
                     :close-path $ .!closePath target
                     :arc $ let
@@ -4257,9 +4171,7 @@
               .!lineStyle target $ js-object
                 :width $ use-number $ option:unwrap-or (get line-style :width) nil
                 :color $ use-number $ option:unwrap-or (get line-style :color) nil
-                :alpha $ either
-                  option:unwrap-or (get line-style :alpha) nil
-                  , 1
+                :alpha $ option:unwrap-or (get line-style :alpha) 1
                 :join $ read-line-join $ option:unwrap-or (get line-style :join) nil
                 :cap $ read-line-cap $ option:unwrap-or (get line-style :cap) nil
             , &unit
