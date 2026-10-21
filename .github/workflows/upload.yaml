@@ -55,37 +55,8 @@ jobs:
         calcit edit format
         git diff --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs --format json
-        calcit calcit.cirru --check-only \
-          --ns phlox.app.comp.drafts \
-          --ns phlox.app.comp.keyboard \
-          --ns phlox.app.comp.slider-demo \
-          --ns phlox.app.container \
-          --ns phlox.app.main \
-          --ns phlox.app.schema \
-          --ns phlox.app.updater \
-          --ns phlox.check \
-          --ns phlox.comp.arrow \
-          --ns phlox.comp.button \
-          --ns phlox.comp.drag-point \
-          --ns phlox.comp.messages \
-          --ns phlox.comp.slider \
-          --ns phlox.comp.switch \
-          --ns phlox.comp.tabs \
-          --ns phlox.complex \
-          --ns phlox.config \
-          --ns phlox.core \
-          --ns phlox.cursor \
-          --ns phlox.input \
-          --ns phlox.keyboard \
-          --ns phlox.math \
-          --ns phlox.render \
-          --ns phlox.render.draw \
-          --ns phlox.schema \
-          --ns phlox.util \
-          --ns phlox.util.lcs \
-          --ns phlox.util.styles \
-          --summary-only --format json
-        calcit calcit.cirru fix --workflow strict --verify
+        calcit calcit.cirru fix --workflow strict --verify --format json > /tmp/phlox-strict.json
+        jq -e '.data.workflow.status == "passed" and (.diagnostics | length == 0)' /tmp/phlox-strict.json
         calcit calcit.cirru test --require-match
         calcit calcit.cirru analyze weak-types --only dynamic-method --summary-only --format json
         calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
