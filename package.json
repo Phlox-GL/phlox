@@ -10,7 +10,7 @@
   "dependencies": {
     "@calcit/procs": "0.30.1-alpha.4",
     "@quamolit/phlox-utils": "^0.0.2",
-    "@triadica/touch-control": "^0.0.4-a1",
+    "@quamolit/touch-control": "0.0.13",
     "fontfaceobserver-es": "^3.3.3",
     "hsluv": "^1.0.1",
     "mobile-detect": "^1.4.5",

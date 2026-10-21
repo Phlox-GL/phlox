@@ -507,6 +507,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@quamolit/touch-control@npm:0.0.13":
+  version: 0.0.13
+  resolution: "@quamolit/touch-control@npm:0.0.13"
+  checksum: 10c0/3145a0462cf41e4857c6a5f30f3b6c12221f19c55511fc38e485bb4e2edd444a3a1cfedc693733ed86b22a2f2cce9d952bb13e3e3ce589a9e259a14bd7b500cd
+  languageName: node
+  linkType: hard
+
 "@rolldown/binding-android-arm-eabi@npm:1.2.11":
   version: 1.2.11
   resolution: "@rolldown/binding-android-arm-eabi@npm:1.2.11"
@@ -616,13 +623,6 @@ __metadata:
   version: 1.0.1
   resolution: "@rolldown/pluginutils@npm:1.0.1"
   checksum: 10c0/99d9b06d90196823e4d8c841f258db7a16e5dbba5824a2962b05d907b79f1ba929d56f22dd744fd530936e568c865ee56a719dc31e57e13bc0a8eb4764a8d8dd
-  languageName: node
-  linkType: hard
-
-"@triadica/touch-control@npm:^0.0.4-a1":
-  version: 0.0.4-a1
-  resolution: "@triadica/touch-control@npm:0.0.4-a1"
-  checksum: 10c0/d22b97514ef0d2484d9cc5122e262c5b09880efaaf20f73d85eebc5a4fbafc9f2328a6819d34a6ebed7ff47bd22f6888d1d6a865625f725418ec62f9d4e46f9a
   languageName: node
   linkType: hard
 
@@ -1570,7 +1570,7 @@ __metadata:
     "@calcit/procs": "npm:0.30.1-alpha.4"
     "@pixi/filter-drop-shadow": "npm:^5.2.0"
     "@quamolit/phlox-utils": "npm:^0.0.2"
-    "@triadica/touch-control": "npm:^0.0.4-a1"
+    "@quamolit/touch-control": "npm:0.0.13"
     bottom-tip: "npm:^0.1.5"
     fontfaceobserver-es: "npm:^3.3.3"
     hsluv: "npm:^1.0.1"
