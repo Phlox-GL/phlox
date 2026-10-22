@@ -1590,7 +1590,7 @@
                     :font-family "|Arial, sans-serif"
                   :alpha 1
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'lilac-switch $ %{} 'CodeEntry (:doc |)

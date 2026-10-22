@@ -1,5 +1,10 @@
 
-@import url(@triadica/touch-control/assets/touch-control.css);
+@import url(@quamolit/touch-control/style/touch-control.css);
+
+.touch-control {
+  user-select: none;
+  -webkit-user-select: none;
+}
 
 body {
   margin: 0;

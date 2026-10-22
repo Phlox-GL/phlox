@@ -10,15 +10,19 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
 
-使用者注意：本轮配对升级到已发布的 Calcit/procs **0.30.1-alpha.4**，不是尚未发布的 0.30.1 稳定版；CLI 与 procs 必须同步。配套正式模块 touch-control 0.0.31、pointed-prompt 0.0.19、js-ffi 0.2.3，不再固定旧 JS-FFI alpha。元素、操作和状态 Map 的外部数据形状、Pixi 7、生产部署路径不变。
+使用者注意：候选 0.7.16 配对正式 Calcit/procs **0.30.1**、touch-control 0.0.32、pointed-prompt 0.0.20、js-ffi 0.2.5。严格消费者需同步整张依赖图、重新生成 JS 并刷新，不混装旧 alpha。0.7.16 正式 tag 发布前，不应引用本分支或 main/hash。元素、操作和状态 Map 的外部数据形状、Pixi 7、生产部署路径不变；npm 显式提供与既有 pixi.js 7.4.0 一致的 @pixi/core，补齐 drop-shadow 原先缺失的 peer，不升级 Pixi 大版本。
+
+当前 main 已合并 #75；官方 program-diff 显示相对已发布 0.7.15 有 19 个定义的表达式变化。部分可选参数现在只对缺失键使用默认值，显式 nil 不再先回落为默认值。后续发版需说明并验收这一语义差别，不能宣称所有默认值行为不变；本分支的返回类型补准不改动这些表达式。
 
 宿主标量返回值及开放数据现在通过既有检查器进入 Number/Bool/String/List/Map 合同；不合法的数据将尽早报错，不再靠伪断言或标量强转蒙混通过。仍保留真实异构 props、宿主对象和回调边界，不宣称零 Dynamic/unsafe。Demo 时钟修正为调用 `Date.now()`，而不是把函数对象当作时间；样式的 camel-case 修正为使用字符串索引，仍仅替换第一个匹配项。
 
 元素构造函数现在准确返回已有 `phlox.schema/PhloxElement`（包括 create-element/create-list 和各 DSL 构造器），不再把名义类型擦成 Dynamic。消费者可直接在返回 schema 中使用此类型，无需创建 `def ... &unit` 占位类型或对返回值添加断言；元素运行时结构不变。
 
+`phlox.comp.switch/comp-switch` 的返回 schema 同样明确为已有 `phlox.schema/PhloxElement`；输入合同、默认值和控件行为不变，不为此添加强转。npm 触控依赖只提供 CSS，改用正式 `@quamolit/touch-control` 0.0.13；它与 Calcit 模块版本独立。已逐行比较旧 alpha 样式，唯一缺少的两条 `user-select` 禁止选择规则保留在本项目 CSS 中，不改变原触控选择行为。
+
 列表控件的状态游标可以包含数字、字符串和 Tag，key 不会被改名或序列化成其他类型。`>>` 的状态树输入/返回明确为 `Map<Dynamic, Dynamic>`：同一节点包含 Tag 元数据和数字/字符串子分支，不能伪称所有 key 都是 Tag。它仍检查分支是 Map、父游标是 List；非 Map 分支仍报错。Arrow、Spin Slider 与 Demo 的对应 states 参数遵循同一合同，业务 `:data`、store、props 合同不扩大。消费者不应对 `>>` 伪造 Fn 签名；相应状态树参数也须反映真实异构 key，不宣称因此消除了 Dynamic。
 
-同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。CI 保留原 28 个公开 namespace、全定义检查、原有 7 项测试，并运行完整 `fix --workflow strict --verify`；另外两个定义附带测试覆盖数字游标状态写入/读取及字符串 key 与数字兄弟分支共存，脚本错误必须立即失败。没有新增固定改写规则、验证 runner、baseline 或 COS 探测脚本。开发另运行 `calcit calcit.cirru js -w`；只提交 `calcit.cirru` / `deps.cirru`，不提交 js-out 或临时通知文件。
+同一 PR/生产分支排队，不取消进行中的上传；job/upload 分别限时 15/10 分钟。CI 保留全定义检查，覆盖原 28 个公开 namespace，不再重复维护手写列表；完整 strict 明确要求 passed 且 diagnostics 为空。原有 9 项测试全部保留，包括数字游标状态写入/读取及字符串 key 与数字兄弟分支共存，脚本错误必须立即失败。没有新增固定改写规则、验证 runner、baseline 或 COS 探测脚本。开发另运行 `calcit calcit.cirru js -w`；只提交 `calcit.cirru` / `deps.cirru`，不提交 js-out 或临时通知文件。正式 CLI 验收由 Linux CI 完成，旧 alpha.4 本地基线不替代正式依赖图验证，也不代表所有平台已有正式 CLI 资产。
 
 ### Usage
 
