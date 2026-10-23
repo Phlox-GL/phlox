@@ -145,21 +145,21 @@
         'comp-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
                 {} $ :position $ [] 100 100
                 comp-slider (>> states :a)
                   {}
-                    :value $ option:unwrap-or (get state :a) nil
+                    :value $ .unwrap-or (get state :a) nil
                     :unit 1
                     :position $ [] 20 0
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :a value
                 comp-slider (>> states :b)
                   {}
-                    :value $ option:unwrap-or (get state :b) nil
+                    :value $ .unwrap-or (get state :b) nil
                     :title |Refine
                     :unit 0.1
                     :position $ [] 20 60
@@ -167,7 +167,7 @@
                       d! cursor $ assoc state :b value
                 comp-slider (>> states :c)
                   {}
-                    :value $ option:unwrap-or (get state :c) nil
+                    :value $ .unwrap-or (get state :c) nil
                     :unit 10
                     :position $ [] 20 120
                     :fill $ hslx 50 90 70
@@ -176,7 +176,7 @@
                       d! cursor $ assoc state :c value
                 comp-slider (>> states :d)
                   {}
-                    :value $ option:unwrap-or (get state :d) nil
+                    :value $ .unwrap-or (get state :d) nil
                     :position $ [] 20 180
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :d value
@@ -184,7 +184,7 @@
                     :round? true
                 comp-slider (>> states :e)
                   {}
-                    :value $ option:unwrap-or (get state :e) nil
+                    :value $ .unwrap-or (get state :e) nil
                     :position $ [] 20 240
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :e value
@@ -192,7 +192,7 @@
                     :min 10
                 comp-slider (>> states :f)
                   {}
-                    :value $ option:unwrap-or (get state :f) nil
+                    :value $ .unwrap-or (get state :f) nil
                     :position $ [] 20 300
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :f value
@@ -205,28 +205,28 @@
         'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
                 {} $ :position $ [] 120 100
                 comp-slider-point (>> states :a)
                   {}
-                    :value $ option:unwrap-or (get state :a) nil
+                    :value $ .unwrap-or (get state :a) nil
                     :unit 1
                     :position $ [] 20 0
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :a value
                 comp-slider-point (>> states :b)
                   {}
-                    :value $ option:unwrap-or (get state :b) nil
+                    :value $ .unwrap-or (get state :b) nil
                     :unit 0.1
                     :position $ [] 20 60
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :b value
                 comp-slider-point (>> states :c)
                   {}
-                    :value $ option:unwrap-or (get state :c) nil
+                    :value $ .unwrap-or (get state :c) nil
                     :unit 10
                     :position $ [] 20 120
                     :fill $ hslx 50 90 70
@@ -235,21 +235,21 @@
                       d! cursor $ assoc state :c value
                 comp-slider-point (>> states :d)
                   {}
-                    :value $ option:unwrap-or (get state :d) nil
+                    :value $ .unwrap-or (get state :d) nil
                     :position $ [] 20 180
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :d value
                     :round? true
                 comp-slider-point (>> states :e)
                   {}
-                    :value $ option:unwrap-or (get state :e) nil
+                    :value $ .unwrap-or (get state :e) nil
                     :position $ [] 20 240
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :e value
                     :min 10
                 comp-slider-point (>> states :f)
                   {}
-                    :value $ option:unwrap-or (get state :f) nil
+                    :value $ .unwrap-or (get state :f) nil
                     :position $ [] 20 300
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :f value
@@ -261,15 +261,15 @@
         'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} (:v1 10)
                     :pos $ [] 240 240
               container ({})
                 comp-spin-slider (>> states :demo)
                   {}
-                    :position $ option:unwrap-or (get state :pos) nil
-                    :value $ option:unwrap-or (get state :v1) nil
+                    :position $ .unwrap-or (get state :pos) nil
+                    :value $ .unwrap-or (get state :v1) nil
                     :unit 1
                     :min 1
                     ; :fill $ hslx 50 90 44
@@ -293,15 +293,15 @@
         'comp-arrows-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-arrows-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {}
                     :from $ [] 100 100
                     :to $ [] 200 200
               comp-arrow (>> states :demo1)
                 {}
-                  :from $ option:unwrap-or (get state :from) nil
-                  :to $ option:unwrap-or (get state :to) nil
+                  :from $ .unwrap-or (get state :from) nil
+                  :to $ .unwrap-or (get state :to) nil
                   :width 2
                   :arm-length 8
                   :on-change $ fn (from to d!)
@@ -331,31 +331,31 @@
             :features $ #{} :js-ffi
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
-            ; println |Store store $ option:unwrap-or (get store :tab) nil
+            ; println |Store store $ .unwrap-or (get store :tab) nil
             let
                 cursor $ []
                 states $ decode-map-as
-                  option:unwrap-or (get store :states) nil
+                  .unwrap-or (get store :states) nil
                   :: 'Map 'Tag 'Dynamic
               group
                 {} $ :position $ [] 0 0
                 comp-tabs tabs
-                  option:unwrap-or (get store :tab) nil
+                  .unwrap-or (get store :tab) nil
                   {} $ :position $ [] 10 10
                   fn (t d!) (d! :tab t)
                 match
-                  option:unwrap-or (get store :tab) nil
+                  .unwrap-or (get store :tab) nil
                   :drafts $ comp-drafts $ decode-map-as
-                    option:unwrap-or (get store :x) nil
+                    .unwrap-or (get store :x) nil
                     , Number
                   :grids $ comp-grids
                   :curves $ comp-curves
                   :gradients $ comp-gradients
                   :keyboard $ comp-keyboard
                     decode-map-as
-                      option:unwrap-or (get store :keyboard-on?) nil
+                      .unwrap-or (get store :keyboard-on?) nil
                       , Bool
-                    option:unwrap-or (get store :counted) nil
+                    .unwrap-or (get store :counted) nil
                   :buttons $ comp-buttons
                   :slider $ comp-slider-demo $ >> states :slider
                   :points $ comp-points-demo $ >> states :points
@@ -499,9 +499,9 @@
         'comp-mesh-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-mesh-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
+                cursor $ .unwrap-or (get states :cursor) nil
                 state $ or
-                  option:unwrap-or (get states :data) nil
+                  .unwrap-or (get states :data) nil
                   {} (:x 0)
                     :base $ [] 109 129
                     :offset $ [] -123 -3
@@ -529,27 +529,27 @@
                     :draw-mode :triangles
                     :uniforms $ let
                         base $ decode-map-as
-                          option:unwrap $ get state :base
+                          .unwrap $ get state :base
                           :: 'List 'Number
                         offset $ decode-map-as
-                          option:unwrap-or (get state :offset) ([] 0 0)
+                          .unwrap-or (get state :offset) ([] 0 0)
                           :: 'List 'Number
                       js-object (:uSampler2 sample-texture)
                         :time $ decode-map-as
-                          option:unwrap $ get state :x
+                          .unwrap $ get state :x
                           , Number
-                        :baseX $ option:unwrap $ first base
-                        :baseY $ option:unwrap $ last base
+                        :baseX $ .unwrap $ first base
+                        :baseY $ .unwrap $ last base
                         :zoom $ decode-map-as
-                          option:unwrap $ get state :zoom
+                          .unwrap $ get state :zoom
                           , Number
-                        :offsetX $ option:unwrap-or (first offset) 0
-                        :offsetY $ option:unwrap-or (last offset) 0
+                        :offsetX $ .unwrap-or (first offset) 0
+                        :offsetY $ .unwrap-or (last offset) 0
                     ; :on $ {} $ :pointertap
                       fn (e d!) (println |clicked)
                   comp-drag-point (>> states :base)
                     {} (:radius 6) (:hide-text? true)
-                      :position $ option:unwrap-or (get state :base) nil
+                      :position $ .unwrap-or (get state :base) nil
                       :fill $ hslx 200 100 50
                       :on-change $ fn (position d!)
                         d! cursor $ assoc state :base position
@@ -557,12 +557,12 @@
                     {} (:radius 6)
                       :fill $ hslx 0 100 50
                       :hide-text? true
-                      :position $ option:unwrap-or (get state :offset) nil
+                      :position $ .unwrap-or (get state :offset) nil
                       :on-change $ fn (position d!)
                         d! cursor $ assoc state :offset position
                 comp-slider-point (>> states :zoom)
                   {}
-                    :value $ option:unwrap-or (get state :zoom) nil
+                    :value $ .unwrap-or (get state :zoom) nil
                     :min 0.01
                     :position $ [] 300 -40
                     :on-change $ fn (value d!)
@@ -574,8 +574,8 @@
         'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {}
                     :messages $ []
                     :bottom? false
@@ -593,15 +593,15 @@
                               :text $ str "|Messages of " id
                         , Dynamic
                 comp-switch $ {}
-                  :value $ option:unwrap-or (get state :bottom?) nil
+                  :value $ .unwrap-or (get state :bottom?) nil
                   :title "|At bottom"
                   :position $ [] 200 280
                   :on-change $ fn (e d!)
                     d! cursor $ update state :bottom? $ fn (current)
                       not $ decode-map-as current 'Bool
                 comp-messages $ {}
-                  :messages $ option:unwrap-or (get state :messages) nil
-                  :bottom? $ option:unwrap-or (get state :bottom?) nil
+                  :messages $ .unwrap-or (get state :messages) nil
+                  :bottom? $ .unwrap-or (get state :bottom?) nil
                   :on-pointertap $ fn (message d!)
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
@@ -609,8 +609,8 @@
                           decode-map-as xs $ :: 'List 'Dynamic
                           filter-not $ fn (x)
                             identical?
-                              option:unwrap-or (get x :id) nil
-                              option:unwrap-or (get message :id) nil
+                              .unwrap-or (get x :id) nil
+                              .unwrap-or (get message :id) nil
                         , Dynamic
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
@@ -619,8 +619,8 @@
         'comp-points-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-points-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {}
                     :p1 $ [] 0 0
                     :p2 $ [] 0 40
@@ -631,18 +631,18 @@
                 {} $ :position $ [] 160 100
                 comp-drag-point (>> states :p1)
                   {}
-                    :position $ option:unwrap-or (get state :p1) nil
+                    :position $ .unwrap-or (get state :p1) nil
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p1 position
                 comp-drag-point (>> states :p2)
                   {}
-                    :position $ option:unwrap-or (get state :p2) nil
+                    :position $ .unwrap-or (get state :p2) nil
                     :unit 2
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p2 position
                 comp-drag-point (>> states :p3)
                   {}
-                    :position $ option:unwrap-or (get state :p3) nil
+                    :position $ .unwrap-or (get state :p3) nil
                     :unit 0.4
                     :radius 10
                     :fill $ hslx 0 90 60
@@ -651,14 +651,14 @@
                       d! cursor $ assoc state :p3 position
                 comp-drag-point (>> states :p4)
                   {}
-                    :position $ option:unwrap-or (get state :p4) nil
+                    :position $ .unwrap-or (get state :p4) nil
                     :title |base
                     :alpha 0.6
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p4 position
                 comp-drag-point (>> states :p5)
                   {}
-                    :position $ option:unwrap-or (get state :p5) nil
+                    :position $ .unwrap-or (get state :p5) nil
                     :hide-text? true
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p5 position
@@ -690,18 +690,18 @@
         'comp-switch-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch-demo (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} $ :value false
               container
                 {} $ :position $ [] 120 300
                 comp-switch $ {}
-                  :value $ option:unwrap-or (get state :value) nil
+                  :value $ .unwrap-or (get state :value) nil
                   :position $ [] 0 0
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
                 comp-switch $ {}
-                  :value $ option:unwrap-or (get state :value) nil
+                  :value $ .unwrap-or (get state :value) nil
                   :position $ [] 100 20
                   :title "|Custom title"
                   :on-change $ fn (value d!)
@@ -713,8 +713,8 @@
         'comp-text-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-text-input (states)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} (:text "|initial text") (:long-text |long..)
               container ({})
                 rect
@@ -726,13 +726,13 @@
                       fn (e d!)
                         request-text! e
                           {}
-                            :initial $ option:unwrap-or (get state :text) nil
+                            :initial $ .unwrap-or (get state :text) nil
                             :style $ {} $ :color |blue
                           fn (result)
                             d! cursor $ assoc state :text result
                             , &unit
                   text $ {}
-                    :text $ option:unwrap-or (get state :text) nil
+                    :text $ .unwrap-or (get state :text) nil
                     :position $ [] 6 4
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
@@ -745,14 +745,14 @@
                       fn (e d!)
                         request-text! e
                           {}
-                            :initial $ option:unwrap-or (get state :long-text) nil
+                            :initial $ .unwrap-or (get state :long-text) nil
                             :style $ {} $ :font-family font-code
                             :textarea? true
                           fn (result)
                             d! cursor $ assoc state :long-text result
                             , &unit
                   text $ {}
-                    :text $ option:unwrap-or (get state :long-text) nil
+                    :text $ .unwrap-or (get state :long-text) nil
                     :position $ [] 6 4
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
@@ -824,7 +824,7 @@
           :code $ quote $ defn dispatch! (op)
             when
               and dev? $ not=
-                option:unwrap-or (nth op 0) :unknown
+                .unwrap-or (nth op 0) :unknown
                 , :states
               js/console.log |dispatch! op
             let
@@ -1006,18 +1006,18 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-arrow (states props) (; dev-check props lilac-arrow)
             let
-                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
+                color $ .unwrap-or (get props :color) (hslx 0 0 100)
                 from $ decode-map-as
-                  option:unwrap-or (get props :from) nil
+                  .unwrap-or (get props :from) nil
                   :: 'List 'Number
                 to $ decode-map-as
-                  option:unwrap-or (get props :to) nil
+                  .unwrap-or (get props :to) nil
                   :: 'List 'Number
-                width $ option:unwrap-or (get props :width) 1
+                width $ .unwrap-or (get props :width) 1
                 arg-length $ decode-map-as
-                  option:unwrap-or (get props :arm-length) 10
+                  .unwrap-or (get props :arm-length) 10
                   , Number
-                on-change $ option:unwrap-or (get props :on-change) nil
+                on-change $ .unwrap-or (get props :on-change) nil
                 reversed-vec $ complex/minus from to
                 reversed-unit $ complex/divide-by reversed-vec $ vec-length reversed-vec
                 arm-left $ complex/times reversed-unit $ [] arg-length (negate arg-length)
@@ -1063,36 +1063,36 @@
           :code $ quote $ defn comp-button (props) (dev-check props lilac-button)
             let
                 button-text $ decode-map-as
-                  option:unwrap-or (get props :text) |BUTTON
+                  .unwrap-or (get props :text) |BUTTON
                   , String
                 size $ decode-map-as
-                  option:unwrap-or (get props :font-size) 14
+                  .unwrap-or (get props :font-size) 14
                   , Number
                 font-family $ decode-map-as
-                  option:unwrap-or (get props :font-family) "|Josefin Sans, sans-serif"
+                  .unwrap-or (get props :font-family) "|Josefin Sans, sans-serif"
                   , String
-                fill $ option:unwrap-or (get props :fill) (hslx 0 0 20)
-                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
+                fill $ .unwrap-or (get props :fill) (hslx 0 0 20)
+                color $ .unwrap-or (get props :color) (hslx 0 0 100)
                 position $ decode-map-as
-                  option:unwrap-or (get props :position) ([] 0 0)
+                  .unwrap-or (get props :position) ([] 0 0)
                   :: 'List 'Number
                 width $ + 16 $ measure-text-width! button-text size font-family
-                align-right? $ option:unwrap-or (get props :align-right?) nil
+                align-right? $ .unwrap-or (get props :align-right?) nil
               container
                 {} $ :position $ if align-right?
                   []
                     -
-                      option:unwrap-or (first position) 0
+                      .unwrap-or (first position) 0
                       , width
-                    option:unwrap $ last position
+                    .unwrap $ last position
                   , position
                 rect $ {} (:fill fill)
                   :size $ [] width 32
                   :on $ cond
-                      non-nil? $ option:unwrap-or (get props :on) nil
-                      option:unwrap-or (get props :on) nil
-                    (non-nil? (option:unwrap-or (get props :on-pointertap) nil))
-                      {} $ :pointertap $ option:unwrap-or (get props :on-pointertap) nil
+                      non-nil? $ .unwrap-or (get props :on) nil
+                      .unwrap-or (get props :on) nil
+                    (non-nil? (.unwrap-or (get props :on-pointertap) nil))
+                      {} $ :pointertap $ .unwrap-or (get props :on-pointertap) nil
                     true nil
                 text $ {} (:text button-text)
                   :position $ [] 8 8
@@ -1116,32 +1116,32 @@
         'comp-drag-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-drag-point (states props)
             dev-check
-              option:unwrap-or (get states :cursor) nil
+              .unwrap-or (get states :cursor) nil
               , lilac-cursor
             dev-check props lilac-drag-point
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
+                cursor $ .unwrap-or (get states :cursor) nil
                 state $ decode-map-as
-                  option:unwrap-or (get states :data)
+                  .unwrap-or (get states :data)
                     {} (:dragging? false)
                       :x0 $ [] 0 0
                   :: 'Map 'Tag 'Dynamic
                 unit $ decode-map-as
-                  option:unwrap-or (get props :unit) 1
+                  .unwrap-or (get props :unit) 1
                   , Number
                 radius $ decode-map-as
-                  option:unwrap-or (get props :radius) 8
+                  .unwrap-or (get props :radius) 8
                   , Number
-                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
-                fill $ option:unwrap-or (get props :fill) (hslx 0 0 60)
+                color $ .unwrap-or (get props :color) (hslx 0 0 100)
+                fill $ .unwrap-or (get props :fill) (hslx 0 0 60)
                 alpha $ decode-map-as
-                  option:unwrap-or (get props :alpha) 1
+                  .unwrap-or (get props :alpha) 1
                   , Number
-                on-change $ option:unwrap-or (get props :on-change)
+                on-change $ .unwrap-or (get props :on-change)
                   fn (pos d!) nil
-                hide-text? $ option:unwrap-or (get props :hide-text?) false
+                hide-text? $ .unwrap-or (get props :hide-text?) false
               let
-                  position $ option:unwrap-or (get props :position) nil
+                  position $ .unwrap-or (get props :position) nil
                 container
                   {} $ :position position
                   circle $ {} (:radius radius)
@@ -1158,22 +1158,22 @@
                             :p0 position
                       :globalpointermove $ fn (e d!)
                         when
-                          option:unwrap-or (get state :dragging?) nil
+                          .unwrap-or (get state :dragging?) nil
                           let
                               x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                               y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                             let
                                 x0 $ decode-map-as
-                                  option:unwrap-or (get state :x0) nil
+                                  .unwrap-or (get state :x0) nil
                                   :: 'List 'Number
                               on-change
                                 complex/add
                                   decode-map-as
-                                    option:unwrap-or (get state :p0) nil
+                                    .unwrap-or (get state :p0) nil
                                     :: 'List 'Number
                                   []
-                                    * unit $ - x $ option:unwrap-or (first x0) 0
-                                    * unit $ - y $ option:unwrap-or (last x0) 0
+                                    * unit $ - x $ .unwrap-or (first x0) 0
+                                    * unit $ - y $ .unwrap-or (last x0) 0
                                 , d!
                       :pointerup $ fn (e d!)
                         d! cursor $ assoc state :dragging? false
@@ -1182,11 +1182,11 @@
                   if-not hide-text? $ text $ {}
                     :text $ str "|("
                       .!toFixed
-                        option:unwrap-or (first position) 0
+                        .unwrap-or (first position) 0
                         , 1
                       , "|, "
                         .!toFixed
-                          option:unwrap-or (last position) 0
+                          .unwrap-or (last position) 0
                           , 1
                         , "|)➤" $ str unit
                     :alpha $ * alpha 0.3
@@ -1194,9 +1194,9 @@
                     :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace")
                   if
                     and (not hide-text?)
-                      non-nil? $ option:unwrap-or (get props :title) nil
+                      non-nil? $ .unwrap-or (get props :title) nil
                     text $ {}
-                      :text $ option:unwrap-or (get props :title) nil
+                      :text $ .unwrap-or (get props :title) nil
                       :alpha $ * alpha 0.3
                       :position $ [] -12 6
                       :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
@@ -1224,10 +1224,10 @@
           :code $ quote $ defn comp-messages (options) (dev-check options lilac-messages)
             let
                 messages $ decode-map-as
-                  option:unwrap-or (get options :messages) ([])
+                  .unwrap-or (get options :messages) ([])
                   :: 'List 'Dynamic
-                bottom? $ option:unwrap-or (get options :bottom?) nil
-                base-position $ option:unwrap-or (get options :position)
+                bottom? $ .unwrap-or (get options :bottom?) nil
+                base-position $ .unwrap-or (get options :position)
                   if bottom?
                     []
                       -
@@ -1241,21 +1241,21 @@
                         * 0.5 $ phlox.core/ffi-number js/window.innerWidth
                         , 16
                       - 16 $ * 0.5 $ phlox.core/ffi-number js/window.innerWidth
-                on-pointertap $ option:unwrap-or (get options :on-pointertap)
+                on-pointertap $ .unwrap-or (get options :on-pointertap)
                   fn (x d!) (println "|missing message handler:" x)
               create-list :container
                 {} $ :position base-position
                 -> messages $ map-indexed $ fn (idx message)
                   []
-                    option:unwrap-or (get message :id) nil
+                    .unwrap-or (get message :id) nil
                     comp-button $ {}
-                      :text $ option:unwrap-or (get message :text) nil
+                      :text $ .unwrap-or (get message :text) nil
                       :position $ if bottom?
                         [] 0 $ - 8 $ * 40
                           - (count messages) idx
                         [] 0 $ * 40 idx
-                      :color $ option:unwrap-or (get options :color) nil
-                      :fill $ option:unwrap-or (get options :fill) nil
+                      :color $ .unwrap-or (get options :color) nil
+                      :fill $ .unwrap-or (get options :fill) nil
                       :align-right? true
                       :on-pointertap $ fn (e d!) (on-pointertap message d!)
           :examples $ []
@@ -1289,26 +1289,26 @@
         'comp-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider (states props)
             dev-check
-              option:unwrap-or (get states :cursor) nil
+              .unwrap-or (get states :cursor) nil
               , lilac-cursor
             dev-check props lilac-slider
             let
                 value $ decode-map-as
-                  option:unwrap-or (get props :value) 1
+                  .unwrap-or (get props :value) 1
                   , Number
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} (:v0 value) (:x0 0) (:dragging? false)
-                title $ option:unwrap-or (get props :title) nil
+                title $ .unwrap-or (get props :title) nil
                 unit $ decode-map-as
-                  option:unwrap-or (get props :unit) 0.1
+                  .unwrap-or (get props :unit) 0.1
                   , Number
-                fill $ option:unwrap-or (get props :fill) (hslx 0 0 30)
-                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
-                on-change $ option:unwrap-or (get props :on-change) nil
-                rounded? $ option:unwrap-or (get props :round?) nil
+                fill $ .unwrap-or (get props :fill) (hslx 0 0 30)
+                color $ .unwrap-or (get props :color) (hslx 0 0 100)
+                on-change $ .unwrap-or (get props :on-change) nil
+                rounded? $ .unwrap-or (get props :round?) nil
               container
-                {} $ :position $ option:unwrap-or (get props :position) nil
+                {} $ :position $ .unwrap-or (get props :position) nil
                 rect
                   {}
                     :size $ [] 120 24
@@ -1320,7 +1320,7 @@
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
                       :globalpointermove $ fn (e d!)
                         when
-                          option:unwrap-or (get state :dragging?) nil
+                          .unwrap-or (get state :dragging?) nil
                           let
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                             if (fn? on-change)
@@ -1328,14 +1328,14 @@
                                 ->
                                   +
                                     decode-map-as
-                                      option:unwrap-or (get state :v0) value
+                                      .unwrap-or (get state :v0) value
                                       , Number
                                     * unit $ - x2 $ decode-map-as
-                                      option:unwrap-or (get state :x0) 0
+                                      .unwrap-or (get state :x0) 0
                                       , Number
                                   (fn (v) (if rounded? (round v) v))
-                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :max) nil)) (&min (decode-map-as (option:unwrap-or (get props :max) v) Number) v) v))
-                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :min) nil)) (&max (decode-map-as (option:unwrap-or (get props :min) v) Number) v) v))
+                                  (fn (v) (if (non-nil? (.unwrap-or (get props :max) nil)) (&min (decode-map-as (.unwrap-or (get props :max) v) Number) v) v))
+                                  (fn (v) (if (non-nil? (.unwrap-or (get props :min) nil)) (&max (decode-map-as (.unwrap-or (get props :min) v) Number) v) v))
                                 , d!
                               js/console.log "|[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
@@ -1366,25 +1366,25 @@
         'comp-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point (states props)
             dev-check
-              option:unwrap-or (get states :cursor) nil
+              .unwrap-or (get states :cursor) nil
               , lilac-cursor
             dev-check props lilac-slider-point
             let
                 value $ decode-map-as
-                  option:unwrap-or (get props :value) 1
+                  .unwrap-or (get props :value) 1
                   , Number
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} (:v0 value) (:x0 0) (:dragging? false)
                 unit $ decode-map-as
-                  option:unwrap-or (get props :unit) 0.1
+                  .unwrap-or (get props :unit) 0.1
                   , Number
-                fill $ option:unwrap-or (get props :fill) (hslx 0 0 30)
-                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
-                on-change $ option:unwrap-or (get props :on-change) nil
-                rounded? $ option:unwrap-or (get props :round?) nil
+                fill $ .unwrap-or (get props :fill) (hslx 0 0 30)
+                color $ .unwrap-or (get props :color) (hslx 0 0 100)
+                on-change $ .unwrap-or (get props :on-change) nil
+                rounded? $ .unwrap-or (get props :round?) nil
               container
-                {} $ :position $ option:unwrap-or (get props :position) nil
+                {} $ :position $ .unwrap-or (get props :position) nil
                 rect
                   {}
                     :size $ [] 16 16
@@ -1397,7 +1397,7 @@
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
                       :globalpointermove $ fn (e d!)
                         when
-                          option:unwrap-or (get state :dragging?) nil
+                          .unwrap-or (get state :dragging?) nil
                           let
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                             if (fn? on-change)
@@ -1405,14 +1405,14 @@
                                 ->
                                   +
                                     decode-map-as
-                                      option:unwrap-or (get state :v0) value
+                                      .unwrap-or (get state :v0) value
                                       , Number
                                     * unit $ - x2 $ decode-map-as
-                                      option:unwrap-or (get state :x0) 0
+                                      .unwrap-or (get state :x0) 0
                                       , Number
                                   (fn (v) (if rounded? (round v) v))
-                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :max) nil)) (&min (decode-map-as (option:unwrap-or (get props :max) v) Number) v) v))
-                                  (fn (v) (if (non-nil? (option:unwrap-or (get props :min) nil)) (&max (decode-map-as (option:unwrap-or (get props :min) v) Number) v) v))
+                                  (fn (v) (if (non-nil? (.unwrap-or (get props :max) nil)) (&min (decode-map-as (.unwrap-or (get props :max) v) Number) v) v))
+                                  (fn (v) (if (non-nil? (.unwrap-or (get props :min) nil)) (&max (decode-map-as (.unwrap-or (get props :min) v) Number) v) v))
                                 , d!
                               js/console.log "|[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
@@ -1432,30 +1432,30 @@
         'comp-spin-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider (states props)
             let
-                cursor $ option:unwrap-or (get states :cursor) nil
-                state $ option:unwrap-or (get states :data)
+                cursor $ .unwrap-or (get states :cursor) nil
+                state $ .unwrap-or (get states :data)
                   {} $ :dragging? false
                 unit $ decode-map-as
-                  option:unwrap-or (get props :unit) 1
+                  .unwrap-or (get props :unit) 1
                   , Number
                 radius $ decode-map-as
-                  option:unwrap-or (get props :radius) 44
+                  .unwrap-or (get props :radius) 44
                   , Number
-                color $ option:unwrap-or (get props :color) (hslx 0 0 100)
-                fill $ option:unwrap-or (get props :fill) (hslx 0 0 0)
-                font-size $ option:unwrap-or (get props :font-size) (&* radius 0.44)
-                alpha $ option:unwrap-or (get props :alpha) 1
-                on-change $ option:unwrap-or (get props :on-change) nil
+                color $ .unwrap-or (get props :color) (hslx 0 0 100)
+                fill $ .unwrap-or (get props :fill) (hslx 0 0 0)
+                font-size $ .unwrap-or (get props :font-size) (&* radius 0.44)
+                alpha $ .unwrap-or (get props :alpha) 1
+                on-change $ .unwrap-or (get props :on-change) nil
                 position $ decode-map-as
-                  option:unwrap-or (get props :position) ([] 0 0)
+                  .unwrap-or (get props :position) ([] 0 0)
                   :: 'List 'Number
-                on-move $ option:unwrap-or (get props :on-move)
+                on-move $ .unwrap-or (get props :on-move)
                   fn (pos d!) nil
                 border-color $ or
-                  option:unwrap-or (get props :border-color) nil
+                  .unwrap-or (get props :border-color) nil
                   hslx 240 80 80
                 border-width $ or
-                  option:unwrap-or (get props :border-width) nil
+                  .unwrap-or (get props :border-width) nil
                   , 4
               container
                 {} $ :position $ [] 0 0
@@ -1474,11 +1474,11 @@
                           x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                         if
-                          option:unwrap-or (get state :dragging?) nil
+                          .unwrap-or (get state :dragging?) nil
                           let
                               current-point $ []
-                                - x $ option:unwrap-or (first @*spin-pivot) 0
-                                - y $ option:unwrap-or (last @*spin-pivot) 0
+                                - x $ .unwrap-or (first @*spin-pivot) 0
+                                - y $ .unwrap-or (last @*spin-pivot) 0
                               prev-point @*prev-spin-point
                             if
                               < (vec-length current-point) (&* 0.5 radius)
@@ -1488,18 +1488,18 @@
                                   let
                                       delta-vec $ rebase current-point prev-point
                                       delta $ phlox.core/ffi-atan2
-                                        option:unwrap-or (last delta-vec) 0
-                                        option:unwrap-or (first delta-vec) 0
+                                        .unwrap-or (last delta-vec) 0
+                                        .unwrap-or (first delta-vec) 0
                                     if (fn? on-change)
                                       on-change
                                         bound-x
                                           +
                                             decode-map-as
-                                              option:unwrap-or (get props :value) 0
+                                              .unwrap-or (get props :value) 0
                                               , Number
                                             &* unit delta
-                                          option:unwrap-or (get props :min) nil
-                                          option:unwrap-or (get props :max) nil
+                                          .unwrap-or (get props :min) nil
+                                          .unwrap-or (get props :max) nil
                                         , d!
                                       js/console.warn "|missing :on-change for spin-slider"
                                 reset! *prev-spin-point current-point
@@ -1509,9 +1509,9 @@
                       d! cursor $ assoc state :dragging? false
                 text $ {}
                   :text $ str $ let
-                      v $ option:unwrap-or (get props :value) nil
+                      v $ .unwrap-or (get props :value) nil
                     if (number? v)
-                      .!toFixed v $ option:unwrap-or (get props :fraction) 1
+                      .!toFixed v $ .unwrap-or (get props :fraction) 1
                       , |-
                   :position $ complex/add position $ [] 0 -10
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "|Source code pro, Menlo, Roboto Mono, monospace")
@@ -1559,10 +1559,10 @@
         'comp-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch (props) (dev-check props lilac-switch)
             let
-                value $ option:unwrap-or (get props :value) nil
-                on-change $ option:unwrap-or (get props :on-change) nil
+                value $ .unwrap-or (get props :value) nil
+                on-change $ .unwrap-or (get props :on-change) nil
               container
-                {} $ :position $ option:unwrap-or (get props :position) ([] 0 0)
+                {} $ :position $ .unwrap-or (get props :position) ([] 0 0)
                 rect $ {}
                   :size $ [] 56 20
                   :fill $ if value (hslx 0 0 92) (hslx 0 0 50)
@@ -1582,7 +1582,7 @@
                     :font-weight 500
                   :alpha $ if value 1 0.4
                 text $ {}
-                  :text $ option:unwrap-or (get props :title) |Switch
+                  :text $ .unwrap-or (get props :title) |Switch
                   :position $ [] 0 -20
                   :style $ {}
                     :fill $ hslx 0 0 80
@@ -1609,16 +1609,16 @@
             let
                 step $ decode-map-as
                   or
-                    option:unwrap-or (get options :step) nil
+                    .unwrap-or (get options :step) nil
                     , 36
                   , Number
                 position $ decode-map-as
                   or
-                    option:unwrap-or (get options :position) nil
+                    .unwrap-or (get options :position) nil
                     [] 0 0
                   :: 'List 'Number
                 font-family $ or
-                  option:unwrap-or (get options :font-family) nil
+                  .unwrap-or (get options :font-family) nil
                   , "|Josefin Sans, sans-serif"
               create-list :container ({})
                 -> tabs $ map-indexed $ fn (idx info)
@@ -1668,10 +1668,10 @@
           :code $ quote $ defn divide-by (point x)
             []
               /
-                option:unwrap-or (first point) 0
+                .unwrap-or (first point) 0
                 , x
               /
-                option:unwrap-or (last point) 0
+                .unwrap-or (last point) 0
                 , x
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -1696,7 +1696,7 @@
         'rand-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rand-point (n & xs)
             let
-                m0 $ option:unwrap-or (first xs) n
+                m0 $ .unwrap-or (first xs) n
               []
                 - n $ floor $ * (random) (* 2 n)
                 - m0 $ floor $ * (random) (* 2 m0)
@@ -1754,7 +1754,7 @@
             :features $ #{} :js-ffi
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
-            = |dev $ option:unwrap-or (get-env |mode) |release
+            = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Dynamic
         'mobile? $ %{} 'CodeEntry (:doc |)
@@ -1801,10 +1801,10 @@
         '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn >> (states k)
             let
-                parent-cursor $ option:unwrap-or (get states :cursor) ([])
+                parent-cursor $ .unwrap-or (get states :cursor) ([])
                 branch $ decode-map-as
                   let
-                      value $ option:unwrap-or (get states k) ({})
+                      value $ .unwrap-or (get states k) ({})
                     if (map? value) value $ raise |expected-child-state-map
                   :: 'Map 'Dynamic 'Dynamic
               assoc branch :cursor $ conj
@@ -2621,7 +2621,7 @@
         'g $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn g (op & args)
             let
-                data $ option:unwrap-or (first args) nil
+                data $ .unwrap-or (first args) nil
               match op
                 :move-to $ dev-check-message "|check :move-to" data lilac-point
                 :line-to $ dev-check-message "|check :line-to" data lilac-point
@@ -2682,7 +2682,7 @@
                   let
                       dy $ * 0.001 $ ffi-event-delta-y event
                       scale $ decode-map-as
-                        option:unwrap-or (get @*stage-config :scale) 1
+                        .unwrap-or (get @*stage-config :scale) 1
                         , 'Number
                       pointer $ complex/minus
                         [] (ffi-event-client-x event) (ffi-event-client-y event)
@@ -2756,9 +2756,9 @@
                 pixi-app $ new PIXI/Application $ js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2)
                   :width $ ffi-window-width
                   :height $ ffi-window-height
-                  :backgroundColor $ option:unwrap-or (get options :background-color) (hslx 0 0 0)
-                  :interactive $ option:unwrap-or (get options :interactive) true
-                  :backgroundAlpha $ option:unwrap-or (get options :background-alpha) 1
+                  :backgroundColor $ .unwrap-or (get options :background-color) (hslx 0 0 0)
+                  :interactive $ .unwrap-or (get options :interactive) true
+                  :backgroundAlpha $ .unwrap-or (get options :background-alpha) 1
               ffi-stop $ ffi-ticker pixi-app
               -> PIXI/Ticker .-shared $ ffi-stop
               -> PIXI/Ticker .-system $ ffi-stop
@@ -2809,8 +2809,8 @@
             let
                 pair0 $ decode-map-as pair $ :: 'List 'Dynamic
               []
-                g :move-to $ option:unwrap $ nth pair0 0
-                g :line-to $ option:unwrap $ nth pair0 1
+                g :move-to $ .unwrap $ nth pair0 0
+                g :line-to $ .unwrap $ nth pair0 1
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'Dynamic
@@ -2819,9 +2819,9 @@
         'line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segments (props & children) (dev-check props lilac-line-segments)
             let
-                line-style $ option:unwrap-or (get props :style) nil
+                line-style $ .unwrap-or (get props :style) nil
                 segments $ decode-map-as
-                  option:unwrap-or (get props :segments) ([])
+                  .unwrap-or (get props :segments) ([])
                   :: 'List 'Dynamic
               create-element :graphics
                 assoc props :ops $ concat
@@ -2853,7 +2853,7 @@
                 update-stage-config!
                   map move $ fn (x)
                     * x (ffi-abs x) 0.02
-                  option:unwrap-or (nth scales 1) 0
+                  .unwrap-or (nth scales 1) 0
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Number 'touch-control.core/ControlState 'touch-control.core/ControlDelta
@@ -2861,14 +2861,14 @@
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
-                line-style $ option:unwrap-or (get props :style) nil
+                line-style $ .unwrap-or (get props :style) nil
                 points $ decode-map-as
-                  option:unwrap-or (get props :points) ([])
+                  .unwrap-or (get props :points) ([])
                   :: 'List 'Dynamic
               create-element :graphics
                 assoc props :ops $ concat
                   [] (g :line-style line-style)
-                    g :move-to $ option:unwrap $ nth points 0
+                    g :move-to $ .unwrap $ nth points 0
                   -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
@@ -2889,7 +2889,7 @@
             let
                 wrap-dispatch $ fn (op & args)
                   let
-                      data $ option:unwrap-or (first args) nil
+                      data $ .unwrap-or (first args) nil
                     if (list? op)
                       @*dispatch-fn $ :: :states op data
                       if (tag? op)
@@ -2910,21 +2910,21 @@
           :code $ quote $ defn render-stage-for-viewer! ()
             let
                 scale $ decode-map-as
-                  option:unwrap-or (get @*stage-config :scale) nil
+                  .unwrap-or (get @*stage-config :scale) nil
                   , 'Number
                 move $ decode-map-as
-                  option:unwrap-or (get @*stage-config :move) nil
+                  .unwrap-or (get @*stage-config :move) nil
                   :: 'List 'Number
               ffi-set-x!
                 ffi-position $ ffi-stage @*app
                 +
                   * 0.5 $ ffi-number js/window.innerWidth
-                  option:unwrap-or (nth move 0) 0
+                  .unwrap-or (nth move 0) 0
               ffi-set-y!
                 ffi-position $ ffi-stage @*app
                 +
                   * 0.5 $ ffi-number js/window.innerHeight
-                  option:unwrap-or (nth move 1) 0
+                  .unwrap-or (nth move 1) 0
               -> @*app ffi-stage ffi-scale $ ffi-set-scale! scale scale
             -> @*app ffi-renderer $ ffi-render $ ffi-stage @*app
           :examples $ []
@@ -2946,10 +2946,10 @@
           :code $ quote $ defn reset-stage-config! ()
             let
                 move0 $ decode-map-as
-                  option:unwrap-or (get @*stage-config :move) nil
+                  .unwrap-or (get @*stage-config :move) nil
                   :: 'List 'Number
                 scale0 $ decode-map-as
-                  option:unwrap-or (get @*stage-config :scale) 1
+                  .unwrap-or (get @*stage-config :scale) 1
                   , 'Number
               when
                 or
@@ -2992,7 +2992,7 @@
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
                 scale0 $ decode-map-as
-                  option:unwrap-or (get @*stage-config :scale) 1
+                  .unwrap-or (get @*stage-config :scale) 1
                   , 'Number
               when
                 and
@@ -3039,7 +3039,7 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-states (store cursor data)
             assoc store :states $ assoc-in
-              option:unwrap-or (get store :states) nil
+              .unwrap-or (get store :states) nil
               conj cursor :data
               , data
           :examples $ []
@@ -3084,7 +3084,7 @@
               if (struct? tree)
                 struct-match tree
                   phlox.schema/PhloxElement element $ let
-                      listener $ option:unwrap-or
+                      listener $ .unwrap-or
                         get-in (:props element) ([] :on-keyboard kind)
                         , nil
                     when (fn? listener) (listener event dispatch!)
@@ -3181,7 +3181,7 @@
       :defs $ {}
         'first-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn first-value (items)
-            option:unwrap-or (first items) nil
+            .unwrap-or (first items) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic
@@ -3191,9 +3191,9 @@
               let
                   size $ decode-map-as size $ :: 'List 'Number
                 set! (.-width target)
-                  option:unwrap $ nth size 0
+                  .unwrap $ nth size 0
                 set! (.-height target)
-                  option:unwrap $ nth size 1
+                  .unwrap $ nth size 1
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -3230,13 +3230,13 @@
           :code $ quote $ defn init-geometry (data)
             let
                 geo $ new PIXI/Geometry
-                attrs $ option:unwrap-or (get data :attributes) nil
+                attrs $ .unwrap-or (get data :attributes) nil
               &doseq (attr attrs)
                 phlox.core/ffi-geometry-add-attribute! geo
-                  option:unwrap-or (get attr :id) nil
-                  to-js-data $ option:unwrap-or (get attr :buffer) nil
-                  option:unwrap-or (get attr :size) nil
-              phlox.core/ffi-geometry-add-index! geo $ to-js-data $ option:unwrap-or (get data :index) nil
+                  .unwrap-or (get attr :id) nil
+                  to-js-data $ .unwrap-or (get attr :buffer) nil
+                  .unwrap-or (get attr :size) nil
+              phlox.core/ffi-geometry-add-index! geo $ to-js-data $ .unwrap-or (get data :index) nil
               , geo
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
@@ -3250,11 +3250,11 @@
                   do
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
                       decode-map-as
-                        option:unwrap-or (first scale) 1
+                        .unwrap-or (first scale) 1
                         , Number
                     phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
                       decode-map-as
-                        option:unwrap-or (last scale) 1
+                        .unwrap-or (last scale) 1
                         , Number
                 (number? scale)
                   do
@@ -3273,8 +3273,8 @@
         'init-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-shader (data uniforms)
             .!from PIXI/Shader
-              option:unwrap-or (get data :vertex-source) nil
-              option:unwrap-or (get data :fragment-source) nil
+              .unwrap-or (get data :vertex-source) nil
+              .unwrap-or (get data :fragment-source) nil
               , uniforms
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
@@ -3282,7 +3282,7 @@
             :features $ #{} :js-ffi
         'last-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn last-value (items)
-            option:unwrap-or (last items) nil
+            .unwrap-or (last items) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic
@@ -3301,7 +3301,7 @@
             &doseq (child-pair children)
               if (non-nil? child-pair)
                 .!addChild target $ render-element
-                  option:unwrap $ last child-pair
+                  .unwrap $ last child-pair
                   , dispatch!
                 js/console.log "|nil child:" child-pair
           :examples $ []
@@ -3312,23 +3312,23 @@
           :code $ quote $ defn render-circle (element dispatch!)
             let
                 target $ new PIXI/Graphics
-                props $ option:unwrap-or (get element :props) nil
-                line-style $ option:unwrap-or (get props :line-style) nil
-                position $ option:unwrap-or (get props :position) nil
-                events $ option:unwrap-or (get props :on) nil
-              init-fill target $ option:unwrap-or (get props :fill) nil
+                props $ .unwrap-or (get element :props) nil
+                line-style $ .unwrap-or (get props :line-style) nil
+                position $ .unwrap-or (get props :position) nil
+                events $ .unwrap-or (get props :on) nil
+              init-fill target $ .unwrap-or (get props :fill) nil
               init-line-style target line-style
-              draw-circle target $ option:unwrap-or (get props :radius) nil
+              draw-circle target $ .unwrap-or (get props :radius) nil
               init-events target events dispatch!
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
               , target
           :examples $ []
@@ -3339,17 +3339,17 @@
           :code $ quote $ defn render-container (element dispatch!)
             let
                 target $ new PIXI/Container
-                props $ option:unwrap-or (get element :props) nil
+                props $ .unwrap-or (get element :props) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               , target
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
@@ -3359,7 +3359,7 @@
           :code $ quote $ defn render-element (element dispatch!)
             if (element? element)
               match
-                option:unwrap-or (get element :name) nil
+                .unwrap-or (get element :name) nil
                 nil nil
                 :container $ render-container element dispatch!
                 :graphics $ render-graphics element dispatch!
@@ -3369,7 +3369,7 @@
                 :mesh $ render-mesh element dispatch!
                 :image $ render-image element dispatch!
                 _ $ do
-                  println "|unknown tag:" $ option:unwrap-or (get element :tag) nil
+                  println "|unknown tag:" $ .unwrap-or (get element :tag) nil
                   {}
               js/console.error "|Unknown element:" element
           :examples $ []
@@ -3380,21 +3380,21 @@
           :code $ quote $ defn render-graphics (element dispatch!)
             let
                 target $ new PIXI/Graphics
-                props $ option:unwrap-or (get element :props) nil
-                ops $ option:unwrap-or (get props :ops) nil
-                events $ option:unwrap-or (get props :on) nil
+                props $ .unwrap-or (get element :props) nil
+                ops $ .unwrap-or (get props :ops) nil
+                events $ .unwrap-or (get props :on) nil
               ; dev-check props lilac-graphics
               call-graphics-ops target ops
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
               init-events target events dispatch!
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
               , target
           :examples $ []
@@ -3404,20 +3404,20 @@
         'render-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-image (element dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                target $ .!from PIXI/Sprite $ option:unwrap-or (get props :url) nil
-                events $ option:unwrap-or (get props :on) nil
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
-              init-box-size target $ option:unwrap-or (get props :size) nil
+                props $ .unwrap-or (get element :props) nil
+                target $ .!from PIXI/Sprite $ .unwrap-or (get props :url) nil
+                events $ .unwrap-or (get props :on) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
+              init-box-size target $ .unwrap-or (get props :size) nil
               init-events target events dispatch!
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
               , target
           :examples $ []
@@ -3427,29 +3427,29 @@
         'render-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-mesh (element dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                geo $ init-geometry $ option:unwrap-or (get props :geometry) nil
+                props $ .unwrap-or (get element :props) nil
+                geo $ init-geometry $ .unwrap-or (get props :geometry) nil
                 shader $ init-shader
-                  option:unwrap-or (get props :shader) nil
-                  option:unwrap-or (get props :uniforms) nil
+                  .unwrap-or (get props :shader) nil
+                  .unwrap-or (get props :uniforms) nil
                 draw-mode $ or
-                  read-draw-mode-alias $ option:unwrap-or (get props :draw-mode) nil
+                  read-draw-mode-alias $ .unwrap-or (get props :draw-mode) nil
                   , js/undefined
                 target $ new PIXI/Mesh geo shader nil draw-mode
-                events $ option:unwrap-or (get props :on) nil
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
+                events $ .unwrap-or (get props :on) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
               init-events target events dispatch!
               if
-                = :center $ option:unwrap-or (get props :align) :left
+                = :center $ .unwrap-or (get props :align) :left
                 phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
               ; js/console.log target
               , target
@@ -3461,23 +3461,23 @@
           :code $ quote $ defn render-rect (element dispatch!)
             let
                 target $ new PIXI/Graphics
-                props $ option:unwrap-or (get element :props) nil
-                events $ option:unwrap-or (get props :on) nil
-              init-fill target $ option:unwrap-or (get props :fill) nil
-              init-line-style target $ option:unwrap-or (get props :line-style) nil
+                props $ .unwrap-or (get element :props) nil
+                events $ .unwrap-or (get props :on) nil
+              init-fill target $ .unwrap-or (get props :fill) nil
+              init-line-style target $ .unwrap-or (get props :line-style) nil
               draw-rect target
-                option:unwrap-or (get props :size) nil
-                option:unwrap-or (get props :radius) nil
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
+                .unwrap-or (get props :size) nil
+                .unwrap-or (get props :radius) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
               init-events target events dispatch!
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
               , target
           :examples $ []
@@ -3487,24 +3487,24 @@
         'render-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-text (element dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                style $ option:unwrap-or (get props :style) nil
+                props $ .unwrap-or (get element :props) nil
+                style $ .unwrap-or (get props :style) nil
                 text-style $ new PIXI/TextStyle $ convert-line-style style
                 target $ new PIXI/Text
-                  option:unwrap-or (get props :text) nil
+                  .unwrap-or (get props :text) nil
                   , text-style
-              init-position target $ option:unwrap-or (get props :position) nil
-              init-scale target $ option:unwrap-or (get props :scale) nil
-              init-pivot target $ option:unwrap-or (get props :pivot) nil
-              init-angle target $ option:unwrap-or (get props :angle) nil
-              init-rotation target $ option:unwrap-or (get props :rotation) nil
-              init-alpha target $ option:unwrap-or (get props :alpha) nil
+              init-position target $ .unwrap-or (get props :position) nil
+              init-scale target $ .unwrap-or (get props :scale) nil
+              init-pivot target $ .unwrap-or (get props :pivot) nil
+              init-angle target $ .unwrap-or (get props :angle) nil
+              init-rotation target $ .unwrap-or (get props :rotation) nil
+              init-alpha target $ .unwrap-or (get props :alpha) nil
               if
-                = :center $ option:unwrap-or (get props :align) :left
+                = :center $ .unwrap-or (get props :align) :left
                 phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
-              init-filters target $ option:unwrap-or (get props :filters) nil
+              init-filters target $ .unwrap-or (get props :filters) nil
               render-children target
-                option:unwrap-or (get element :children) nil
+                .unwrap-or (get element :children) nil
                 , dispatch!
               , target
           :examples $ []
@@ -3527,9 +3527,9 @@
                 let
                     size $ decode-map-as size $ :: 'List 'Number
                   set! (.-width target)
-                    option:unwrap $ nth size 0
+                    .unwrap $ nth size 0
                   set! (.-height target)
-                    option:unwrap $ nth size 1
+                    .unwrap $ nth size 1
                 do
                   set! (.-width target) js/undefined
                   set! (.-height target) js/undefined
@@ -3551,7 +3551,7 @@
                 loop
                     idx 0
                     ops $ decode-map-as
-                      option:unwrap $ get list-ops :acc
+                      .unwrap $ get list-ops :acc
                       :: 'List $ :: 'List 'Dynamic
                     xs children-dict
                     ys old-children-dict
@@ -3593,48 +3593,48 @@
         'update-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-circle (element old-element target dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
-                position $ option:unwrap-or (get props :position) nil
-                position' $ option:unwrap-or (get props' :position) nil
-                radius $ option:unwrap-or (get props :radius) nil
-                radius' $ option:unwrap-or (get props' :radius) nil
-                line-style $ option:unwrap-or (get props :line-style) nil
-                line-style' $ option:unwrap-or (get props' :line-style) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
+                position $ .unwrap-or (get props :position) nil
+                position' $ .unwrap-or (get props' :position) nil
+                radius $ .unwrap-or (get props :radius) nil
+                radius' $ .unwrap-or (get props' :radius) nil
+                line-style $ .unwrap-or (get props :line-style) nil
+                line-style' $ .unwrap-or (get props' :line-style) nil
               when
                 or (not= position position') (not= radius radius') (not= line-style line-style')
                   not=
-                    option:unwrap-or (get props :fill) nil
-                    option:unwrap-or (get props' :fill) nil
+                    .unwrap-or (get props :fill) nil
+                    .unwrap-or (get props' :fill) nil
                 .!clear target
-                init-fill target $ option:unwrap-or (get props :fill) nil
+                init-fill target $ .unwrap-or (get props :fill) nil
                 init-line-style target line-style
-                draw-circle target $ option:unwrap-or (get props :radius) nil
+                draw-circle target $ .unwrap-or (get props :radius) nil
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-events target
-                option:unwrap-or (get props :on) nil
-                option:unwrap-or (get props' :on) nil
+                .unwrap-or (get props :on) nil
+                .unwrap-or (get props' :on) nil
                 , dispatch!
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
@@ -3642,29 +3642,29 @@
         'update-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-container (element old-element target)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -3686,12 +3686,12 @@
             cond
                 or (nil? element) (nil? element)
                 js/console.error "|Not supposed to be empty"
-              (and (element? element) (element? old-element) (= (option:unwrap-or (get element :name) nil) (option:unwrap-or (get old-element :name) nil)))
+              (and (element? element) (element? old-element) (= (.unwrap-or (get element :name) nil) (.unwrap-or (get old-element :name) nil)))
                 do
                   let
                       target $ .!getChildAt parent-element idx
                     match
-                      option:unwrap-or (get element :name) nil
+                      .unwrap-or (get element :name) nil
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
                       :rect $ update-rect element old-element target dispatch!
@@ -3699,13 +3699,13 @@
                       :graphics $ update-graphics element old-element target dispatch!
                       :mesh $ update-mesh element old-element target dispatch!
                       :image $ update-image element old-element target dispatch!
-                      _ $ eprintln "|not implement yet for updating:" $ option:unwrap-or (get element :name) nil
+                      _ $ eprintln "|not implement yet for updating:" $ .unwrap-or (get element :name) nil
                   update-children
-                    option:unwrap-or (get element :children) nil
-                    option:unwrap-or (get old-element :children) nil
+                    .unwrap-or (get element :children) nil
+                    .unwrap-or (get old-element :children) nil
                     .!getChildAt parent-element idx
                     , dispatch! options
-              (not= (option:unwrap-or (get element :name) nil) (option:unwrap-or (get old-element :name) nil))
+              (not= (.unwrap-or (get element :name) nil) (.unwrap-or (get old-element :name) nil))
                 do (.!removeChildAt parent-element idx)
                   .!addChildAt parent-element (render-element element dispatch!) idx
               true $ js/console.warn "|Unknown case:" element old-element
@@ -3745,36 +3745,36 @@
         'update-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-graphics (element old-element target dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
-                ops $ option:unwrap-or (get props :ops) nil
-                ops' $ option:unwrap-or (get props' :ops) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
+                ops $ .unwrap-or (get props :ops) nil
+                ops' $ .unwrap-or (get props' :ops) nil
               when (not= ops ops') (.!clear target) (call-graphics-ops target ops)
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               update-events target
-                option:unwrap-or (get props :on) nil
-                option:unwrap-or (get props' :on) nil
+                .unwrap-or (get props :on) nil
+                .unwrap-or (get props' :on) nil
                 , dispatch!
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
@@ -3782,45 +3782,45 @@
         'update-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-image (element old-element target dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
-                position $ option:unwrap-or (get props :position) nil
-                position' $ option:unwrap-or (get props' :position) nil
-                size $ option:unwrap-or (get props :size) nil
-                size' $ option:unwrap-or (get props' :size) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
+                position $ .unwrap-or (get props :position) nil
+                position' $ .unwrap-or (get props' :position) nil
+                size $ .unwrap-or (get props :size) nil
+                size' $ .unwrap-or (get props' :size) nil
               when
                 not=
-                  option:unwrap-or (get props :url) nil
-                  option:unwrap-or (get props' :url) nil
+                  .unwrap-or (get props :url) nil
+                  .unwrap-or (get props' :url) nil
                 js/console.warn "|image url changes are not handling in updates"
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               update-box-size target
-                option:unwrap-or (get props :size) nil
-                option:unwrap-or (get props' :size) nil
+                .unwrap-or (get props :size) nil
+                .unwrap-or (get props' :size) nil
               update-events target
-                option:unwrap-or (get props :on) nil
-                option:unwrap-or (get props' :on) nil
+                .unwrap-or (get props :on) nil
+                .unwrap-or (get props' :on) nil
                 , dispatch!
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
@@ -3828,54 +3828,54 @@
         'update-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-mesh (element old-element target dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
-                ops $ option:unwrap-or (get props :ops) nil
-                ops' $ option:unwrap-or (get props' :ops) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
+                ops $ .unwrap-or (get props :ops) nil
+                ops' $ .unwrap-or (get props' :ops) nil
               update-geometry target
-                option:unwrap-or (get props :geometry) nil
-                option:unwrap-or (get props' :geometry) nil
+                .unwrap-or (get props :geometry) nil
+                .unwrap-or (get props' :geometry) nil
               update-shader target
-                option:unwrap-or (get props :shader) nil
-                option:unwrap-or (get props' :shader) nil
-                option:unwrap-or (get props :uniforms) nil
+                .unwrap-or (get props :shader) nil
+                .unwrap-or (get props' :shader) nil
+                .unwrap-or (get props :uniforms) nil
               update-draw-mode target
-                option:unwrap-or (get props :draw-mode) nil
-                option:unwrap-or (get props' :draw-mode) nil
+                .unwrap-or (get props :draw-mode) nil
+                .unwrap-or (get props' :draw-mode) nil
               let
                   pointer $ -> target phlox.core/ffi-shader phlox.core/ffi-uniforms
                 ->
-                  option:unwrap-or (get props :uniforms) nil
+                  .unwrap-or (get props :uniforms) nil
                   , js/Object.entries $ phlox.core/ffi-for-each $ fn (arr & args)
                     if
                       not $ identical? (phlox.core/ffi-entry-value arr)
                         aget pointer $ phlox.core/ffi-entry-key arr
                       aset pointer (phlox.core/ffi-entry-key arr) (phlox.core/ffi-entry-value arr)
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               update-events target
-                option:unwrap-or (get props :on) nil
-                option:unwrap-or (get props' :on) nil
+                .unwrap-or (get props :on) nil
+                .unwrap-or (get props' :on) nil
                 , dispatch!
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
@@ -3883,50 +3883,50 @@
         'update-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rect (element old-element target dispatch!)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
-                position $ option:unwrap-or (get props :position) nil
-                position' $ option:unwrap-or (get props' :position) nil
-                size $ option:unwrap-or (get props :size) nil
-                size' $ option:unwrap-or (get props' :size) nil
-                radius $ option:unwrap-or (get props :radius) nil
-                radius' $ option:unwrap-or (get props' :radius) nil
-                line-style $ option:unwrap-or (get props :line-style) nil
-                line-style' $ option:unwrap-or (get props' :line-style) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
+                position $ .unwrap-or (get props :position) nil
+                position' $ .unwrap-or (get props' :position) nil
+                size $ .unwrap-or (get props :size) nil
+                size' $ .unwrap-or (get props' :size) nil
+                radius $ .unwrap-or (get props :radius) nil
+                radius' $ .unwrap-or (get props' :radius) nil
+                line-style $ .unwrap-or (get props :line-style) nil
+                line-style' $ .unwrap-or (get props' :line-style) nil
               when
                 or (not= size size') (not= radius radius') (not= line-style line-style')
                   not=
-                    option:unwrap-or (get props :fill) nil
-                    option:unwrap-or (get props' :fill) nil
+                    .unwrap-or (get props :fill) nil
+                    .unwrap-or (get props' :fill) nil
                 .!clear target
-                init-fill target $ option:unwrap-or (get props :fill) nil
+                init-fill target $ .unwrap-or (get props :fill) nil
                 init-line-style target line-style
-                draw-rect target size $ option:unwrap-or (get props :radius) nil
+                draw-rect target size $ .unwrap-or (get props :radius) nil
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               update-events target
-                option:unwrap-or (get props :on) nil
-                option:unwrap-or (get props' :on) nil
+                .unwrap-or (get props :on) nil
+                .unwrap-or (get props' :on) nil
                 , dispatch!
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
@@ -3939,11 +3939,11 @@
                   do
                     phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
                       decode-map-as
-                        option:unwrap-or (first scale) 1
+                        .unwrap-or (first scale) 1
                         , Number
                     phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
                       decode-map-as
-                        option:unwrap-or (last scale) 1
+                        .unwrap-or (last scale) 1
                         , Number
                 (number? scale)
                   do
@@ -3971,49 +3971,49 @@
         'update-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-text (element old-element target)
             let
-                props $ option:unwrap-or (get element :props) nil
-                props' $ option:unwrap-or (get old-element :props) nil
-                text-style $ option:unwrap-or (get props :style) nil
-                text-style' $ option:unwrap-or (get props' :style) nil
+                props $ .unwrap-or (get element :props) nil
+                props' $ .unwrap-or (get old-element :props) nil
+                text-style $ .unwrap-or (get props :style) nil
+                text-style' $ .unwrap-or (get props' :style) nil
               when
                 not=
-                  option:unwrap-or (get props :text) nil
-                  option:unwrap-or (get props' :text) nil
+                  .unwrap-or (get props :text) nil
+                  .unwrap-or (get props' :text) nil
                 set! (.-text target)
-                  option:unwrap-or (get props :text) nil
+                  .unwrap-or (get props :text) nil
               when (not= text-style text-style')
                 let
                     new-style $ new PIXI/TextStyle $ convert-line-style text-style
                   set! (.-style target) new-style
               update-position target
-                option:unwrap-or (get props :position) nil
-                option:unwrap-or (get props' :position) nil
+                .unwrap-or (get props :position) nil
+                .unwrap-or (get props' :position) nil
               update-scale target
-                option:unwrap-or (get props :scale) nil
-                option:unwrap-or (get props' :scale) nil
+                .unwrap-or (get props :scale) nil
+                .unwrap-or (get props' :scale) nil
               update-rotation target
-                option:unwrap-or (get props :rotation) nil
-                option:unwrap-or (get props' :rotation) nil
+                .unwrap-or (get props :rotation) nil
+                .unwrap-or (get props' :rotation) nil
               update-angle target
-                option:unwrap-or (get props :angle) nil
-                option:unwrap-or (get props' :angle) nil
+                .unwrap-or (get props :angle) nil
+                .unwrap-or (get props' :angle) nil
               update-pivot target
-                option:unwrap-or (get props :pivot) nil
-                option:unwrap-or (get props' :pivot) nil
+                .unwrap-or (get props :pivot) nil
+                .unwrap-or (get props' :pivot) nil
               update-alpha target
-                option:unwrap-or (get props :alpha) nil
-                option:unwrap-or (get props' :alpha) nil
+                .unwrap-or (get props :alpha) nil
+                .unwrap-or (get props' :alpha) nil
               if
                 not=
-                  option:unwrap-or (get props :align) nil
-                  option:unwrap-or (get props' :align) :left
+                  .unwrap-or (get props :align) nil
+                  .unwrap-or (get props' :align) :left
                 if
-                  = :center $ option:unwrap-or (get props :align) :left
+                  = :center $ .unwrap-or (get props :align) :left
                   phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
                   phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) nil
               update-filters target
-                option:unwrap-or (get props :filters) nil
-                option:unwrap-or (get props' :filters) nil
+                .unwrap-or (get props :filters) nil
+                .unwrap-or (get props' :filters) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic 'Dynamic 'Dynamic
@@ -4036,64 +4036,64 @@
                   decode-map-as pair $ :: 'List 'Dynamic
                   match op
                     :move-to $ .!moveTo target
-                      option:unwrap $ first data
-                      option:unwrap $ last data
+                      .unwrap $ first data
+                      .unwrap $ last data
                     :line-to $ .!lineTo target
-                      option:unwrap $ first data
-                      option:unwrap $ last data
+                      .unwrap $ first data
+                      .unwrap $ last data
                     :line-style $ init-line-style target data
                     :begin-fill $ .!beginFill target
-                      option:unwrap-or (get data :color) nil
-                      option:unwrap-or (get data :alpha) 1
+                      .unwrap-or (get data :color) nil
+                      .unwrap-or (get data :alpha) 1
                     :end-fill $ .!endFill target
                     :close-path $ .!closePath target
                     :arc $ let
-                        center $ option:unwrap-or (get data :center) nil
+                        center $ .unwrap-or (get data :center) nil
                         radian $ cond
-                            non-nil? $ option:unwrap-or (get data :radian) nil
-                            option:unwrap-or (get data :radian) nil
-                          (non-nil? (option:unwrap-or (get data :angle) nil))
+                            non-nil? $ .unwrap-or (get data :radian) nil
+                            .unwrap-or (get data :radian) nil
+                          (non-nil? (.unwrap-or (get data :angle) nil))
                             map
                               decode-map-as
-                                option:unwrap-or (get data :angle) ([])
+                                .unwrap-or (get data :angle) ([])
                                 :: 'List 'Number
                               , angle->radian
                           true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
                       .!arc target
-                        option:unwrap $ first center
-                        option:unwrap $ last center
-                        option:unwrap-or (get data :radius) nil
-                        option:unwrap $ first radian
-                        option:unwrap $ last radian
-                        option:unwrap-or (get data :anticlockwise?) nil
+                        .unwrap $ first center
+                        .unwrap $ last center
+                        .unwrap-or (get data :radius) nil
+                        .unwrap $ first radian
+                        .unwrap $ last radian
+                        .unwrap-or (get data :anticlockwise?) nil
                     :arc-to $ let
-                        p1 $ option:unwrap-or (get data :p1) nil
-                        p2 $ option:unwrap-or (get data :p2) nil
+                        p1 $ .unwrap-or (get data :p1) nil
+                        p2 $ .unwrap-or (get data :p2) nil
                       .!arcTo target
-                        option:unwrap $ first p1
-                        option:unwrap $ last p1
-                        option:unwrap $ first p2
-                        option:unwrap $ last p2
-                        option:unwrap-or (get data :radius) nil
+                        .unwrap $ first p1
+                        .unwrap $ last p1
+                        .unwrap $ first p2
+                        .unwrap $ last p2
+                        .unwrap-or (get data :radius) nil
                     :bezier-to $ let
-                        p1 $ option:unwrap-or (get data :p1) nil
-                        p2 $ option:unwrap-or (get data :p2) nil
-                        to-p $ option:unwrap-or (get data :to-p) nil
+                        p1 $ .unwrap-or (get data :p1) nil
+                        p2 $ .unwrap-or (get data :p2) nil
+                        to-p $ .unwrap-or (get data :to-p) nil
                       .!bezierCurveTo target
-                        option:unwrap $ first p1
-                        option:unwrap $ last p1
-                        option:unwrap $ first p2
-                        option:unwrap $ last p2
-                        option:unwrap $ first to-p
-                        option:unwrap $ last to-p
+                        .unwrap $ first p1
+                        .unwrap $ last p1
+                        .unwrap $ first p2
+                        .unwrap $ last p2
+                        .unwrap $ first to-p
+                        .unwrap $ last to-p
                     :quadratic-to $ let
-                        p1 $ option:unwrap-or (get data :p1) nil
-                        to-p $ option:unwrap-or (get data :to-p) nil
+                        p1 $ .unwrap-or (get data :p1) nil
+                        to-p $ .unwrap-or (get data :to-p) nil
                       .!quadraticCurveTo target
-                        option:unwrap $ first p1
-                        option:unwrap $ last p1
-                        option:unwrap $ first to-p
-                        option:unwrap $ last to-p
+                        .unwrap $ first p1
+                        .unwrap $ last p1
+                        .unwrap $ first to-p
+                        .unwrap $ last to-p
                     :begin-hole $ .!beginHole target
                     :end-hole $ .!endHole target
                     _ $ js/console.warn "|not supported op:" op data
@@ -4116,12 +4116,12 @@
             if (list? size)
               if (non-nil? radius)
                 .!drawRoundedRect target 0 0
-                  use-number $ option:unwrap $ first size
-                  use-number $ option:unwrap $ last size
+                  use-number $ .unwrap $ first size
+                  use-number $ .unwrap $ last size
                   , radius
                 .!drawRect target 0 0
-                  use-number $ option:unwrap $ first size
-                  use-number $ option:unwrap $ last size
+                  use-number $ .unwrap $ first size
+                  use-number $ .unwrap $ last size
               js/console.warn "|Unknown size" size
             , &unit
           :examples $ []
@@ -4156,7 +4156,7 @@
                 &doseq
                   k $ keys checked-events
                   let
-                      listener $ option:unwrap $ get checked-events k
+                      listener $ .unwrap $ get checked-events k
                     .!on target (to-string k)
                       fn (event)
                         when (fn? listener) (listener event dispatch!)
@@ -4169,11 +4169,11 @@
           :code $ quote $ defn init-line-style (target line-style)
             when (non-nil? line-style)
               .!lineStyle target $ js-object
-                :width $ use-number $ option:unwrap-or (get line-style :width) nil
-                :color $ use-number $ option:unwrap-or (get line-style :color) nil
-                :alpha $ option:unwrap-or (get line-style :alpha) 1
-                :join $ read-line-join $ option:unwrap-or (get line-style :join) nil
-                :cap $ read-line-cap $ option:unwrap-or (get line-style :cap) nil
+                :width $ use-number $ .unwrap-or (get line-style :width) nil
+                :color $ use-number $ .unwrap-or (get line-style :color) nil
+                :alpha $ .unwrap-or (get line-style :alpha) 1
+                :join $ read-line-join $ .unwrap-or (get line-style :join) nil
+                :cap $ read-line-cap $ .unwrap-or (get line-style :cap) nil
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -4184,11 +4184,11 @@
             when (non-nil? pivot)
               phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
                 decode-map-as
-                  option:unwrap-or (first pivot) 0
+                  .unwrap-or (first pivot) 0
                   , Number
               phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
                 decode-map-as
-                  option:unwrap-or (last pivot) 0
+                  .unwrap-or (last pivot) 0
                   , Number
             , &unit
           :examples $ []
@@ -4201,13 +4201,13 @@
               phlox.core/ffi-set-x! (phlox.core/ffi-position target)
                 if (list? point)
                   decode-map-as
-                    option:unwrap-or (first point) 0
+                    .unwrap-or (first point) 0
                     , Number
                   , 0
               phlox.core/ffi-set-y! (phlox.core/ffi-position target)
                 if (list? point)
                   decode-map-as
-                    option:unwrap-or (last point) 0
+                    .unwrap-or (last point) 0
                     , Number
                   , 0
             , &unit
@@ -4271,7 +4271,7 @@
                 &doseq
                   k $ keys checked-events
                   let
-                      listener $ option:unwrap $ get checked-events k
+                      listener $ .unwrap $ get checked-events k
                     .!on target (to-string k)
                       fn (event)
                         when (fn? listener) (listener event dispatch!)
@@ -4293,13 +4293,13 @@
               phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
                 if (list? pivot)
                   decode-map-as
-                    option:unwrap-or (first pivot) 0
+                    .unwrap-or (first pivot) 0
                     , Number
                   , 0
               phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
                 if (list? pivot)
                   decode-map-as
-                    option:unwrap-or (last pivot) 0
+                    .unwrap-or (last pivot) 0
                     , Number
                   , 0
             , &unit
@@ -4313,13 +4313,13 @@
               phlox.core/ffi-set-x! (phlox.core/ffi-position target)
                 if (list? point)
                   decode-map-as
-                    option:unwrap-or (first point) 0
+                    .unwrap-or (first point) 0
                     , Number
                   , 0
               phlox.core/ffi-set-y! (phlox.core/ffi-position target)
                 if (list? point)
                   decode-map-as
-                    option:unwrap-or (last point) 0
+                    .unwrap-or (last point) 0
                     , Number
                   , 0
             , &unit
@@ -4362,7 +4362,7 @@
           :code $ quote $ defn camel-case (x)
             js-ffi.contract/expect-string |String.replace $ .!replace x (new js/RegExp |-[a-z])
               fn (matched idx full-text)
-                js-ffi.contract/expect-string |String.toUpperCase $ .!toUpperCase $ option:unwrap-or
+                js-ffi.contract/expect-string |String.toUpperCase $ .!toUpperCase $ .unwrap-or
                   nth (js-ffi.contract/expect-string |String.replace-match matched) 1
                   , |
           :examples $ []
@@ -4416,12 +4416,12 @@
         'detect-func-in-map? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-func-in-map? (params)
             if (empty? params) false $ let
-                p0 $ option:unwrap-or (first params) nil
+                p0 $ .unwrap-or (first params) nil
               if
                 and (map? p0)
                   any? (to-pairs p0)
                     fn (pair)
-                      fn? $ option:unwrap-or (last pair) nil
+                      fn? $ .unwrap-or (last pair) nil
                 , true $ recur $ rest params
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
@@ -4465,7 +4465,7 @@
         'remove-nil-values $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-nil-values (dict)
             -> dict $ filter $ fn (pair)
-              non-nil? $ option:unwrap-or (last pair) nil
+              non-nil? $ .unwrap-or (last pair) nil
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] $ :: 'List (:: 'List 'Dynamic)
@@ -4497,11 +4497,11 @@
             -> state
               assoc :acc $ conj
                 decode-map-as
-                  option:unwrap $ get state :acc
+                  .unwrap $ get state :acc
                   :: 'List $ :: 'List 'Dynamic
                 [] kind key
               assoc :step $ + cost $ decode-map-as
-                option:unwrap $ get state :step
+                .unwrap $ get state :step
                 , Number
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -4515,19 +4515,19 @@
               (empty? xs)
                 recur
                   append-op state :add
-                    option:unwrap $ first ys
+                    .unwrap $ first ys
                     , 1
                   , xs $ rest ys
               (empty? ys)
                 recur
                   append-op state :remove
-                    option:unwrap $ first xs
+                    .unwrap $ first xs
                     , 1
                   rest xs
                   , ys
               true $ let
-                  x0 $ option:unwrap $ first xs
-                  y0 $ option:unwrap $ first ys
+                  x0 $ .unwrap $ first xs
+                  y0 $ .unwrap $ first ys
                 cond
                     identical? x0 y0
                     recur (append-op state :remains x0 0) (rest xs) (rest ys)
@@ -4541,10 +4541,10 @@
                     if
                       <=
                         decode-map-as
-                          option:unwrap $ get solution-a :step
+                          .unwrap $ get solution-a :step
                           , Number
                         decode-map-as
-                          option:unwrap $ get solution-b :step
+                          .unwrap $ get solution-b :step
                           , Number
                       , solution-a solution-b
           :examples $ []
