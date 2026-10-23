@@ -1,0 +1,50 @@
+name: Temporary attached Option migration
+
+on:
+  pull_request:
+    paths:
+      - migration/option-attached031.json
+      - .github/workflows/attached-migration.yaml
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: calcit-lang/setup-calcit@v1.5.0
+        with:
+          tools: calcit
+          deps-file: deps.cirru
+      - name: Preserve and migrate the four original attached tests
+        run: |
+          set -euo pipefail
+          out=.calcit/attached-migration
+          mkdir -p "$out"
+          git hash-object calcit.cirru > "$out/before-blob.txt"
+          calcit edit transaction --file migration/option-attached031.json --dry-run --format json > "$out/preview.json"
+          jq -e '.changed == true and (.operations | length) == 4' "$out/preview.json"
+          revision="$(jq -er '.scoped_revision' "$out/preview.json")"
+          calcit edit transaction --file migration/option-attached031.json --expect-revision "$revision" --format json > "$out/applied.json"
+          calcit query def 'phlox.core/>>' --format json > "$out/after-tests.json"
+          jq -e '(.data.tests | length) == 5 and ([.data.tests[].code | .. | strings | select(startswith("option:"))] | length) == 0' "$out/after-tests.json"
+          calcit analyze program-diff HEAD --format json > "$out/program-diff.json"
+          jq '{original_revision,scoped_revision,changed,operation_count:(.operations|length)}' "$out/preview.json" > "$out/receipt.json"
+          cp calcit.cirru "$out/calcit.cirru"
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: phlox-attached-migration-source
+          path: |
+            .calcit/attached-migration/calcit.cirru
+            .calcit/attached-migration/before-blob.txt
+            .calcit/attached-migration/after-tests.json
+            .calcit/attached-migration/program-diff.json
+            .calcit/attached-migration/receipt.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
