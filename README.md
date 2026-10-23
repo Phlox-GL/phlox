@@ -10,7 +10,26 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
 
-使用者注意：候选 0.7.16 配对正式 Calcit/procs **0.30.1**、touch-control 0.0.32、pointed-prompt 0.0.20、js-ffi 0.2.5。严格消费者需同步整张依赖图、重新生成 JS 并刷新，不混装旧 alpha。0.7.16 正式 tag 发布前，不应引用本分支或 main/hash。元素、操作和状态 Map 的外部数据形状、Pixi 7、生产部署路径不变；npm 显式提供与既有 pixi.js 7.4.0 一致的 @pixi/core，补齐 drop-shadow 原先缺失的 peer，不升级 Pixi 大版本。
+### 0.7.17 公开 Option 方法迁移候选
+
+使用者影响：配对正式 Calcit/procs0.30.1，依赖图与已发布0.7.16相同。
+将77个定义中的517处 `option:unwrap-or` 和51处 `option:unwrap` 改为公开
+`.unwrap-or` / `.unwrap`；原参数、默认值表达式、数据/回调合同、宿主身份和绘图公式不变。
+上述源码命中含1处注释子树，其余567处为普通代码；不把注释写法计为运行调用。
+四项原附着测试中的9处解包也同步迁移，测试名、标签、断言与操作数保持不变，不新增测试框架。
+对全部29个命名空间/291个定义读取附着元数据，共9项测试、0项examples；迁移后旧调用为零。
+不回滚#75相对0.7.15已引入的默认值语义差异，不增加消费者强转或renderer缓存绕过。
+候选版本以 `deps.cirru :version` 为准；正式tag发布前不要引用未发布版本或main/hash。
+不把一次性源码事务成功或普通源码检索归零当作附着区域、运行语义或整个生态迁移已完成。
+
+本轮精确CI、原测试、真实消费者和Demo操作结果见迁移PR。
+临时事务输入/源码导出workflow已经移除，不作为永久fix子系统或额外项目检查脚本保留。
+两个preset的空建议本身不覆盖Option调用迁移，不能替代上述附着元数据核查；暂态审计步骤也不保留在CI。
+Actions使用精确正式tag，接受tag可移动风险；原COS内置verify、前端路径和SSH host key校验不变。
+
+以下保留0.7.16的历史迁移说明，不代表本轮新增行为或验收：
+
+已发布0.7.16配对正式 Calcit/procs **0.30.1**、touch-control0.0.32、pointed-prompt0.0.20、js-ffi0.2.5。严格消费者需同步整张依赖图、重新生成JS并刷新，不混装旧alpha。元素、操作和状态Map的外部数据形状、Pixi7、生产部署路径不变；npm显式提供与既有pixi.js7.4.0一致的@pixi/core，补齐drop-shadow原先缺失的peer，不升级Pixi大版本。
 
 当前 main 已合并 #75；官方 program-diff 显示相对已发布 0.7.15 有 19 个定义的表达式变化。部分可选参数现在只对缺失键使用默认值，显式 nil 不再先回落为默认值。后续发版需说明并验收这一语义差别，不能宣称所有默认值行为不变；本分支的返回类型补准不改动这些表达式。
 
