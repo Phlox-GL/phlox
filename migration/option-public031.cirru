@@ -1,5 +1,4 @@
 []
-  [] |config |version |0.7.17
   [] |tree |replace |phlox.render.draw/call-graphics-ops |--path |@3.2.2.3.2.1.2.0 |--input-format |cirru |--code
     quote .unwrap
   [] |tree |replace |phlox.render.draw/call-graphics-ops |--path |@3.2.2.3.2.1.3.0 |--input-format |cirru |--code
