@@ -1817,7 +1817,7 @@
           :tests $ []
             %{} 'TestEntry (:name |missing-branch)
               :code $ quote $ assert= ([] :root :child)
-                option:unwrap $ get
+                .unwrap $ get
                   >>
                     {} $ :cursor $ [] :root
                     , :child
@@ -1829,9 +1829,9 @@
                       :cursor $ [] :root
                       :child $ {} $ :value 7
                     , :child
-                assert= 7 $ option:unwrap $ get child :value
+                assert= 7 $ .unwrap $ get child :value
                 assert= ([] :root :child)
-                  option:unwrap $ get child :cursor
+                  .unwrap $ get child :cursor
             %{} 'TestEntry (:name |rejects-non-map-branch)
               :code $ quote $ assert= true
                 try
@@ -1846,15 +1846,15 @@
                     [] :demo 0 :drag
                     {} $ :dragging? true
                   root $ >>
-                    option:unwrap $ get store :states
+                    .unwrap $ get store :states
                     , :demo
                   row $ >> root 0
                   drag $ >> row :drag
                 assert= ([] :demo 0 :drag)
-                  option:unwrap $ get drag :cursor
+                  .unwrap $ get drag :cursor
                 assert=
                   {} $ :dragging? true
-                  option:unwrap $ get drag :data
+                  .unwrap $ get drag :data
               :tags $ #{} :unit
             %{} 'TestEntry (:name |string-child-state-and-numeric-sibling)
               :code $ quote $ let
@@ -1864,11 +1864,11 @@
                     0 $ {} $ :data 8
                   child $ >> states |frequency:0
                 assert= ([] :demo |frequency:0)
-                  option:unwrap $ get child :cursor
-                assert= 3 $ option:unwrap $ get child :data
+                  .unwrap $ get child :cursor
+                assert= 3 $ .unwrap $ get child :data
                 assert=
                   {} $ :data 8
-                  option:unwrap $ get states 0
+                  .unwrap $ get states 0
               :tags $ #{} :unit
         'AppendableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait AppendableHost
