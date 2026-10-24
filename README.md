@@ -10,7 +10,20 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
 
-### 0.7.17 公开 Option 方法迁移候选
+### 0.7.18 正式依赖图迁移候选
+
+使用者影响：仍配对正式 Calcit/procs 0.30.1。严格消费者需同时使用
+touch-control 0.0.33、js-ffi 0.2.6 和 pointed-prompt 0.0.21，重新生成 JS；
+不要只升级一个模块后混用旧依赖图。Phlox Snapshot、公开类型、Pixi 和控件逻辑不变。
+Pointed Prompt 改用已检查的 DOM value 入口：正常 input/textarea 提交行为不变，
+缺失或非字符串的异常宿主 value 会报错，不再静默回落为空串。
+
+本轮不修改源码或放宽质量基线。原九项测试、完整 strict 与固定版本的真实
+Circling Tree 消费者继续使用同一候选依赖图验收；COS 仅使用 Action 自带 verify。
+候选版本正式发布前不要引用其 tag，不以 main/hash 替代正式依赖。
+合并可能触发原 Demo 前端部署，不代表允许合并或部署下游业务项目。
+
+### 0.7.17 公开 Option 方法迁移记录
 
 使用者影响：配对正式 Calcit/procs0.30.1，依赖图与已发布0.7.16相同。
 将77个定义中的517处 `option:unwrap-or` 和51处 `option:unwrap` 改为公开
