@@ -53,7 +53,7 @@ jobs:
       run: |
         set -euo pipefail
         calcit edit format
-        git diff --exit-code -- calcit.cirru
+        git diff --quiet --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > /tmp/phlox-strict.json
         jq -e '.data.workflow.status == "passed" and (.diagnostics | length == 0)' /tmp/phlox-strict.json
@@ -81,15 +81,15 @@ jobs:
         cat > "$consumer/deps.cirru" <<'EOF'
         {} (:calcit-version |0.30.1)
           :version |0.1.2
-          :dependencies $ {} (|Phlox-GL/phlox |0.7.17)
-            |Triadica/touch-control |0.0.32
-            |calcit-lang/js-ffi |0.2.5
-            |mvc-works/pointed-prompt |0.0.20
+          :dependencies $ {} (|Phlox-GL/phlox |0.7.18)
+            |Triadica/touch-control |0.0.33
+            |calcit-lang/js-ffi |0.2.6
+            |mvc-works/pointed-prompt |0.0.21
         EOF
         cd "$consumer"
         yarn add --exact @calcit/procs@0.30.1
         calcit calcit.cirru edit format
-        git diff --exit-code -- calcit.cirru
+        git diff --quiet --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > "$RUNNER_TEMP/consumer-strict.json"
         jq -e '.data.workflow.status == "passed" and (.diagnostics | length == 0)' "$RUNNER_TEMP/consumer-strict.json"
