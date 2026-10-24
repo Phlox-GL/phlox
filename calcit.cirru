@@ -1142,64 +1142,70 @@
                 hide-text? $ .unwrap-or (get props :hide-text?) false
               let
                   position $ .unwrap-or (get props :position) nil
-                container
+                create-list :container
                   {} $ :position position
-                  circle $ {} (:radius radius)
-                    :position $ [] 0 0
-                    :fill fill
-                    :alpha alpha
-                    :on $ {}
-                      :pointerdown $ fn (e d!)
-                        let
-                            x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
-                            y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
-                          d! cursor $ merge state $ {} (:dragging? true)
-                            :x0 $ [] x y
-                            :p0 position
-                      :globalpointermove $ fn (e d!)
-                        when
-                          .unwrap-or (get state :dragging?) nil
-                          let
-                              x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
-                              y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
+                  concat
+                    [] $ [] 0 $ circle
+                      {} (:radius radius)
+                        :position $ [] 0 0
+                        :fill fill
+                        :alpha alpha
+                        :on $ {}
+                          :pointerdown $ fn (e d!)
                             let
-                                x0 $ decode-map-as
-                                  .unwrap-or (get state :x0) nil
-                                  :: 'List 'Number
-                              on-change
-                                complex/add
-                                  decode-map-as
-                                    .unwrap-or (get state :p0) nil
-                                    :: 'List 'Number
-                                  []
-                                    * unit $ - x $ .unwrap-or (first x0) 0
-                                    * unit $ - y $ .unwrap-or (last x0) 0
-                                , d!
-                      :pointerup $ fn (e d!)
-                        d! cursor $ assoc state :dragging? false
-                      :pointerupoutside $ fn (e d!)
-                        d! cursor $ assoc state :dragging? false
-                  if-not hide-text? $ text $ {}
-                    :text $ str "|("
-                      .!toFixed
-                        .unwrap-or (first position) 0
-                        , 1
-                      , "|, "
-                        .!toFixed
-                          .unwrap-or (last position) 0
-                          , 1
-                        , "|)➤" $ str unit
-                    :alpha $ * alpha 0.3
-                    :position $ [] -20 -16
-                    :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace")
-                  if
-                    and (not hide-text?)
-                      non-nil? $ .unwrap-or (get props :title) nil
-                    text $ {}
-                      :text $ .unwrap-or (get props :title) nil
-                      :alpha $ * alpha 0.3
-                      :position $ [] -12 6
-                      :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
+                                x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
+                                y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
+                              d! cursor $ merge state $ {} (:dragging? true)
+                                :x0 $ [] x y
+                                :p0 position
+                          :globalpointermove $ fn (e d!)
+                            when
+                              .unwrap-or (get state :dragging?) nil
+                              let
+                                  x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
+                                  y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
+                                let
+                                    x0 $ decode-map-as
+                                      .unwrap-or (get state :x0) nil
+                                      :: 'List 'Number
+                                  on-change
+                                    complex/add
+                                      decode-map-as
+                                        .unwrap-or (get state :p0) nil
+                                        :: 'List 'Number
+                                      []
+                                        * unit $ - x $ .unwrap-or (first x0) 0
+                                        * unit $ - y $ .unwrap-or (last x0) 0
+                                    , d!
+                          :pointerup $ fn (e d!)
+                            d! cursor $ assoc state :dragging? false
+                          :pointerupoutside $ fn (e d!)
+                            d! cursor $ assoc state :dragging? false
+                    if hide-text? ([])
+                      [] $ [] 1 $ text
+                        {}
+                          :text $ str "|("
+                            .!toFixed
+                              .unwrap-or (first position) 0
+                              , 1
+                            , "|, "
+                              .!toFixed
+                                .unwrap-or (last position) 0
+                                , 1
+                              , "|)➤" $ str unit
+                          :alpha $ * alpha 0.3
+                          :position $ [] -20 -16
+                          :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace")
+                    if
+                      and (not hide-text?)
+                        non-nil? $ .unwrap-or (get props :title) nil
+                      [] $ [] 2 $ text
+                        {}
+                          :text $ .unwrap-or (get props :title) nil
+                          :alpha $ * alpha 0.3
+                          :position $ [] -12 6
+                          :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
+                      []
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic 'Dynamic
@@ -1325,17 +1331,31 @@
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                             if (fn? on-change)
                               on-change
-                                ->
-                                  +
-                                    decode-map-as
-                                      .unwrap-or (get state :v0) value
-                                      , Number
-                                    * unit $ - x2 $ decode-map-as
-                                      .unwrap-or (get state :x0) 0
-                                      , Number
-                                  (fn (v) (if rounded? (round v) v))
-                                  (fn (v) (if (non-nil? (.unwrap-or (get props :max) nil)) (&min (decode-map-as (.unwrap-or (get props :max) v) Number) v) v))
-                                  (fn (v) (if (non-nil? (.unwrap-or (get props :min) nil)) (&max (decode-map-as (.unwrap-or (get props :min) v) Number) v) v))
+                                let
+                                    v0 $ +
+                                      decode-map-as
+                                        .unwrap-or (get state :v0) value
+                                        , Number
+                                      * unit $ - x2 $ decode-map-as
+                                        .unwrap-or (get state :x0) 0
+                                        , Number
+                                    v1 $ if rounded? (round v0) v0
+                                    v2 $ if
+                                      non-nil? $ .unwrap-or (get props :max) nil
+                                      &min
+                                        decode-map-as
+                                          .unwrap-or (get props :max) v1
+                                          , Number
+                                        , v1
+                                      , v1
+                                  if
+                                    non-nil? $ .unwrap-or (get props :min) nil
+                                    &max
+                                      decode-map-as
+                                        .unwrap-or (get props :min) v2
+                                        , Number
+                                      , v2
+                                    , v2
                                 , d!
                               js/console.log "|[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
@@ -1402,17 +1422,31 @@
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                             if (fn? on-change)
                               on-change
-                                ->
-                                  +
-                                    decode-map-as
-                                      .unwrap-or (get state :v0) value
-                                      , Number
-                                    * unit $ - x2 $ decode-map-as
-                                      .unwrap-or (get state :x0) 0
-                                      , Number
-                                  (fn (v) (if rounded? (round v) v))
-                                  (fn (v) (if (non-nil? (.unwrap-or (get props :max) nil)) (&min (decode-map-as (.unwrap-or (get props :max) v) Number) v) v))
-                                  (fn (v) (if (non-nil? (.unwrap-or (get props :min) nil)) (&max (decode-map-as (.unwrap-or (get props :min) v) Number) v) v))
+                                let
+                                    v0 $ +
+                                      decode-map-as
+                                        .unwrap-or (get state :v0) value
+                                        , Number
+                                      * unit $ - x2 $ decode-map-as
+                                        .unwrap-or (get state :x0) 0
+                                        , Number
+                                    v1 $ if rounded? (round v0) v0
+                                    v2 $ if
+                                      non-nil? $ .unwrap-or (get props :max) nil
+                                      &min
+                                        decode-map-as
+                                          .unwrap-or (get props :max) v1
+                                          , Number
+                                        , v1
+                                      , v1
+                                  if
+                                    non-nil? $ .unwrap-or (get props :min) nil
+                                    &max
+                                      decode-map-as
+                                        .unwrap-or (get props :min) v2
+                                        , Number
+                                      , v2
+                                    , v2
                                 , d!
                               js/console.log "|[slider] missing :on-change listener"
                       :pointerup $ fn (e d!)
