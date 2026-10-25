@@ -4459,7 +4459,7 @@
                 , true $ recur $ rest params
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
+            :args $ [] $ :: 'List 'Dynamic
         'element? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn element? (x)
             and (struct? x)
