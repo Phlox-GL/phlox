@@ -81,7 +81,7 @@ jobs:
         cat > "$consumer/deps.cirru" <<'EOF'
         {} (:calcit-version |0.31.0)
           :version |0.1.2
-          :dependencies $ {} (|Phlox-GL/phlox |0.8.0-alpha.1)
+          :dependencies $ {} (|Phlox-GL/phlox |0.8.0-alpha.2)
             |Triadica/touch-control |0.0.33
             |calcit-lang/js-ffi |0.2.6
             |mvc-works/pointed-prompt |0.0.22
