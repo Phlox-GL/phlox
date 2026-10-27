@@ -79,7 +79,7 @@ jobs:
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         # Only stage the target graph/runtime; leave consumer Snapshot untouched.
         cat > "$consumer/deps.cirru" <<'EOF'
-        {} (:calcit-version |0.31.0-alpha.7)
+        {} (:calcit-version |0.31.0)
           :version |0.1.2
           :dependencies $ {} (|Phlox-GL/phlox |0.8.0-alpha.1)
             |Triadica/touch-control |0.0.33
@@ -87,7 +87,7 @@ jobs:
             |mvc-works/pointed-prompt |0.0.21
         EOF
         cd "$consumer"
-        yarn add --exact @calcit/procs@0.31.0-alpha.7
+        yarn add --exact @calcit/procs@0.31.0
         calcit calcit.cirru edit format
         git diff --quiet --exit-code -- calcit.cirru
         calcit calcit.cirru --check-only --all-defs --format json

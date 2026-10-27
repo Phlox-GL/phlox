@@ -8,7 +8,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前 alpha.7 工具链
 
-CLI / `@calcit/procs` 成对使用已发布的 `0.31.0-alpha.7`，固定真实消费者夹具也配对同一工具链。
+CLI / `@calcit/procs` 成对使用已发布的 `0.31.0`，固定真实消费者夹具也配对同一工具链。
 本次不改 Snapshot、控件合同或依赖模块 tag，保留原测试、完整 strict 和一小时 npm 隔离。
 下文 0.30.1 段落属于历史记录；稳定消费者继续使用原发布维护线。
 
