@@ -6,6 +6,12 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
+### 当前 alpha.7 工具链
+
+CLI / `@calcit/procs` 成对使用已发布的 `0.31.0-alpha.7`，固定真实消费者夹具也配对同一工具链。
+本次不改 Snapshot、控件合同或依赖模块 tag，保留原测试、完整 strict 和一小时 npm 隔离。
+下文 0.30.1 段落属于历史记录；稳定消费者继续使用原发布维护线。
+
 ### 前端 COS/CDN 部署
 
 COS Action 1.2.0 使用已有 `public-base-url` 执行内置引用与公开访问 verify，不复制额外校验脚本。PR 资源按仓库/PR 编号/run/attempt 隔离，Vite base 与 COS prefix 来自同一结果。生产 COS 与原 rsync 路径、SSH host key 校验保持不变；fork PR 不上传，缺少 COS secrets 的同仓 PR 仍按原策略提示并跳过上传。
