@@ -1,5 +1,5 @@
 {
-  "version": "0.8.0-alpha.3",
+  "version": "0.8.0",
   "packageManager": "yarn@4.18.0",
   "scripts": {
     "compile": "calcit calcit.cirru js",
@@ -8,7 +8,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@calcit/procs": "0.31.0",
+    "@calcit/procs": "0.32.0",
     "@pixi/core": "7.4.0",
     "@quamolit/phlox-utils": "^0.0.2",
     "@quamolit/touch-control": "0.0.13",
