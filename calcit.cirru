@@ -755,7 +755,7 @@
           :code $ quote $ def tabs
             [] ([] :drafts |Drafts) ([] :grids |Grids) ([] :curves |Curves) ([] :gradients |Gradients) ([] :keyboard |Keyboard) ([] :slider |Slider) ([] :buttons |Buttons) ([] :points |Points) ([] :switch |Switch) ([] :input |Input) ([] :messages |Messages) ([] :slider-point "|Slider Point") ([] :spin-slider "|Spin Slider") ([] :arrows |Arrows) ([] :shadow |Shadow) ([] :mesh |Mesh)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ List (List Dynamic)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.container
           :require

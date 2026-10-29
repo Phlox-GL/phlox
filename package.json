@@ -8,7 +8,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@calcit/procs": "0.32.0",
+    "@calcit/procs": "0.32.1",
     "@pixi/core": "7.4.0",
     "@quamolit/phlox-utils": "^0.0.2",
     "@quamolit/touch-control": "0.0.13",
