@@ -1227,10 +1227,10 @@
     'phlox.comp.slider $ %{} 'FileEntry
       :defs $ {}
         '*prev-spin-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *prev-spin-point nil
+          :code $ quote $ defref *prev-spin-point (Option :none)
           :examples $ []
           :schema $ quote $ Ref
-            Optional $ List Number
+            Option $ List Number
         '*spin-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *spin-pivot ([] 0 0)
           :examples $ []
@@ -1440,7 +1440,7 @@
                           x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                         reset! *spin-pivot $ [] x y
-                        reset! *prev-spin-point $ [] 0 0
+                        reset! *prev-spin-point $ Option :some $ [] 0 0
                         d! cursor $ assoc state :dragging? true
                     :globalpointermove $ fn (e d!)
                       let
@@ -1455,9 +1455,9 @@
                               prev-point @*prev-spin-point
                             if
                               < (vec-length current-point) (&* 0.5 radius)
-                              reset! *prev-spin-point nil
+                              reset! *prev-spin-point $ Option :none
                               do
-                                if (non-nil? prev-point)
+                                when-let (prev-point prev-point)
                                   let
                                       delta-vec $ rebase current-point prev-point
                                       delta $ phlox.core/ffi-atan2
@@ -1475,10 +1475,12 @@
                                           .unwrap-or (get props :max) nil
                                         , d!
                                       js/console.warn "|missing :on-change for spin-slider"
-                                reset! *prev-spin-point current-point
-                    :pointerup $ fn (e d!) (reset! *prev-spin-point nil)
+                                reset! *prev-spin-point $ Option :some current-point
+                    :pointerup $ fn (e d!)
+                      reset! *prev-spin-point $ Option :none
                       d! cursor $ assoc state :dragging? false
-                    :pointerupoutside $ fn (e d!) (reset! *prev-spin-point nil)
+                    :pointerupoutside $ fn (e d!)
+                      reset! *prev-spin-point $ Option :none
                       d! cursor $ assoc state :dragging? false
                 text $ {}
                   :text $ str $ let
