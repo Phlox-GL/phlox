@@ -6,7 +6,30 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
-### 当前工具链与使用者影响
+### 0.32.1 迁移候选：使用者影响
+
+候选 `0.8.0` 将 CLI 与 `@calcit/procs` 配对正式 `0.32.1`，消费者需要整图
+升级、重新生成 JS 并重启开发服务。依赖使用已发布的 Touch Control `0.0.35`、
+Pointed Prompt `0.0.24` 和 JS-FFI `0.2.9`；完整 Caps strict 安装与 toolchain
+验证通过。本库 0.8.0 尚未发布，正式 tag 出现前不要把候选分支当作发布依赖。
+
+此前官方工具转换 25 处旧类型表达式。本轮 289 个项目定义的运行代码和原测试
+均不变，只为 Demo 的 tabs 常量补齐实际 `List<List<Dynamic>>` 类型，确保传入
+comp-tabs 的 List 证明来自数据本身；内部 Tag/String 对仍保留真实混合值合同。
+不改变 Pixi 7、控件默认值、混合状态游标、HUD，也不增加强转或放宽类型门禁。
+
+全定义 355/355、完整 strict（diagnostics 为空）、原九项测试、不可变安装与
+构建通过；dynamic-method 与 deprecated-call 均为零。真实 Circling Tree
+源码 fixture 在同一已发布底层图加本库本地候选下通过 315 个定义、完整 strict
+及构建，原 Snapshot 不变守卫保留；该测试不表示已发布 Phlox 或已部署消费者。
+实际消费者 Sun/Circle/Bezier 场景、Bezier 控制点拖动和刷新通过，无 console warning/error。
+
+本库实际 Demo 的 Slider 40→88、Button 回调、Switch Off→On、单行中文/emoji
+提交与刷新通过，无 console error。Pixi drop-shadow 的 FILTER_RESOLUTION
+废弃提示及 IAB 中既有静态标签可见性风险仍按 #71 保留，不宣称已修复。
+尚需本次精确 PR 的 Linux CI、评审与后续 main 验收；不新增验证脚本或测试框架。
+
+### 历史：0.31.0 工具链与使用者影响
 
 候选 **0.8.0-alpha.3** 配对正式 **Calcit / @calcit/procs 0.31.0**，依赖图同步到真实声明 0.31 的 Touch Control **0.0.34**、JS-FFI **0.2.7**、Pointed Prompt **0.0.23**。消费者须整图同步、重新生成 JS 并重启开发服务；正式 tag 发布前不要引用候选 main/hash。保留已有 0.8 alpha 发布线，不向旧 0.7 稳定线回退。
 

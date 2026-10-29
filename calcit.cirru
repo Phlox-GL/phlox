@@ -96,9 +96,7 @@
                 :on $ {} $ :pointertap
                   fn (e d!) (println "|click on image")
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number (-> Dynamic) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.drafts
           :require $ phlox.core :refer $ g hslx hclx rect circle text container graphics create-list image
@@ -134,9 +132,7 @@
                     :up $ fn (e d!) (println :up)
                   {}
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Bool 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Bool Dynamic (-> Dynamic) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.keyboard
           :require $ phlox.core :refer $ g hslx rect circle text container graphics create-list
@@ -199,9 +195,7 @@
                     :title "|max 10"
                     :max 10
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
         'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point-demo (states)
             let
@@ -255,9 +249,7 @@
                       d! cursor $ assoc state :f value
                     :max 10
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
         'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider-demo (states)
             let
@@ -280,9 +272,7 @@
                       d! cursor $ assoc state :pos pos
                     :label |dgemo
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.slider-demo
           :require
@@ -307,9 +297,7 @@
                   :on-change $ fn (from to d!)
                     d! cursor $ assoc (assoc state :from from) :to to
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
         'comp-buttons $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-buttons ()
             container
@@ -326,9 +314,7 @@
                 :position $ [] 100 120
                 :on-pointertap $ fn (e d!) (println |clicked)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             ; println |Store store $ .unwrap-or (get store :tab) nil
@@ -377,9 +363,7 @@
                   :radius 10
                   :fill 0xffffff
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'comp-curves $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-curves ()
             container ({})
@@ -455,9 +439,7 @@
                         + (* 8 idx) 10
                         , 80
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
         'comp-gradients $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-gradients ()
             container ({})
@@ -475,9 +457,7 @@
                 :position $ [] 120 120
                 :style $ {} $ :fill (hslx 20 90 60)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
         'comp-grids $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-grids () (echo "|calculating grids")
             container ({})
@@ -493,9 +473,7 @@
                         :on $ {} $ :pointerover
                           fn (e d!) (println |hover: x y)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
         'comp-mesh-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-mesh-demo (states)
             let
@@ -568,9 +546,7 @@
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :zoom value
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
         'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages-demo (states)
             let
@@ -613,9 +589,7 @@
                               .unwrap-or (get message :id) nil
                         , Dynamic
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'comp-points-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-points-demo (states)
             let
@@ -663,9 +637,7 @@
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p5 position
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Map 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
         'comp-shadow-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-shadow-demo ()
             container
@@ -684,9 +656,7 @@
                     :quality 4
                     :blur 6
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
         'comp-switch-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch-demo (states)
             let
@@ -707,9 +677,7 @@
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'comp-text-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-text-input (states)
             let
@@ -757,42 +725,37 @@
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'grid-row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-row (x)
             -> (range 40)
               map $ fn (y) ([] x y)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Number
-            :return $ :: 'List $ :: 'List 'Number
+          :schema $ quote $ Fn Number
+            -> $ List $ List Number
         'inline-file $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro inline-file (name)
             read-file $ str |assets/ name
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{} :fs-read
-            :expansion $ :: 'Expr 'String
-            :required $ [] $ :: 'Expr 'String
+          :schema $ quote $ Macro (Expr String)
+            -> $ Expr String
+            :capabilities :fs-read
         'load-sample-texture $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn load-sample-texture ()
             .!from PIXI/Texture |https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/1a2af589827261.5e022908ed0b1.jpg
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ []
-            :features $ #{} :js-ffi
-            :return $ :: 'JsNullish 'JsObject
+          :schema $ quote $ Fn
+            -> $ JsNullish JsObject
+            :features :js-ffi
         'sample-texture $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def sample-texture (load-sample-texture)
           :examples $ []
-          :schema $ :: 'JsNullish 'JsObject
+          :schema $ quote $ JsNullish JsObject
         'tabs $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def tabs
             [] ([] :drafts |Drafts) ([] :grids |Grids) ([] :curves |Curves) ([] :gradients |Gradients) ([] :keyboard |Keyboard) ([] :slider |Slider) ([] :buttons |Buttons) ([] :points |Points) ([] :switch |Switch) ([] :input |Input) ([] :messages |Messages) ([] :slider-point "|Slider Point") ([] :spin-slider "|Spin Slider") ([] :arrows |Arrows) ([] :shadow |Shadow) ([] :mesh |Mesh)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote $ List (List Dynamic)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.container
           :require
@@ -819,7 +782,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Ref (Map Tag Dynamic)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when
@@ -833,9 +796,7 @@
               reset! *store $ updater @*store op op-id op-time
               , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (; js/console.log PIXI)
             if dev? $ load-console-formatter!
@@ -846,9 +807,7 @@
             when true (render-control!) (start-control-loop! 8 on-control-event)
             println "|App Started"
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (js-nullish? build-errors)
@@ -860,16 +819,12 @@
               hud! |error build-errors
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! (comp-container @*store) dispatch! $ {}
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.main
           :require (|pixi.js :as PIXI)
@@ -891,7 +846,7 @@
               :states $ {}
               :cursor $ []
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.schema
     'phlox.app.updater $ %{} 'FileEntry
@@ -919,9 +874,8 @@
                 decode-map-as d $ :: 'Map 'Tag 'Dynamic
               _ $ do (eprintln "|unknown op" op) store
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Dynamic 'String 'Number
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Tag Dynamic) Dynamic String Number
+            -> $ Map Tag Dynamic
           :tests $ [] $ %{} 'TestEntry (:name |payload-free-demo-operations)
             :code $ quote $ let
                 store $ {} (:x 0) (:keyboard-on? false) (:counted 0)
@@ -940,65 +894,61 @@
         'dev-check $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro dev-check (data rule) (quasiquote nil)
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr 'Nil
-            :required $ [] (:: 'Expr 'Dynamic) (:: 'Expr 'Dynamic)
+          :schema $ quote $ Macro (Expr Dynamic) (Expr Dynamic)
+            -> $ Expr Nil
         'dev-check-message $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro dev-check-message (message data rule) (quasiquote nil)
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr 'Nil
-            :required $ [] (:: 'Expr 'Dynamic) (:: 'Expr 'Dynamic) (:: 'Expr 'Dynamic)
+          :schema $ quote $ Macro (Expr Dynamic) (Expr Dynamic) (Expr Dynamic)
+            -> $ Expr Nil
         'lilac-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-circle nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-color $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-color nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-container nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-event-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-event-map nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-graphics nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-line-segments nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-line-style nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-point nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-polyline nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-rect nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-text nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-text-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-text-style nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.check
     'phlox.comp.arrow $ %{} 'FileEntry
@@ -1046,9 +996,7 @@
                     g :move-to to
                     g :line-to $ complex/add to arm-right
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic (-> Dynamic) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.arrow
           :require
@@ -1098,13 +1046,11 @@
                   :position $ [] 8 8
                   :style $ {} (:fill color) (:font-size size) (:font-family font-family)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'lilac-button $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-button nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.button
           :require
@@ -1207,17 +1153,15 @@
                           :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
                       []
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-cursor nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-drag-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-drag-point nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.drag-point
           :require
@@ -1265,17 +1209,15 @@
                       :align-right? true
                       :on-pointertap $ fn (e d!) (on-pointertap message d!)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'lilac-message-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-message-list nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-messages $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-messages nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.messages
           :require
@@ -1287,11 +1229,12 @@
         '*prev-spin-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *prev-spin-point nil
           :examples $ []
-          :schema $ :: 'Ref $ :: 'Optional (:: 'List 'Number)
+          :schema $ quote $ Ref
+            Optional $ List Number
         '*spin-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *spin-pivot ([] 0 0)
           :examples $ []
-          :schema $ :: 'Ref $ :: 'List 'Number
+          :schema $ quote $ Ref (List Number)
         'comp-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider (states props)
             dev-check
@@ -1380,9 +1323,7 @@
                       :font-size 13
                       :font-family "|Arial, sans-serif"
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'comp-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point (states props)
             dev-check
@@ -1460,9 +1401,7 @@
                     :position $ [] 20 3
                     :style $ {} (:fill color) (:font-size 10) (:font-family "|Menlo, monospace")
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'comp-spin-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider (states props)
             let
@@ -1564,21 +1503,19 @@
                       :position $ complex/add position $ [] 0 -20
                       :style $ {} (:fill color) (:font-size 13) (:font-family "|Josefin Sans, sans-serif")
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic (-> Dynamic) (:features :js-ffi)
         'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-cursor nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-slider nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-slider-point nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.slider
           :require
@@ -1624,13 +1561,11 @@
                     :font-family "|Arial, sans-serif"
                   :alpha 1
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'lilac-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-switch nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.switch
           :require
@@ -1674,9 +1609,7 @@
                           :font-family font-family
                         :position $ [] 10 2
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] (:: 'List 'Dynamic) 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (List Dynamic) Dynamic Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.tabs
           :require
@@ -1689,15 +1622,13 @@
           :code $ quote $ defn add (p1 p2)
             let[] (a b) p1 $ let[] (x y) p2 $ [] (+ a x) (+ b y)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'Number) (:: 'List 'Number)
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number) (List Number)
+            -> $ List Number
         'conjugate $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn conjugate (pair) (update pair 1 negate)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'List 'Number
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number)
+            -> $ List Number
         'divide-by $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn divide-by (point x)
             []
@@ -1708,25 +1639,22 @@
                 .unwrap-or (last point) 0
                 , x
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'Number) 'Number
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number) Number
+            -> $ List Number
         'minus $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn minus (v1 v2)
             let[] (a b) v1 $ let[] (x y) v2 $ [] (- a x) (- b y)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'Number) (:: 'List 'Number)
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number) (List Number)
+            -> $ List Number
         'polar-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polar-point (angle r)
             []
               * r $ phlox.core/ffi-cos angle
               * r $ phlox.core/ffi-sin angle
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Number 'Number
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn Number Number
+            -> $ List Number
         'rand-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rand-point (n & xs)
             let
@@ -1735,10 +1663,9 @@
                 - n $ floor $ * (random) (* 2 n)
                 - m0 $ floor $ * (random) (* 2 m0)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Number)
-            :args $ [] 'Number
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn Number & Number
+            -> $ List Number
+            :features :js-ffi
         'rebase $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rebase (value base) "|complex number division, renamed since naming collision"
             let[] (x y) value $ let[] (a b) base $ let
@@ -1747,25 +1674,22 @@
                 * inverted $ + (* x a) (* y b)
                 * inverted $ - (* y a) (* x b)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'Number) (:: 'List 'Number)
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number) (List Number)
+            -> $ List Number
         'scale $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn scale (pair v)
             map pair $ fn (x) (* v x)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'Number) 'Number
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number) Number
+            -> $ List Number
         'times $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn times (v1 v2)
             let[] (a b) v1 $ let[] (x y) v2 $ []
               - (* a x) (* b y)
               + (* a y) (* b x)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'Number) (:: 'List 'Number)
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn (List Number) (List Number)
+            -> $ List Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.complex
           :require $ js-ffi.browser :refer $ random
@@ -1773,28 +1697,25 @@
       :defs $ {}
         'MobileDetectHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait MobileDetectHost
-            .mobile $ :: 'Fn $ {}
-              :args $ [] 'MobileDetectHost
-              :return $ :: 'JsNullish 'String
+            .mobile $ quote $ Fn MobileDetectHost
+              -> $ JsNullish String
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'detect-mobile? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-mobile? ()
             js-present? $ .!mobile $ unsafe-coerce (new mobile-detect js/window.navigator.userAgent) MobileDetectHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Bool) (:features :js-ffi)
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
             = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'mobile? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def mobile? (detect-mobile?)
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.config
           :require $ |mobile-detect :default mobile-detect
@@ -1803,35 +1724,35 @@
         '*app $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *app nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         '*dispatch-fn $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *dispatch-fn
             fn (& args) nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         '*drag-moving-cache $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *drag-moving-cache nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         '*events-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *events-element nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         '*renderer $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *renderer nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         '*stage-config $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *stage-config
             {}
               :move $ [] 0 0
               :scale 1
           :examples $ []
-          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Ref (Map Tag Dynamic)
         '*tree-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *tree-element nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn >> (states k)
             let
@@ -1845,9 +1766,8 @@
                 decode-map-as parent-cursor $ :: 'List 'Dynamic
                 , k
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Dynamic 'Dynamic) 'Dynamic
-            :return $ :: 'Map 'Dynamic 'Dynamic
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic
+            -> $ Map Dynamic Dynamic
           :tests $ []
             %{} 'TestEntry (:name |missing-branch)
               :code $ quote $ assert= ([] :root :child)
@@ -1906,618 +1826,469 @@
               :tags $ #{} :unit
         'AppendableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait AppendableHost
-            .appendChild $ :: 'Fn $ {}
-              :args $ [] 'AppendableHost 'Dynamic
-              :return 'Unit
+            .appendChild $ quote $ Fn AppendableHost Dynamic (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'CanvasContextHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait CanvasContextHost (:font 'String)
-            .measureText $ :: 'Fn $ {}
-              :args $ [] 'CanvasContextHost 'String
-              :return 'JsObject
+            .measureText $ quote $ Fn CanvasContextHost String (-> JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'CanvasHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait CanvasHost
-            .getContext $ :: 'Fn $ {}
-              :args $ [] 'CanvasHost 'String
-              :return 'JsObject
+            .getContext $ quote $ Fn CanvasHost String (-> JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'ColorHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait ColorHost
-            .toNumber $ :: 'Fn $ {}
-              :args $ [] 'ColorHost
-              :return 'Number
+            .toNumber $ quote $ Fn ColorHost (-> Number)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'DestroyableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DestroyableHost
-            .destroy $ :: 'Fn $ {}
-              :args $ [] 'DestroyableHost
-              :return 'Unit
+            .destroy $ quote $ Fn DestroyableHost (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'DocumentHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DocumentHost (:body 'JsObject)
-            .createElement $ :: 'Fn $ {}
-              :args $ [] 'DocumentHost 'String
-              :return 'JsObject
+            .createElement $ quote $ Fn DocumentHost String (-> JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'DomEventHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DomEventHost (:clientX 'Number) (:clientY 'Number) (:data 'JsObject) (:deltaY 'Number) (:key 'String) (:keyCode 'Number) (:ctrlKey 'Bool) (:metaKey 'Bool) (:shiftKey 'Bool)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'EventTargetHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait EventTargetHost
-            .addEventListener $ :: 'Fn $ {}
-              :args $ [] 'EventTargetHost 'String $ :: 'Fn
-                {}
-                  :args $ [] 'Dynamic
-                  :return 'Dynamic
-              :return 'Unit
+            .addEventListener $ quote $ Fn EventTargetHost String
+              Fn Dynamic $ -> Dynamic
+              -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'EventTargetWithOptionsHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait EventTargetWithOptionsHost
-            .addEventListener $ :: 'Fn $ {}
-              :args $ [] 'EventTargetWithOptionsHost 'String
-                :: 'Fn $ {}
-                  :args $ [] 'Dynamic
-                  :return 'Dynamic
-                , 'Dynamic
-              :return 'Unit
+            .addEventListener $ quote $ Fn EventTargetWithOptionsHost String
+              Fn Dynamic $ -> Dynamic
+              , Dynamic (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'FontFaceObserverHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait FontFaceObserverHost
-            .load $ :: 'Fn $ {}
-              :args $ [] 'FontFaceObserverHost
-              :return 'Dynamic
+            .load $ quote $ Fn FontFaceObserverHost (-> Dynamic)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'HsluvHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait HsluvHost (:hsluv_h 'Number) (:hsluv_s 'Number) (:hsluv_l 'Number) (:rgb_r 'Number) (:rgb_g 'Number) (:rgb_b 'Number)
-            .hsluvToRgb $ :: 'Fn $ {}
-              :args $ [] 'HsluvHost
-              :return 'Unit
+            .hsluvToRgb $ quote $ Fn HsluvHost (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'JsArrayHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait JsArrayHost
-            .push $ :: 'Fn $ {}
-              :args $ [] 'JsArrayHost 'Dynamic
-              :return 'Number
-            .forEach $ :: 'Fn $ {}
-              :args $ [] 'JsArrayHost $ :: 'Fn
-                {}
-                  :args $ [] 'Dynamic
-                  :return 'Dynamic
-              :return 'Unit
+            .push $ quote $ Fn JsArrayHost Dynamic (-> Number)
+            .forEach $ quote $ Fn JsArrayHost
+              Fn Dynamic $ -> Dynamic
+              -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'JsEntryHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait JsEntryHost (:0 'String) (:1 'Dynamic)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiAnchorHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiAnchorHost
-            .set $ :: 'Fn $ {}
-              :args $ [] 'PixiAnchorHost 'Dynamic
-              :return 'Unit
+            .set $ quote $ Fn PixiAnchorHost Dynamic (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiAppHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiAppHost (:renderer 'JsObject) (:stage 'JsObject) (:ticker 'JsObject) (:view 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiContainerHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiContainerHost
-            .addChild $ :: 'Fn $ {}
-              :args $ [] 'PixiContainerHost 'Dynamic
-              :return 'Unit
-            .addChildAt $ :: 'Fn $ {}
-              :args $ [] 'PixiContainerHost 'Dynamic 'Number
-              :return 'Unit
-            .getChildAt $ :: 'Fn $ {}
-              :args $ [] 'PixiContainerHost 'Number
-              :return 'JsObject
-            .removeChildAt $ :: 'Fn $ {}
-              :args $ [] 'PixiContainerHost 'Number
-              :return 'Unit
+            .addChild $ quote $ Fn PixiContainerHost Dynamic (-> Unit)
+            .addChildAt $ quote $ Fn PixiContainerHost Dynamic Number (-> Unit)
+            .getChildAt $ quote $ Fn PixiContainerHost Number (-> JsObject)
+            .removeChildAt $ quote $ Fn PixiContainerHost Number (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiDisplayHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiDisplayHost (:anchor 'JsObject) (:pivot 'JsObject) (:position 'JsObject) (:scale 'JsObject) (:shader 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiEventDataHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiEventDataHost (:global 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiGeometryHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiGeometryHost
-            .addAttribute $ :: 'Fn $ {}
-              :args $ [] 'PixiGeometryHost 'Dynamic 'Dynamic 'Dynamic
-              :return 'Unit
-            .addIndex $ :: 'Fn $ {}
-              :args $ [] 'PixiGeometryHost 'Dynamic
-              :return 'Unit
+            .addAttribute $ quote $ Fn PixiGeometryHost Dynamic Dynamic Dynamic (-> Unit)
+            .addIndex $ quote $ Fn PixiGeometryHost Dynamic (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiPluginsHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiPluginsHost (:accessibility 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiRendererHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiRendererHost (:plugins 'JsObject)
-            .render $ :: 'Fn $ {}
-              :args $ [] 'PixiRendererHost 'Dynamic
-              :return 'Unit
-            .resize $ :: 'Fn $ {}
-              :args $ [] 'PixiRendererHost 'Number 'Number
-              :return 'Unit
+            .render $ quote $ Fn PixiRendererHost Dynamic (-> Unit)
+            .resize $ quote $ Fn PixiRendererHost Number Number (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiScaleHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiScaleHost
-            .set $ :: 'Fn $ {}
-              :args $ [] 'PixiScaleHost 'Number 'Number
-              :return 'Unit
+            .set $ quote $ Fn PixiScaleHost Number Number (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiShaderHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiShaderHost (:uniforms 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiTickerHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiTickerHost
-            .stop $ :: 'Fn $ {}
-              :args $ [] 'PixiTickerHost
-              :return 'Unit
+            .stop $ quote $ Fn PixiTickerHost (-> Unit)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PixiVectorHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiVectorHost (:x 'Number) (:y 'Number)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'PromiseHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PromiseHost
-            .then $ :: 'Fn $ {}
-              :args $ [] 'PromiseHost $ :: 'Fn
-                {}
-                  :args $ [] 'Dynamic
-                  :return 'Dynamic
-              :return 'Dynamic
+            .then $ quote $ Fn PromiseHost
+              Fn Dynamic $ -> Dynamic
+              -> Dynamic
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'TextMetricsHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait TextMetricsHost (:width 'Number)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
-          :schema $ :: 'Trait
+          :schema $ quote Trait
         'circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn clear-phlox-caches! () &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-element (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ index-items children
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Tag 'Dynamic $ :: 'List 'Dynamic
+          :schema $ quote $ Fn Tag Dynamic (List Dynamic) (-> phlox.schema/PhloxElement)
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ decode-map-as children
               :: 'List $ :: 'List 'Dynamic
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Tag 'Dynamic $ :: 'List 'Dynamic
+          :schema $ quote $ Fn Tag Dynamic (List Dynamic) (-> phlox.schema/PhloxElement)
         'defcomp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro defcomp (name params & body)
             quasiquote $ defn ~name ~params ~@body
           :examples $ []
-          :schema $ :: 'Macro $ {} (:rest 'Syntax)
-            :capabilities $ #{}
-            :expansion $ :: 'Definition 'Fn
-            :required $ [] 'SyntaxSymbol 'SyntaxList
+          :schema $ quote $ Macro SyntaxSymbol SyntaxList & Syntax
+            -> $ Definition Fn
         'ffi-abs $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-abs (value)
             js-ffi.contract/expect-number |Math.abs $ js/Math.abs value
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-accessibility $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-accessibility (plugins)
             unsafe-coerce
               .-accessibility $ unsafe-coerce plugins PixiPluginsHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-add-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-child (parent child)
             .!addChild (unsafe-coerce parent PixiContainerHost) child
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-add-event-listener $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-event-listener (target event callback)
             .!addEventListener (unsafe-coerce target EventTargetHost) event callback
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'String $ :: 'Fn
-              {} (:return 'Dynamic)
-                :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic String
+            Fn Dynamic $ -> Dynamic
+            -> Unit
+            :features :js-ffi
         'ffi-add-event-listener-options $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-event-listener-options (target event callback options)
             .!addEventListener (unsafe-coerce target EventTargetWithOptionsHost) event callback options
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'String
-              :: 'Fn $ {} (:return 'Dynamic)
-                :args $ [] 'Dynamic
-              , 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic String
+            Fn Dynamic $ -> Dynamic
+            , Dynamic (-> Unit) (:features :js-ffi)
         'ffi-anchor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-anchor (target)
             unsafe-coerce
               .-anchor $ unsafe-coerce target PixiDisplayHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-append-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-append-child (parent child)
             .!appendChild (unsafe-coerce parent AppendableHost) child
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-atan2 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-atan2 (y x)
             js-ffi.contract/expect-number |Math.atan2 $ js/Math.atan2 y x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Number (-> Number) (:features :js-ffi)
         'ffi-bool $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-bool (value) (js-ffi.contract/expect-bool |Phlox.boolean value)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
         'ffi-cos $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-cos (value)
             js-ffi.contract/expect-number |Math.cos $ js/Math.cos value
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-create-element (document tag)
             unsafe-coerce
               .!createElement (unsafe-coerce document DocumentHost) tag
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
         'ffi-destroy $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-destroy (target)
             .!destroy $ unsafe-coerce target DestroyableHost
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'ffi-document-body $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-document-body (document)
             unsafe-coerce
               .-body $ unsafe-coerce document DocumentHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-entry-key $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-entry-key (entry)
             .-0 $ unsafe-coerce entry JsEntryHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> String) (:features :js-ffi)
         'ffi-entry-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-entry-value (entry)
             .-1 $ unsafe-coerce entry JsEntryHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'ffi-event-client-x $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-client-x (event)
             .-clientX $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-event-client-y $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-client-y (event)
             .-clientY $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-event-ctrl? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-ctrl? (event)
             .-ctrlKey $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
         'ffi-event-data $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-data (event)
             unsafe-coerce
               .-data $ unsafe-coerce event DomEventHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-event-delta-y $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-delta-y (event)
             unsafe-coerce
               .-deltaY $ unsafe-coerce event DomEventHost
               , Number
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-event-key $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-key (event)
             .-key $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> String) (:features :js-ffi)
         'ffi-event-key-code $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-key-code (event)
             .-keyCode $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-event-meta? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-meta? (event)
             .-metaKey $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
         'ffi-event-shift? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-shift? (event)
             .-shiftKey $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
         'ffi-for-each $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-for-each (items callback)
             .!forEach (unsafe-coerce items JsArrayHost) callback
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic $ :: 'Fn
-              {} (:return 'Dynamic)
-                :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic
+            Fn Dynamic $ -> Dynamic
+            -> Unit
+            :features :js-ffi
         'ffi-geometry-add-attribute! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-geometry-add-attribute! (target id buffer size)
             .!addAttribute (unsafe-coerce target PixiGeometryHost) id buffer size
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-geometry-add-index! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-geometry-add-index! (target index)
             .!addIndex (unsafe-coerce target PixiGeometryHost) index
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-get-context $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-get-context (element kind)
             unsafe-coerce
               .!getContext (unsafe-coerce element CanvasHost) kind
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
         'ffi-global $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-global (data)
             unsafe-coerce
               .-global $ unsafe-coerce data PixiEventDataHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-load-font $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-load-font (font)
             .!load $ unsafe-coerce font FontFaceObserverHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'ffi-measure-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-measure-text (context text)
             unsafe-coerce
               .!measureText (unsafe-coerce context CanvasContextHost) text
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
         'ffi-nullish? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-nullish? (value)
             nil? $ unsafe-coerce value Dynamic
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
         'ffi-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-number (value) (js-ffi.contract/expect-number |Phlox.number value)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-object-x $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-object-x (value)
             .-x $ unsafe-coerce value PixiVectorHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-object-y $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-object-y (value)
             .-y $ unsafe-coerce value PixiVectorHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-pivot (target)
             unsafe-coerce
               .-pivot $ unsafe-coerce target PixiDisplayHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-plugins $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-plugins (renderer)
             unsafe-coerce
               .-plugins $ unsafe-coerce renderer PixiRendererHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-position (target)
             unsafe-coerce
               .-position $ unsafe-coerce target PixiDisplayHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-push-array! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-push-array! (xs x)
             js-ffi.contract/expect-number |Array.push $ .!push (unsafe-coerce xs JsArrayHost) x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Number) (:features :js-ffi)
         'ffi-random $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-random () (browser/random)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'ffi-render $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-render (renderer stage)
             .!render (unsafe-coerce renderer PixiRendererHost) stage
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-renderer $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-renderer (app)
             unsafe-coerce
               .-renderer $ unsafe-coerce app PixiAppHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-resize $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-resize (renderer width height)
             .!resize (unsafe-coerce renderer PixiRendererHost) width height
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Number Number (-> Unit) (:features :js-ffi)
         'ffi-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-scale (target)
             unsafe-coerce
               .-scale $ unsafe-coerce target PixiDisplayHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-set-anchor! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-anchor! (anchor value)
             .!set (unsafe-coerce anchor PixiAnchorHost) value
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-set-font! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-font! (context font)
             set!
@@ -2525,17 +2296,13 @@
               , font
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic String (-> Unit) (:features :js-ffi)
         'ffi-set-scale! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-scale! (target x y)
             .!set (unsafe-coerce target PixiScaleHost) x y
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Number Number (-> Unit) (:features :js-ffi)
         'ffi-set-x! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-x! (target value)
             set!
@@ -2543,9 +2310,7 @@
               , value
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Number (-> Unit) (:features :js-ffi)
         'ffi-set-y! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-y! (target value)
             set!
@@ -2553,105 +2318,82 @@
               , value
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Number (-> Unit) (:features :js-ffi)
         'ffi-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-shader (target)
             unsafe-coerce
               .-shader $ unsafe-coerce target PixiDisplayHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-sin $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-sin (value)
             js-ffi.contract/expect-number |Math.sin $ js/Math.sin value
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-stage $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-stage (app)
             unsafe-coerce
               .-stage $ unsafe-coerce app PixiAppHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-stop $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-stop (target)
             .!stop $ unsafe-coerce target PixiTickerHost
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'ffi-text-width $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-text-width (metrics)
             unsafe-coerce
               .-width $ unsafe-coerce metrics TextMetricsHost
               , Number
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-then $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-then (promise callback)
             .!then (unsafe-coerce promise PromiseHost) callback
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic $ :: 'Fn
-              {} (:return 'Dynamic)
-                :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic
+            Fn Dynamic $ -> Dynamic
+            -> Dynamic
+            :features :js-ffi
         'ffi-ticker $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-ticker (app)
             unsafe-coerce
               .-ticker $ unsafe-coerce app PixiAppHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-uniforms $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-uniforms (shader)
             unsafe-coerce
               .-uniforms $ unsafe-coerce shader PixiShaderHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-view $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-view (app)
             unsafe-coerce
               .-view $ unsafe-coerce app PixiAppHost
               , JsObject
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-window-height $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-window-height ()
             let
                 viewport $ browser/viewport
               viewport :height
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'ffi-window-width $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-window-width ()
             let
                 viewport $ browser/viewport
               viewport :width
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'g $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn g (op & args)
             let
@@ -2672,21 +2414,18 @@
                 _ $ js/console.warn "|not supported:" op
               [] op data
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic)
-            :args $ [] 'Tag
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'Dynamic
+          :schema $ quote $ Fn Tag & Dynamic
+            -> $ List Dynamic
+            :features :js-ffi
         'graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group (props & children) (dev-check props lilac-container)
             noted "|which is an alias of container" $ create-element :container props children
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-drag-moving (el)
             ffi-add-event-listener el |mousedown $ fn (event)
@@ -2743,18 +2482,14 @@
                       render-stage-for-viewer!
               js-object $ :passive true
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'hclx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hclx (h c l)
             js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
               new Color $ hcl-to-hex h c l
               , ColorHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Number Number (-> Number) (:features :js-ffi)
         'hsluvx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hsluvx (h c l)
             let
@@ -2767,23 +2502,18 @@
                 new Color $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
                 , ColorHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Number Number (-> Number) (:features :js-ffi)
         'hslx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hslx (h s l)
             js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
               new Color $ js-object (:h h) (:s s) (:l l) (:a 1)
               , ColorHost
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Number Number (-> Number) (:features :js-ffi)
         'image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'init-pixi-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pixi-app! (options)
             let
@@ -2807,37 +2537,35 @@
                 render-stage-for-viewer!
               , pixi-app
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Tag Dynamic) (-> JsObject) (:features :js-ffi)
         'lilac-arc $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-arc nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-arc-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-arc-to nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-begin-fill $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-begin-fill nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-bezier-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-bezier-to nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-image nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-mesh nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'lilac-quadratic-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-quadratic-to nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'line-segment->ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segment->ops (pair)
             let
@@ -2846,10 +2574,9 @@
                 g :move-to $ .unwrap $ nth pair0 0
                 g :line-to $ .unwrap $ nth pair0 1
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'List $ :: 'List 'Dynamic
+          :schema $ quote $ Fn Dynamic
+            -> $ List $ List Dynamic
+            :features :js-ffi
         'line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segments (props & children) (dev-check props lilac-line-segments)
             let
@@ -2863,21 +2590,18 @@
                   mapcat segments line-segment->ops
                 , children
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mesh (props & children) (dev-check props lilac-mesh) (create-element :mesh props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'mount-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-app! (app dispatch!)
             let
                 element-tree $ render-element app dispatch!
               ffi-add-child (ffi-stage @*app) element-tree
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit)
         'on-control-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-control-event (elapsed states delta)
             if (:left-b? states) (reset-stage-config!)
@@ -2889,9 +2613,7 @@
                     * x (ffi-abs x) 0.02
                   .unwrap-or (nth scales 1) 0
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Number 'touch-control.core/ControlState 'touch-control.core/ControlDelta
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number touch-control.core/ControlState touch-control.core/ControlDelta (-> Unit) (:features :js-ffi)
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
@@ -2906,13 +2628,11 @@
                   -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'render! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render! (expanded-app dispatch! options)
             when
@@ -2937,9 +2657,7 @@
               reset! *tree-element expanded-app
             render-stage-for-viewer!
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic $ :: 'Map 'Tag 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-stage-for-viewer! ()
             let
@@ -2962,9 +2680,7 @@
               -> @*app ffi-stage ffi-scale $ ffi-set-scale! scale scale
             -> @*app ffi-renderer $ ffi-render $ ffi-stage @*app
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'rerender-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rerender-app! (app dispatch! options) (; js/console.log "|rerender tree" app @*tree-element)
             update-children
@@ -2973,9 +2689,7 @@
               ffi-stage @*app
               , dispatch! options
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic $ :: 'Map 'Tag 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'reset-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reset-stage-config! ()
             let
@@ -3014,14 +2728,11 @@
                 render-stage-for-viewer!
               , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Dynamic) (:return 'phlox.schema/PhloxElement)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
         'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
@@ -3052,9 +2763,7 @@
                 render-stage-for-viewer!
               , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] (:: 'List 'Number) 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (List Number) Number (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.core
           :require (|pixi.js :as PIXI) (phlox.schema :as schema)
@@ -3077,9 +2786,8 @@
               conj cursor :data
               , data
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'Dynamic) 'Dynamic
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Tag Dynamic) (List Dynamic) Dynamic
+            -> $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.cursor
     'phlox.input $ %{} 'FileEntry
@@ -3087,7 +2795,7 @@
         'lilac-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-input nil
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'request-text! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn request-text! (e options cb) (dev-check options lilac-input)
             prompt-at!
@@ -3095,11 +2803,10 @@
               decode-map-as options $ :: 'Map 'Tag 'Dynamic
               , cb
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic
+            Fn String $ -> Unit
+            -> Unit
+            :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.input
           :require
@@ -3110,8 +2817,7 @@
         'get-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-value (*x) @*x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] $ :: 'Ref 'Dynamic
+          :schema $ quote $ Fn (Ref Dynamic) (-> Dynamic)
         'handle-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-event (kind tree event dispatch!)
             when (non-nil? tree)
@@ -3130,9 +2836,7 @@
                 js/console.log "|unknown tree for handling event:" tree
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Tag 'Dynamic (:: 'Map 'Tag 'Dynamic) 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Tag Dynamic (Map Tag Dynamic) Dynamic (-> Unit) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |struct-tree-parent-child-keyboard-dispatch)
             :code $ quote $ let
                 calls $ ref $ [] :start
@@ -3160,9 +2864,7 @@
             phlox.core/ffi-add-event-listener js/window |keypress $ fn (event)
               handle-event :press (get-value *tree-element) (wrap-event event) dispatch!
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] (:: 'Ref 'Dynamic) 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Ref Dynamic) Dynamic (-> Unit) (:features :js-ffi)
         'wrap-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn wrap-event (event)
             {} (:event event)
@@ -3172,9 +2874,8 @@
               :meta? $ phlox.core/ffi-event-meta? event
               :shift? $ phlox.core/ffi-event-shift? event
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Dynamic
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn Dynamic
+            -> $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.keyboard
           :require $ phlox.util :refer $ element?
@@ -3183,32 +2884,27 @@
         'angle->radian $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn angle->radian (x) (* x radian-ratio)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number
+          :schema $ quote $ Fn Number (-> Number)
         'bound-x $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn bound-x (x lower higher)
             js-ffi.contract/expect-number |Math.min $ js/Math.min (either higher js/+Infinity)
               js/Math.max (either lower js/-Infinity) x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Dynamic Dynamic (-> Number) (:features :js-ffi)
         'ffi-pi $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ffi-pi 3.141592653589793
           :examples $ []
-          :schema $ :: 'Number
+          :schema $ quote Number
         'radian-ratio $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def radian-ratio (/ ffi-pi 180)
           :examples $ []
-          :schema $ :: 'Number
+          :schema $ quote Number
         'vec-length $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn vec-length (point)
             let[] (x y) point $ js-ffi.contract/expect-number |Math.sqrt $ js/Math.sqrt
               &+ (&* x x) (&* y y)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] $ :: 'List 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (List Number) (-> Number) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.math
     'phlox.render $ %{} 'FileEntry
@@ -3217,8 +2913,7 @@
           :code $ quote $ defn first-value (items)
             .unwrap-or (first items) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> Dynamic)
         'init-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-box-size (target size)
             if (non-nil? size)
@@ -3230,17 +2925,13 @@
                   .unwrap $ nth size 1
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-fill $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-fill (target color) (.!endFill target)
             if (non-nil? color) (.!beginFill target color)
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-filters $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-filters (target filters)
             if
@@ -3257,9 +2948,7 @@
                 set! (.-filters target) filters-arr
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-geometry $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-geometry (data)
             let
@@ -3273,9 +2962,7 @@
               phlox.core/ffi-geometry-add-index! geo $ to-js-data $ .unwrap-or (get data :index) nil
               , geo
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'init-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-scale (target scale)
             when (non-nil? scale)
@@ -3301,9 +2988,7 @@
                 true $ js/console.error "|unknown scale" scale
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-shader (data uniforms)
             .!from PIXI/Shader
@@ -3311,15 +2996,12 @@
               .unwrap-or (get data :fragment-source) nil
               , uniforms
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'last-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn last-value (items)
             .unwrap-or (last items) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> Dynamic)
         'read-draw-mode-alias $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-draw-mode-alias (draw-mode)
             if (tag? draw-mode)
@@ -3327,9 +3009,7 @@
                 _ $ js/console.warn "|Unknown draw mode:" draw-mode
               , draw-mode
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (target children dispatch!)
             &doseq (child-pair children)
@@ -3339,9 +3019,7 @@
                   , dispatch!
                 js/console.log "|nil child:" child-pair
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'render-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-circle (element dispatch!)
             let
@@ -3366,9 +3044,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-container (element dispatch!)
             let
@@ -3386,9 +3062,7 @@
               init-filters target $ .unwrap-or (get props :filters) nil
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-element (element dispatch!)
             if (element? element)
@@ -3407,9 +3081,7 @@
                   {}
               js/console.error "|Unknown element:" element
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-graphics (element dispatch!)
             let
@@ -3432,9 +3104,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-image (element dispatch!)
             let
@@ -3455,9 +3125,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-mesh (element dispatch!)
             let
@@ -3488,9 +3156,7 @@
               ; js/console.log target
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-rect (element dispatch!)
             let
@@ -3515,9 +3181,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-text (element dispatch!)
             let
@@ -3542,18 +3206,14 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'update-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-angle (target v v0)
             when (not= v v0)
               set! (.-angle target) v
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-box-size (target size size')
             if (not= size size')
@@ -3569,9 +3229,7 @@
                   set! (.-height target) js/undefined
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-children (raw-children raw-old-children parent-container dispatch! options)
             let
@@ -3621,9 +3279,7 @@
                         _ $ println "|Unknown op:" op
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic $ :: 'Map 'Tag 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'update-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-circle (element old-element target dispatch!)
             let
@@ -3670,9 +3326,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-container (element old-element target)
             let
@@ -3700,9 +3354,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-draw-mode $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-draw-mode (target draw-mode draw-mode')
             when (not= draw-mode draw-mode')
@@ -3712,9 +3364,7 @@
                 set! (.-drawMode target) m
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-element (element old-element parent-element idx dispatch! options)
             cond
@@ -3745,9 +3395,7 @@
               true $ js/console.warn "|Unknown case:" element old-element
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Number 'Dynamic $ :: 'Map 'Tag 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Number Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'update-filters $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-filters (target filters filters0)
             let
@@ -3764,18 +3412,14 @@
                   init-filters target next-filters
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-geometry $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-geometry (target geo geo')
             when (not= geo geo')
               -> target .-geometry $ set! $ init-geometry geo
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-graphics (element old-element target dispatch!)
             let
@@ -3810,9 +3454,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-image (element old-element target dispatch!)
             let
@@ -3856,9 +3498,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-mesh (element old-element target dispatch!)
             let
@@ -3911,9 +3551,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rect (element old-element target dispatch!)
             let
@@ -3962,9 +3600,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-scale (target scale scale')
             when (not= scale scale')
@@ -3990,18 +3626,14 @@
                 true $ js/console.error "|unknown scale:" scale
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-shader (target shader shader' uniforms)
             when (not= shader shader')
               -> target .-shader $ set! $ init-shader shader uniforms
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-text (element old-element target)
             let
@@ -4049,9 +3681,7 @@
                 .unwrap-or (get props :filters) nil
                 .unwrap-or (get props' :filters) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.render
           :require (|pixi.js :as PIXI)
@@ -4132,9 +3762,7 @@
                     :end-hole $ .!endHole target
                     _ $ js/console.warn "|not supported op:" op data
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'draw-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn draw-circle (target radius)
             if (number? radius)
@@ -4142,9 +3770,7 @@
               js/console.warn "|Unknown radius" radius
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'draw-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn draw-rect (target size radius)
             if (list? size)
@@ -4159,27 +3785,21 @@
               js/console.warn "|Unknown size" size
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-alpha (target alpha)
             when (non-nil? alpha)
               set! (-> target .-alpha) alpha
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-angle (target v)
             when (non-nil? v)
               set! (.-angle target) v
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-events (target events dispatch!)
             when (non-nil? events)
@@ -4196,9 +3816,7 @@
                         when (fn? listener) (listener event dispatch!)
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-line-style (target line-style)
             when (non-nil? line-style)
@@ -4210,9 +3828,7 @@
                 :cap $ read-line-cap $ .unwrap-or (get line-style :cap) nil
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pivot (target pivot)
             when (non-nil? pivot)
@@ -4226,9 +3842,7 @@
                   , Number
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-position (target point)
             when (non-nil? point)
@@ -4246,18 +3860,14 @@
                   , 0
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-rotation (target v)
             when (non-nil? v)
               set! (.-rotation target) v
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'read-line-cap $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-line-cap (x)
             match x
@@ -4267,9 +3877,7 @@
               :square $ .-SQUARE PIXI/LINE_CAP
               _ $ println "|unknown line-cap:" x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'read-line-join $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-line-join (x)
             match x
@@ -4279,18 +3887,14 @@
               :round $ .-ROUND PIXI/LINE_JOIN
               _ $ println "|unknown line-join value:" x
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'update-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-alpha (target alpha alpha0)
             when (not= alpha alpha0)
               set! (-> target .-alpha) alpha
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-events (target events old-events dispatch!)
             when (non-nil? old-events)
@@ -4318,9 +3922,7 @@
                 set! (.-eventMode target) |none
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-pivot (target pivot pivot0)
             when (not= pivot pivot0)
@@ -4338,9 +3940,7 @@
                   , 0
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-position (target point point0)
             when (not= point point0)
@@ -4358,18 +3958,14 @@
                   , 0
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rotation (target v v0)
             when (not= v v0)
               set! (.-rotation target) v
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.render.draw
           :require
@@ -4383,7 +3979,7 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct PhloxElement (:name 'Dynamic) (:props 'Dynamic) (:children 'Dynamic)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.schema
     'phlox.util $ %{} 'FileEntry
@@ -4391,7 +3987,7 @@
         '*ctx-instance $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *ctx-instance nil
           :examples $ []
-          :schema $ :: 'Ref 'Dynamic
+          :schema $ quote $ Ref Dynamic
         'camel-case $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn camel-case (x)
             js-ffi.contract/expect-string |String.replace $ .!replace x (new js/RegExp |-[a-z])
@@ -4400,19 +3996,16 @@
                   nth (js-ffi.contract/expect-string |String.replace-match matched) 1
                   , |
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> String) (:features :js-ffi)
         'canvas-center! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn canvas-center! ()
             []
               &* 0.5 $ phlox.core/ffi-number js/window.innerWidth
               &* 0.5 $ phlox.core/ffi-number js/window.innerHeight
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ []
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn
+            -> $ List Number
+            :features :js-ffi
         'convert-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn convert-line-style (props)
             ->
@@ -4444,9 +4037,7 @@
               pairs-map
               to-js-data
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'detect-func-in-map? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-func-in-map? (params)
             if (empty? params) false $ let
@@ -4458,8 +4049,7 @@
                       fn? $ .unwrap-or (last pair) nil
                 , true $ recur $ rest params
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] $ :: 'List 'Dynamic
+          :schema $ quote $ Fn (List Dynamic) (-> Bool)
         'element? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn element? (x)
             and (struct? x)
@@ -4467,15 +4057,13 @@
                 (:some definition) (= definition schema/PhloxElement)
                 (:none) false
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> Bool)
         'index-items $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn index-items (xs)
             -> xs $ map-indexed $ fn (idx x) ([] idx x)
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'List 'Dynamic
-            :return $ :: 'List $ :: 'List 'Dynamic
+          :schema $ quote $ Fn (List Dynamic)
+            -> $ List $ List Dynamic
         'measure-text-width! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn measure-text-width! (text size font-family)
             when
@@ -4486,24 +4074,20 @@
             phlox.core/ffi-set-font! @*ctx-instance $ str size "|px " font-family
             phlox.core/ffi-text-width $ phlox.core/ffi-measure-text @*ctx-instance text
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'String 'Number 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String Number String (-> Number) (:features :js-ffi)
         'rand-color $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rand-color ()
             floor $ * (random) 0xffffff
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'remove-nil-values $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-nil-values (dict)
             -> dict $ filter $ fn (pair)
               non-nil? $ .unwrap-or (last pair) nil
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'List (:: 'List 'Dynamic)
-            :return $ :: 'List $ :: 'List 'Dynamic
+          :schema $ quote $ Fn
+            List $ List Dynamic
+            -> $ List $ List Dynamic
           :tests $ [] $ %{} 'TestEntry (:name |nil-filter-keeps-false-and-keys)
             :code $ quote $ assert=
               [] ([] 1 false) ([] 2 |a)
@@ -4515,9 +4099,7 @@
                 not $ js/isNaN x
               , x $ do (js/console.error "|Invalid number:" x) nil
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.util
           :require
@@ -4538,9 +4120,8 @@
                 .unwrap $ get state :step
                 , Number
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'Tag 'Dynamic 'Number
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Tag Dynamic) Tag Dynamic Number
+            -> $ Map Tag Dynamic
         'find-minimal-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn find-minimal-ops (state xs ys)
             cond
@@ -4582,9 +4163,8 @@
                           , Number
                       , solution-a solution-b
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'Dynamic) (:: 'List 'Dynamic)
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Tag Dynamic) (List Dynamic) (List Dynamic)
+            -> $ Map Tag Dynamic
           :tests $ [] $ %{} 'TestEntry (:name |legacy-simple-changes)
             :code $ quote $ do
               assert=
@@ -4624,7 +4204,7 @@
               :acc $ []
               :step 0
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.util.lcs
     'phlox.util.styles $ %{} 'FileEntry
@@ -4632,25 +4212,25 @@
         'font-code $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace"
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'font-normal $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def font-normal "|Hind, Helvetica, Arial, sans-serif"
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'layout-column $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def layout-column
             {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'layout-expand $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def layout-expand
             {} (:flex 1) (:overflow :auto)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
         'layout-row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def layout-row
             {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ quote Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.util.styles
