@@ -96,7 +96,7 @@
                 :on $ {} $ :pointertap
                   fn (e d!) (println "|click on image")
           :examples $ []
-          :schema $ quote $ Fn Number (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.drafts
           :require $ phlox.core :refer $ g hslx hclx rect circle text container graphics create-list image
@@ -314,7 +314,7 @@
                 :position $ [] 100 120
                 :on-pointertap $ fn (e d!) (println |clicked)
           :examples $ []
-          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             ; println |Store store $ .unwrap-or (get store :tab) nil
@@ -439,7 +439,7 @@
                         + (* 8 idx) 10
                         , 80
           :examples $ []
-          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-gradients $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-gradients ()
             container ({})
@@ -457,7 +457,7 @@
                 :position $ [] 120 120
                 :style $ {} $ :fill (hslx 20 90 60)
           :examples $ []
-          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-grids $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-grids () (echo "|calculating grids")
             container ({})
@@ -473,7 +473,7 @@
                         :on $ {} $ :pointerover
                           fn (e d!) (println |hover: x y)
           :examples $ []
-          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-mesh-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-mesh-demo (states)
             let
@@ -656,7 +656,7 @@
                     :quality 4
                     :blur 6
           :examples $ []
-          :schema $ quote $ Fn (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-switch-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch-demo (states)
             let
@@ -1711,7 +1711,7 @@
           :code $ quote $ def dev?
             = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Bool
         'mobile? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def mobile? (detect-mobile?)
           :examples $ []
@@ -4212,16 +4212,16 @@
         'font-code $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'font-normal $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def font-normal "|Hind, Helvetica, Arial, sans-serif"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'layout-column $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def layout-column
             {} (:display |flex) (:align-items |stretch) (:flex-direction |column)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'layout-expand $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def layout-expand
             {} (:flex 1) (:overflow :auto)
@@ -4231,6 +4231,6 @@
           :code $ quote $ def layout-row
             {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.util.styles
