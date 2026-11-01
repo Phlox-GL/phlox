@@ -141,21 +141,21 @@
         'comp-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
                 {} $ :position $ [] 100 100
                 comp-slider (>> states :a)
                   {}
-                    :value $ .unwrap-or (get state :a) nil
+                    :value $ phlox.util/prop state :a
                     :unit 1
                     :position $ [] 20 0
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :a value
                 comp-slider (>> states :b)
                   {}
-                    :value $ .unwrap-or (get state :b) nil
+                    :value $ phlox.util/prop state :b
                     :title |Refine
                     :unit 0.1
                     :position $ [] 20 60
@@ -163,7 +163,7 @@
                       d! cursor $ assoc state :b value
                 comp-slider (>> states :c)
                   {}
-                    :value $ .unwrap-or (get state :c) nil
+                    :value $ phlox.util/prop state :c
                     :unit 10
                     :position $ [] 20 120
                     :fill $ hslx 50 90 70
@@ -172,7 +172,7 @@
                       d! cursor $ assoc state :c value
                 comp-slider (>> states :d)
                   {}
-                    :value $ .unwrap-or (get state :d) nil
+                    :value $ phlox.util/prop state :d
                     :position $ [] 20 180
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :d value
@@ -180,7 +180,7 @@
                     :round? true
                 comp-slider (>> states :e)
                   {}
-                    :value $ .unwrap-or (get state :e) nil
+                    :value $ phlox.util/prop state :e
                     :position $ [] 20 240
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :e value
@@ -188,7 +188,7 @@
                     :min 10
                 comp-slider (>> states :f)
                   {}
-                    :value $ .unwrap-or (get state :f) nil
+                    :value $ phlox.util/prop state :f
                     :position $ [] 20 300
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :f value
@@ -199,28 +199,28 @@
         'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} (:a 40) (:b 20) (:c 10) (:d 10) (:e 10) (:f 10)
               container
                 {} $ :position $ [] 120 100
                 comp-slider-point (>> states :a)
                   {}
-                    :value $ .unwrap-or (get state :a) nil
+                    :value $ phlox.util/prop state :a
                     :unit 1
                     :position $ [] 20 0
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :a value
                 comp-slider-point (>> states :b)
                   {}
-                    :value $ .unwrap-or (get state :b) nil
+                    :value $ phlox.util/prop state :b
                     :unit 0.1
                     :position $ [] 20 60
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :b value
                 comp-slider-point (>> states :c)
                   {}
-                    :value $ .unwrap-or (get state :c) nil
+                    :value $ phlox.util/prop state :c
                     :unit 10
                     :position $ [] 20 120
                     :fill $ hslx 50 90 70
@@ -229,21 +229,21 @@
                       d! cursor $ assoc state :c value
                 comp-slider-point (>> states :d)
                   {}
-                    :value $ .unwrap-or (get state :d) nil
+                    :value $ phlox.util/prop state :d
                     :position $ [] 20 180
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :d value
                     :round? true
                 comp-slider-point (>> states :e)
                   {}
-                    :value $ .unwrap-or (get state :e) nil
+                    :value $ phlox.util/prop state :e
                     :position $ [] 20 240
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :e value
                     :min 10
                 comp-slider-point (>> states :f)
                   {}
-                    :value $ .unwrap-or (get state :f) nil
+                    :value $ phlox.util/prop state :f
                     :position $ [] 20 300
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :f value
@@ -253,15 +253,15 @@
         'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} (:v1 10)
                     :pos $ [] 240 240
               container ({})
                 comp-spin-slider (>> states :demo)
                   {}
-                    :position $ .unwrap-or (get state :pos) nil
-                    :value $ .unwrap-or (get state :v1) nil
+                    :position $ phlox.util/prop state :pos
+                    :value $ phlox.util/prop state :v1
                     :unit 1
                     :min 1
                     ; :fill $ hslx 50 90 44
@@ -283,15 +283,15 @@
         'comp-arrows-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-arrows-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {}
                     :from $ [] 100 100
                     :to $ [] 200 200
               comp-arrow (>> states :demo1)
                 {}
-                  :from $ .unwrap-or (get state :from) nil
-                  :to $ .unwrap-or (get state :to) nil
+                  :from $ phlox.util/prop state :from
+                  :to $ phlox.util/prop state :to
                   :width 2
                   :arm-length 8
                   :on-change $ fn (from to d!)
@@ -317,31 +317,23 @@
           :schema $ quote $ Fn (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
-            ; println |Store store $ .unwrap-or (get store :tab) nil
             let
                 cursor $ []
-                states $ decode-map-as
-                  .unwrap-or (get store :states) nil
-                  :: 'Map 'Tag 'Dynamic
+                states $ decode-map-as (phlox.util/require-prop store :states)
+                  quote $ Map Tag Dynamic
               group
                 {} $ :position $ [] 0 0
-                comp-tabs tabs
-                  .unwrap-or (get store :tab) nil
+                comp-tabs tabs (phlox.util/require-prop store :tab)
                   {} $ :position $ [] 10 10
                   fn (t d!) (d! :tab t)
-                match
-                  .unwrap-or (get store :tab) nil
-                  :drafts $ comp-drafts $ decode-map-as
-                    .unwrap-or (get store :x) nil
-                    , Number
+                match (phlox.util/require-prop store :tab)
+                  :drafts $ comp-drafts $ decode-map-as (phlox.util/require-prop store :x) Number
                   :grids $ comp-grids
                   :curves $ comp-curves
                   :gradients $ comp-gradients
                   :keyboard $ comp-keyboard
-                    decode-map-as
-                      .unwrap-or (get store :keyboard-on?) nil
-                      , Bool
-                    .unwrap-or (get store :counted) nil
+                    decode-map-as (phlox.util/require-prop store :keyboard-on?) Bool
+                    phlox.util/prop-or store :counted 0
                   :buttons $ comp-buttons
                   :slider $ comp-slider-demo $ >> states :slider
                   :points $ comp-points-demo $ >> states :points
@@ -477,13 +469,11 @@
         'comp-mesh-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-mesh-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
-                state $ or
-                  .unwrap-or (get states :data) nil
-                  {} (:x 0)
-                    :base $ [] 109 129
-                    :offset $ [] -123 -3
-                    :zoom 0.26
+                cursor $ phlox.util/prop-or states :cursor $ []
+                state $ phlox.util/prop-or states :data $ {} (:x 0)
+                  :base $ [] 109 129
+                  :offset $ [] -123 -3
+                  :zoom 0.26
               container ({})
                 comp-button $ {} (:text |Tick)
                   :position $ [] 200 -40
@@ -508,10 +498,10 @@
                     :uniforms $ let
                         base $ decode-map-as
                           .unwrap $ get state :base
-                          :: 'List 'Number
+                          quote $ List Number
                         offset $ decode-map-as
-                          .unwrap-or (get state :offset) ([] 0 0)
-                          :: 'List 'Number
+                          phlox.util/prop-or state :offset $ [] 0 0
+                          quote $ List Number
                       js-object (:uSampler2 sample-texture)
                         :time $ decode-map-as
                           .unwrap $ get state :x
@@ -527,7 +517,7 @@
                       fn (e d!) (println |clicked)
                   comp-drag-point (>> states :base)
                     {} (:radius 6) (:hide-text? true)
-                      :position $ .unwrap-or (get state :base) nil
+                      :position $ phlox.util/prop state :base
                       :fill $ hslx 200 100 50
                       :on-change $ fn (position d!)
                         d! cursor $ assoc state :base position
@@ -535,12 +525,12 @@
                     {} (:radius 6)
                       :fill $ hslx 0 100 50
                       :hide-text? true
-                      :position $ .unwrap-or (get state :offset) nil
+                      :position $ phlox.util/prop state :offset
                       :on-change $ fn (position d!)
                         d! cursor $ assoc state :offset position
                 comp-slider-point (>> states :zoom)
                   {}
-                    :value $ .unwrap-or (get state :zoom) nil
+                    :value $ phlox.util/prop state :zoom
                     :min 0.01
                     :position $ [] 300 -40
                     :on-change $ fn (value d!)
@@ -550,7 +540,7 @@
         'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {}
                     :messages $ []
@@ -562,38 +552,36 @@
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
                         conj
-                          decode-map-as xs $ :: 'List 'Dynamic
+                          decode-map-as xs $ quote $ List Dynamic
                           let
                               id $ nanoid
                             {} (:id id)
                               :text $ str "|Messages of " id
                         , Dynamic
                 comp-switch $ {}
-                  :value $ .unwrap-or (get state :bottom?) nil
+                  :value $ phlox.util/prop state :bottom?
                   :title "|At bottom"
                   :position $ [] 200 280
                   :on-change $ fn (e d!)
                     d! cursor $ update state :bottom? $ fn (current)
                       not $ decode-map-as current 'Bool
                 comp-messages $ {}
-                  :messages $ .unwrap-or (get state :messages) nil
-                  :bottom? $ .unwrap-or (get state :bottom?) nil
+                  :messages $ phlox.util/prop state :messages
+                  :bottom? $ phlox.util/prop state :bottom?
                   :on-pointertap $ fn (message d!)
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
                         ->
-                          decode-map-as xs $ :: 'List 'Dynamic
+                          decode-map-as xs $ quote $ List Dynamic
                           filter-not $ fn (x)
-                            identical?
-                              .unwrap-or (get x :id) nil
-                              .unwrap-or (get message :id) nil
+                            identical? (phlox.util/require-prop x :id) (phlox.util/require-prop message :id)
                         , Dynamic
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'comp-points-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-points-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {}
                     :p1 $ [] 0 0
@@ -605,18 +593,18 @@
                 {} $ :position $ [] 160 100
                 comp-drag-point (>> states :p1)
                   {}
-                    :position $ .unwrap-or (get state :p1) nil
+                    :position $ phlox.util/prop state :p1
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p1 position
                 comp-drag-point (>> states :p2)
                   {}
-                    :position $ .unwrap-or (get state :p2) nil
+                    :position $ phlox.util/prop state :p2
                     :unit 2
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p2 position
                 comp-drag-point (>> states :p3)
                   {}
-                    :position $ .unwrap-or (get state :p3) nil
+                    :position $ phlox.util/prop state :p3
                     :unit 0.4
                     :radius 10
                     :fill $ hslx 0 90 60
@@ -625,14 +613,14 @@
                       d! cursor $ assoc state :p3 position
                 comp-drag-point (>> states :p4)
                   {}
-                    :position $ .unwrap-or (get state :p4) nil
+                    :position $ phlox.util/prop state :p4
                     :title |base
                     :alpha 0.6
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p4 position
                 comp-drag-point (>> states :p5)
                   {}
-                    :position $ .unwrap-or (get state :p5) nil
+                    :position $ phlox.util/prop state :p5
                     :hide-text? true
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p5 position
@@ -660,18 +648,18 @@
         'comp-switch-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch-demo (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} $ :value false
               container
                 {} $ :position $ [] 120 300
                 comp-switch $ {}
-                  :value $ .unwrap-or (get state :value) nil
+                  :value $ phlox.util/prop state :value
                   :position $ [] 0 0
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
                 comp-switch $ {}
-                  :value $ .unwrap-or (get state :value) nil
+                  :value $ phlox.util/prop state :value
                   :position $ [] 100 20
                   :title "|Custom title"
                   :on-change $ fn (value d!)
@@ -681,7 +669,7 @@
         'comp-text-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-text-input (states)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} (:text "|initial text") (:long-text |long..)
               container ({})
@@ -694,13 +682,13 @@
                       fn (e d!)
                         request-text! e
                           {}
-                            :initial $ .unwrap-or (get state :text) nil
+                            :initial $ phlox.util/prop state :text
                             :style $ {} $ :color |blue
                           fn (result)
                             d! cursor $ assoc state :text result
                             , &unit
                   text $ {}
-                    :text $ .unwrap-or (get state :text) nil
+                    :text $ phlox.util/prop state :text
                     :position $ [] 6 4
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
@@ -713,14 +701,14 @@
                       fn (e d!)
                         request-text! e
                           {}
-                            :initial $ .unwrap-or (get state :long-text) nil
+                            :initial $ phlox.util/prop state :long-text
                             :style $ {} $ :font-family font-code
                             :textarea? true
                           fn (result)
                             d! cursor $ assoc state :long-text result
                             , &unit
                   text $ {}
-                    :text $ .unwrap-or (get state :long-text) nil
+                    :text $ phlox.util/prop state :long-text
                     :position $ [] 6 4
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
@@ -868,10 +856,10 @@
                   inc $ decode-map-as x Number
               (:states cursor s)
                 update-states store
-                  decode-map-as cursor $ :: 'List 'Dynamic
+                  decode-map-as cursor $ quote $ List Dynamic
                   , s
               (:hydrate-storage d)
-                decode-map-as d $ :: 'Map 'Tag 'Dynamic
+                decode-map-as d $ quote $ Map Tag Dynamic
               _ $ do (eprintln "|unknown op" op) store
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) Dynamic String Number
@@ -956,18 +944,14 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-arrow (states props) (; dev-check props lilac-arrow)
             let
-                color $ .unwrap-or (get props :color) (hslx 0 0 100)
-                from $ decode-map-as
-                  .unwrap-or (get props :from) nil
-                  :: 'List 'Number
-                to $ decode-map-as
-                  .unwrap-or (get props :to) nil
-                  :: 'List 'Number
-                width $ .unwrap-or (get props :width) 1
-                arg-length $ decode-map-as
-                  .unwrap-or (get props :arm-length) 10
-                  , Number
-                on-change $ .unwrap-or (get props :on-change) nil
+                color $ phlox.util/prop-or props :color $ hslx 0 0 100
+                from $ decode-map-as (phlox.util/require-prop props :from)
+                  quote $ List Number
+                to $ decode-map-as (phlox.util/require-prop props :to)
+                  quote $ List Number
+                width $ phlox.util/prop-or props :width 1
+                arg-length $ decode-map-as (phlox.util/prop-or props :arm-length 10) Number
+                on-change $ phlox.util/prop props :on-change
                 reversed-vec $ complex/minus from to
                 reversed-unit $ complex/divide-by reversed-vec $ vec-length reversed-vec
                 arm-left $ complex/times reversed-unit $ [] arg-length (negate arg-length)
@@ -979,12 +963,12 @@
                     :fill $ hslx 200 80 20
                     :hide-text? true
                     :on-change $ fn (position d!)
-                      if (fn? on-change) (on-change position to d!) (js/console.warn "|missing onchange for arrow")
+                      if-let (handler on-change) (handler position to d!) (js/console.warn "|missing onchange for arrow")
                 comp-drag-point (>> states :to)
                   {} (:position to) (:hide-text? true)
                     :fill $ hslx 200 80 20
                     :on-change $ fn (position d!)
-                      if (fn? on-change) (on-change from position d!) (js/console.warn "|missing onchange for arrow")
+                      if-let (handler on-change) (handler from position d!) (js/console.warn "|missing onchange for arrow")
                 graphics $ {} $ :ops
                   []
                     g :line-style $ {} (:width width)
@@ -1010,22 +994,16 @@
         'comp-button $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-button (props) (dev-check props lilac-button)
             let
-                button-text $ decode-map-as
-                  .unwrap-or (get props :text) |BUTTON
-                  , String
-                size $ decode-map-as
-                  .unwrap-or (get props :font-size) 14
-                  , Number
-                font-family $ decode-map-as
-                  .unwrap-or (get props :font-family) "|Josefin Sans, sans-serif"
-                  , String
-                fill $ .unwrap-or (get props :fill) (hslx 0 0 20)
-                color $ .unwrap-or (get props :color) (hslx 0 0 100)
+                button-text $ decode-map-as (phlox.util/prop-or props :text |BUTTON) String
+                size $ decode-map-as (phlox.util/prop-or props :font-size 14) Number
+                font-family $ decode-map-as (phlox.util/prop-or props :font-family "|Josefin Sans, sans-serif") String
+                fill $ phlox.util/prop-or props :fill $ hslx 0 0 20
+                color $ phlox.util/prop-or props :color $ hslx 0 0 100
                 position $ decode-map-as
-                  .unwrap-or (get props :position) ([] 0 0)
-                  :: 'List 'Number
+                  phlox.util/prop-or props :position $ [] 0 0
+                  quote $ List Number
                 width $ + 16 $ measure-text-width! button-text size font-family
-                align-right? $ .unwrap-or (get props :align-right?) nil
+                align-right? $ phlox.util/prop-or props :align-right? false
               container
                 {} $ :position $ if align-right?
                   []
@@ -1036,12 +1014,13 @@
                   , position
                 rect $ {} (:fill fill)
                   :size $ [] width 32
-                  :on $ cond
-                      non-nil? $ .unwrap-or (get props :on) nil
-                      .unwrap-or (get props :on) nil
-                    (non-nil? (.unwrap-or (get props :on-pointertap) nil))
-                      {} $ :pointertap $ .unwrap-or (get props :on-pointertap) nil
-                    true nil
+                  :on $ match (phlox.util/prop props :on)
+                    (:some on) (Option :some on)
+                    (:none)
+                      match (phlox.util/prop props :on-pointertap)
+                        (:some tap)
+                          Option :some $ {} $ :pointertap tap
+                        (:none) (Option :none)
                 text $ {} (:text button-text)
                   :position $ [] 8 8
                   :style $ {} (:fill color) (:font-size size) (:font-family font-family)
@@ -1062,32 +1041,26 @@
         'comp-drag-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-drag-point (states props)
             dev-check
-              .unwrap-or (get states :cursor) nil
+              phlox.util/prop-or states :cursor $ []
               , lilac-cursor
             dev-check props lilac-drag-point
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ decode-map-as
                   .unwrap-or (get states :data)
                     {} (:dragging? false)
                       :x0 $ [] 0 0
-                  :: 'Map 'Tag 'Dynamic
-                unit $ decode-map-as
-                  .unwrap-or (get props :unit) 1
-                  , Number
-                radius $ decode-map-as
-                  .unwrap-or (get props :radius) 8
-                  , Number
-                color $ .unwrap-or (get props :color) (hslx 0 0 100)
-                fill $ .unwrap-or (get props :fill) (hslx 0 0 60)
-                alpha $ decode-map-as
-                  .unwrap-or (get props :alpha) 1
-                  , Number
+                  quote $ Map Tag Dynamic
+                unit $ decode-map-as (phlox.util/prop-or props :unit 1) Number
+                radius $ decode-map-as (phlox.util/prop-or props :radius 8) Number
+                color $ phlox.util/prop-or props :color $ hslx 0 0 100
+                fill $ phlox.util/prop-or props :fill $ hslx 0 0 60
+                alpha $ decode-map-as (phlox.util/prop-or props :alpha 1) Number
                 on-change $ .unwrap-or (get props :on-change)
                   fn (pos d!) nil
-                hide-text? $ .unwrap-or (get props :hide-text?) false
+                hide-text? $ phlox.util/prop-or props :hide-text? false
               let
-                  position $ .unwrap-or (get props :position) nil
+                  position $ phlox.util/prop-or props :position $ [] 0 0
                 create-list :container
                   {} $ :position position
                   concat
@@ -1105,20 +1078,17 @@
                                 :x0 $ [] x y
                                 :p0 position
                           :globalpointermove $ fn (e d!)
-                            when
-                              .unwrap-or (get state :dragging?) nil
+                            when (phlox.util/prop-or state :dragging? false)
                               let
                                   x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                                   y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                                 let
-                                    x0 $ decode-map-as
-                                      .unwrap-or (get state :x0) nil
-                                      :: 'List 'Number
+                                    x0 $ decode-map-as (phlox.util/require-prop state :x0)
+                                      quote $ List Number
                                   on-change
                                     complex/add
-                                      decode-map-as
-                                        .unwrap-or (get state :p0) nil
-                                        :: 'List 'Number
+                                      decode-map-as (phlox.util/require-prop state :p0)
+                                        quote $ List Number
                                       []
                                         * unit $ - x $ .unwrap-or (first x0) 0
                                         * unit $ - y $ .unwrap-or (last x0) 0
@@ -1144,10 +1114,10 @@
                           :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace")
                     if
                       and (not hide-text?)
-                        non-nil? $ .unwrap-or (get props :title) nil
+                        .some? $ phlox.util/prop props :title
                       [] $ [] 2 $ text
                         {}
-                          :text $ .unwrap-or (get props :title) nil
+                          :text $ phlox.util/prop props :title
                           :alpha $ * alpha 0.3
                           :position $ [] -12 6
                           :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
@@ -1174,9 +1144,9 @@
           :code $ quote $ defn comp-messages (options) (dev-check options lilac-messages)
             let
                 messages $ decode-map-as
-                  .unwrap-or (get options :messages) ([])
-                  :: 'List 'Dynamic
-                bottom? $ .unwrap-or (get options :bottom?) nil
+                  phlox.util/prop-or options :messages $ []
+                  quote $ List Dynamic
+                bottom? $ phlox.util/prop-or options :bottom? false
                 base-position $ .unwrap-or (get options :position)
                   if bottom?
                     []
@@ -1196,16 +1166,15 @@
               create-list :container
                 {} $ :position base-position
                 -> messages $ map-indexed $ fn (idx message)
-                  []
-                    .unwrap-or (get message :id) nil
+                  [] (phlox.util/require-prop message :id)
                     comp-button $ {}
-                      :text $ .unwrap-or (get message :text) nil
+                      :text $ phlox.util/prop message :text
                       :position $ if bottom?
                         [] 0 $ - 8 $ * 40
                           - (count messages) idx
                         [] 0 $ * 40 idx
-                      :color $ .unwrap-or (get options :color) nil
-                      :fill $ .unwrap-or (get options :fill) nil
+                      :color $ phlox.util/prop options :color
+                      :fill $ phlox.util/prop options :fill
                       :align-right? true
                       :on-pointertap $ fn (e d!) (on-pointertap message d!)
           :examples $ []
@@ -1238,26 +1207,22 @@
         'comp-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider (states props)
             dev-check
-              .unwrap-or (get states :cursor) nil
+              phlox.util/prop-or states :cursor $ []
               , lilac-cursor
             dev-check props lilac-slider
             let
-                value $ decode-map-as
-                  .unwrap-or (get props :value) 1
-                  , Number
-                cursor $ .unwrap-or (get states :cursor) nil
+                value $ decode-map-as (phlox.util/prop-or props :value 1) Number
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} (:v0 value) (:x0 0) (:dragging? false)
-                title $ .unwrap-or (get props :title) nil
-                unit $ decode-map-as
-                  .unwrap-or (get props :unit) 0.1
-                  , Number
-                fill $ .unwrap-or (get props :fill) (hslx 0 0 30)
-                color $ .unwrap-or (get props :color) (hslx 0 0 100)
-                on-change $ .unwrap-or (get props :on-change) nil
-                rounded? $ .unwrap-or (get props :round?) nil
+                title $ phlox.util/prop props :title
+                unit $ decode-map-as (phlox.util/prop-or props :unit 0.1) Number
+                fill $ phlox.util/prop-or props :fill $ hslx 0 0 30
+                color $ phlox.util/prop-or props :color $ hslx 0 0 100
+                on-change $ phlox.util/prop props :on-change
+                rounded? $ phlox.util/prop-or props :round? false
               container
-                {} $ :position $ .unwrap-or (get props :position) nil
+                {} $ :position $ phlox.util/prop props :position
                 rect
                   {}
                     :size $ [] 120 24
@@ -1268,35 +1233,26 @@
                             x1 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
                       :globalpointermove $ fn (e d!)
-                        when
-                          .unwrap-or (get state :dragging?) nil
+                        when (phlox.util/prop-or state :dragging? false)
                           let
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
-                            if (fn? on-change)
-                              on-change
+                            if-let (handler on-change)
+                              handler
                                 let
                                     v0 $ +
-                                      decode-map-as
-                                        .unwrap-or (get state :v0) value
-                                        , Number
-                                      * unit $ - x2 $ decode-map-as
-                                        .unwrap-or (get state :x0) 0
-                                        , Number
+                                      decode-map-as (phlox.util/prop-or state :v0 value) Number
+                                      * unit $ - x2 $ decode-map-as (phlox.util/prop-or state :x0 0) Number
                                     v1 $ if rounded? (round v0) v0
                                     v2 $ if
-                                      non-nil? $ .unwrap-or (get props :max) nil
+                                      .some? $ phlox.util/prop props :max
                                       &min
-                                        decode-map-as
-                                          .unwrap-or (get props :max) v1
-                                          , Number
+                                        decode-map-as (phlox.util/prop-or props :max v1) Number
                                         , v1
                                       , v1
                                   if
-                                    non-nil? $ .unwrap-or (get props :min) nil
+                                    .some? $ phlox.util/prop props :min
                                     &max
-                                      decode-map-as
-                                        .unwrap-or (get props :min) v2
-                                        , Number
+                                      decode-map-as (phlox.util/prop-or props :min v2) Number
                                       , v2
                                     , v2
                                 , d!
@@ -1315,7 +1271,10 @@
                     :style $ {} (:fill color) (:font-size 12) (:font-family "|Menlo, monospace")
                   text $ {}
                     :text $ str
-                      if (string? title) (str title "| ") |
+                      match title
+                        (:some t)
+                          if (string? t) (str t "| ") |
+                        (:none) |
                       , "|◈ " unit
                     :position $ [] 0 -18
                     :style $ {}
@@ -1327,25 +1286,21 @@
         'comp-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point (states props)
             dev-check
-              .unwrap-or (get states :cursor) nil
+              phlox.util/prop-or states :cursor $ []
               , lilac-cursor
             dev-check props lilac-slider-point
             let
-                value $ decode-map-as
-                  .unwrap-or (get props :value) 1
-                  , Number
-                cursor $ .unwrap-or (get states :cursor) nil
+                value $ decode-map-as (phlox.util/prop-or props :value 1) Number
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} (:v0 value) (:x0 0) (:dragging? false)
-                unit $ decode-map-as
-                  .unwrap-or (get props :unit) 0.1
-                  , Number
-                fill $ .unwrap-or (get props :fill) (hslx 0 0 30)
-                color $ .unwrap-or (get props :color) (hslx 0 0 100)
-                on-change $ .unwrap-or (get props :on-change) nil
-                rounded? $ .unwrap-or (get props :round?) nil
+                unit $ decode-map-as (phlox.util/prop-or props :unit 0.1) Number
+                fill $ phlox.util/prop-or props :fill $ hslx 0 0 30
+                color $ phlox.util/prop-or props :color $ hslx 0 0 100
+                on-change $ phlox.util/prop props :on-change
+                rounded? $ phlox.util/prop-or props :round? false
               container
-                {} $ :position $ .unwrap-or (get props :position) nil
+                {} $ :position $ phlox.util/prop props :position
                 rect
                   {}
                     :size $ [] 16 16
@@ -1357,35 +1312,26 @@
                             x1 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
                       :globalpointermove $ fn (e d!)
-                        when
-                          .unwrap-or (get state :dragging?) nil
+                        when (phlox.util/prop-or state :dragging? false)
                           let
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
-                            if (fn? on-change)
-                              on-change
+                            if-let (handler on-change)
+                              handler
                                 let
                                     v0 $ +
-                                      decode-map-as
-                                        .unwrap-or (get state :v0) value
-                                        , Number
-                                      * unit $ - x2 $ decode-map-as
-                                        .unwrap-or (get state :x0) 0
-                                        , Number
+                                      decode-map-as (phlox.util/prop-or state :v0 value) Number
+                                      * unit $ - x2 $ decode-map-as (phlox.util/prop-or state :x0 0) Number
                                     v1 $ if rounded? (round v0) v0
                                     v2 $ if
-                                      non-nil? $ .unwrap-or (get props :max) nil
+                                      .some? $ phlox.util/prop props :max
                                       &min
-                                        decode-map-as
-                                          .unwrap-or (get props :max) v1
-                                          , Number
+                                        decode-map-as (phlox.util/prop-or props :max v1) Number
                                         , v1
                                       , v1
                                   if
-                                    non-nil? $ .unwrap-or (get props :min) nil
+                                    .some? $ phlox.util/prop props :min
                                     &max
-                                      decode-map-as
-                                        .unwrap-or (get props :min) v2
-                                        , Number
+                                      decode-map-as (phlox.util/prop-or props :min v2) Number
                                       , v2
                                     , v2
                                 , d!
@@ -1405,31 +1351,23 @@
         'comp-spin-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider (states props)
             let
-                cursor $ .unwrap-or (get states :cursor) nil
+                cursor $ phlox.util/prop-or states :cursor $ []
                 state $ .unwrap-or (get states :data)
                   {} $ :dragging? false
-                unit $ decode-map-as
-                  .unwrap-or (get props :unit) 1
-                  , Number
-                radius $ decode-map-as
-                  .unwrap-or (get props :radius) 44
-                  , Number
-                color $ .unwrap-or (get props :color) (hslx 0 0 100)
-                fill $ .unwrap-or (get props :fill) (hslx 0 0 0)
-                font-size $ .unwrap-or (get props :font-size) (&* radius 0.44)
-                alpha $ .unwrap-or (get props :alpha) 1
-                on-change $ .unwrap-or (get props :on-change) nil
+                unit $ decode-map-as (phlox.util/prop-or props :unit 1) Number
+                radius $ decode-map-as (phlox.util/prop-or props :radius 44) Number
+                color $ phlox.util/prop-or props :color $ hslx 0 0 100
+                fill $ phlox.util/prop-or props :fill $ hslx 0 0 0
+                font-size $ phlox.util/prop-or props :font-size $ &* radius 0.44
+                alpha $ phlox.util/prop-or props :alpha 1
+                on-change $ phlox.util/prop props :on-change
                 position $ decode-map-as
-                  .unwrap-or (get props :position) ([] 0 0)
-                  :: 'List 'Number
+                  phlox.util/prop-or props :position $ [] 0 0
+                  quote $ List Number
                 on-move $ .unwrap-or (get props :on-move)
                   fn (pos d!) nil
-                border-color $ or
-                  .unwrap-or (get props :border-color) nil
-                  hslx 240 80 80
-                border-width $ or
-                  .unwrap-or (get props :border-width) nil
-                  , 4
+                border-color $ phlox.util/prop-or props :border-color $ hslx 240 80 80
+                border-width $ phlox.util/prop-or props :border-width 4
               container
                 {} $ :position $ [] 0 0
                 circle $ {} (:radius radius) (:position position) (:fill fill) (:alpha alpha)
@@ -1446,8 +1384,7 @@
                       let
                           x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
-                        if
-                          .unwrap-or (get state :dragging?) nil
+                        if (phlox.util/prop-or state :dragging? false)
                           let
                               current-point $ []
                                 - x $ .unwrap-or (first @*spin-pivot) 0
@@ -1463,16 +1400,14 @@
                                       delta $ phlox.core/ffi-atan2
                                         .unwrap-or (last delta-vec) 0
                                         .unwrap-or (first delta-vec) 0
-                                    if (fn? on-change)
-                                      on-change
+                                    if-let (handler on-change)
+                                      handler
                                         bound-x
                                           +
-                                            decode-map-as
-                                              .unwrap-or (get props :value) 0
-                                              , Number
+                                            decode-map-as (phlox.util/prop-or props :value 0) Number
                                             &* unit delta
-                                          .unwrap-or (get props :min) nil
-                                          .unwrap-or (get props :max) nil
+                                          phlox.util/prop props :min
+                                          phlox.util/prop props :max
                                         , d!
                                       js/console.warn "|missing :on-change for spin-slider"
                                 reset! *prev-spin-point $ Option :some current-point
@@ -1483,11 +1418,12 @@
                       reset! *prev-spin-point $ Option :none
                       d! cursor $ assoc state :dragging? false
                 text $ {}
-                  :text $ str $ let
-                      v $ .unwrap-or (get props :value) nil
-                    if (number? v)
-                      .!toFixed v $ .unwrap-or (get props :fraction) 1
-                      , |-
+                  :text $ str $ match (phlox.util/prop props :value)
+                    (:some v)
+                      if (number? v)
+                        .!toFixed v $ phlox.util/prop-or props :fraction 1
+                        , |-
+                    (:none) |-
                   :position $ complex/add position $ [] 0 -10
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "|Source code pro, Menlo, Roboto Mono, monospace")
                   :align :center
@@ -1532,10 +1468,10 @@
         'comp-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch (props) (dev-check props lilac-switch)
             let
-                value $ .unwrap-or (get props :value) nil
-                on-change $ .unwrap-or (get props :on-change) nil
+                value $ phlox.util/prop-or props :value false
+                on-change $ phlox.util/prop props :on-change
               container
-                {} $ :position $ .unwrap-or (get props :position) ([] 0 0)
+                {} $ :position $ phlox.util/prop-or props :position ([] 0 0)
                 rect $ {}
                   :size $ [] 56 20
                   :fill $ if value (hslx 0 0 92) (hslx 0 0 50)
@@ -1543,8 +1479,9 @@
                   :radius 3
                   :on $ {} $ :pointertap
                     fn (e d!)
-                      when (fn? on-change)
-                        on-change (not value) d!
+                      if-let (handler on-change)
+                        handler (not value) d!
+                        , &unit
                 text $ {}
                   :text $ if value |On |Off
                   :position $ if value ([] 8 2) ([] 24 2)
@@ -1555,7 +1492,7 @@
                     :font-weight 500
                   :alpha $ if value 1 0.4
                 text $ {}
-                  :text $ .unwrap-or (get props :title) |Switch
+                  :text $ phlox.util/prop-or props :title |Switch
                   :position $ [] 0 -20
                   :style $ {}
                     :fill $ hslx 0 0 80
@@ -1578,23 +1515,15 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-tabs (tabs selected options on-select)
             let
-                step $ decode-map-as
-                  or
-                    .unwrap-or (get options :step) nil
-                    , 36
-                  , Number
+                step $ decode-map-as (phlox.util/prop-or options :step 36) Number
                 position $ decode-map-as
-                  or
-                    .unwrap-or (get options :position) nil
-                    [] 0 0
-                  :: 'List 'Number
-                font-family $ or
-                  .unwrap-or (get options :font-family) nil
-                  , "|Josefin Sans, sans-serif"
+                  phlox.util/prop-or options :position $ [] 0 0
+                  quote $ List Number
+                font-family $ phlox.util/prop-or options :font-family "|Josefin Sans, sans-serif"
               create-list :container ({})
                 -> tabs $ map-indexed $ fn (idx info)
                   let[] (tab title)
-                    decode-map-as info $ :: 'List 'Dynamic
+                    decode-map-as info $ quote $ List Dynamic
                     [] idx $ container
                       {} $ :position $ complex/add position
                         [] 0 $ * idx step
@@ -1758,14 +1687,14 @@
         '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn >> (states k)
             let
-                parent-cursor $ .unwrap-or (get states :cursor) ([])
+                parent-cursor $ phlox.util/prop-or states :cursor $ []
                 branch $ decode-map-as
                   let
                       value $ .unwrap-or (get states k) ({})
                     if (map? value) value $ raise |expected-child-state-map
-                  :: 'Map 'Dynamic 'Dynamic
+                  quote $ Map Dynamic Dynamic
               assoc branch :cursor $ conj
-                decode-map-as parent-cursor $ :: 'List 'Dynamic
+                decode-map-as parent-cursor $ quote $ List Dynamic
                 , k
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic
@@ -2013,7 +1942,7 @@
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ decode-map-as children
-              :: 'List $ :: 'List 'Dynamic
+              quote $ List $ List Dynamic
           :examples $ []
           :schema $ quote $ Fn Tag Dynamic (List Dynamic) (-> phlox.schema/PhloxElement)
         'defcomp $ %{} 'CodeEntry (:doc |)
@@ -2398,23 +2327,25 @@
           :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'g $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn g (op & args)
-            let
-                data $ .unwrap-or (first args) nil
-              match op
-                :move-to $ dev-check-message "|check :move-to" data lilac-point
-                :line-to $ dev-check-message "|check :line-to" data lilac-point
-                :line-style $ dev-check-message "|check :line-style" data lilac-line-style
-                :begin-fill $ dev-check-message "|check :fill" data lilac-begin-fill
-                :end-fill nil
-                :close-path nil
-                :arc $ dev-check-message "|check :arc" data lilac-arc
-                :arc-to $ dev-check-message "|check :arc-to" data lilac-arc-to
-                :bezier-to $ dev-check-message "|check :bezier-to" data lilac-bezier-to
-                :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quadratic-to
-                :begin-hole nil
-                :end-hole nil
-                _ $ js/console.warn "|not supported:" op
-              [] op data
+            match (first args)
+              (:none) ([] op)
+              (:some data)
+                do
+                  match op
+                    :move-to $ dev-check-message "|check :move-to" data lilac-point
+                    :line-to $ dev-check-message "|check :line-to" data lilac-point
+                    :line-style $ dev-check-message "|check :line-style" data lilac-line-style
+                    :begin-fill $ dev-check-message "|check :fill" data lilac-begin-fill
+                    :end-fill nil
+                    :close-path nil
+                    :arc $ dev-check-message "|check :arc" data lilac-arc
+                    :arc-to $ dev-check-message "|check :arc-to" data lilac-arc-to
+                    :bezier-to $ dev-check-message "|check :bezier-to" data lilac-bezier-to
+                    :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quadratic-to
+                    :begin-hole nil
+                    :end-hole nil
+                    _ $ js/console.warn "|not supported:" op
+                  [] op data
           :examples $ []
           :schema $ quote $ Fn Tag & Dynamic
             -> $ List Dynamic
@@ -2439,14 +2370,14 @@
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
                   non-nil? @*drag-moving-cache
                 let
-                    prev $ decode-map-as @*drag-moving-cache $ :: 'List 'Number
+                    prev $ decode-map-as @*drag-moving-cache $ quote (List Number)
                     current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
                     delta $ complex/minus current prev
                   reset! *drag-moving-cache current
                   swap! *stage-config update :move $ fn (prev)
                     unsafe-coerce
                       complex/add
-                        decode-map-as prev $ :: 'List 'Number
+                        decode-map-as prev $ quote $ List Number
                         , delta
                       , Dynamic
                   render-stage-for-viewer!
@@ -2473,7 +2404,7 @@
                       swap! *stage-config update :move $ fn (pos)
                         unsafe-coerce
                           let
-                              pos0 $ decode-map-as pos $ :: 'List 'Number
+                              pos0 $ decode-map-as pos $ quote (List Number)
                               shift $ complex/minus pointer pos0
                             complex/minus pos0 $ complex/times shift $ [] (/ dy scale) 0
                           , Dynamic
@@ -2522,9 +2453,9 @@
                 pixi-app $ new PIXI/Application $ js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2)
                   :width $ ffi-window-width
                   :height $ ffi-window-height
-                  :backgroundColor $ .unwrap-or (get options :background-color) (hslx 0 0 0)
-                  :interactive $ .unwrap-or (get options :interactive) true
-                  :backgroundAlpha $ .unwrap-or (get options :background-alpha) 1
+                  :backgroundColor $ phlox.util/prop-or options :background-color $ hslx 0 0 0
+                  :interactive $ phlox.util/prop-or options :interactive true
+                  :backgroundAlpha $ phlox.util/prop-or options :background-alpha 1
               ffi-stop $ ffi-ticker pixi-app
               -> PIXI/Ticker .-shared $ ffi-stop
               -> PIXI/Ticker .-system $ ffi-stop
@@ -2571,7 +2502,7 @@
         'line-segment->ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segment->ops (pair)
             let
-                pair0 $ decode-map-as pair $ :: 'List 'Dynamic
+                pair0 $ decode-map-as pair $ quote (List Dynamic)
               []
                 g :move-to $ .unwrap $ nth pair0 0
                 g :line-to $ .unwrap $ nth pair0 1
@@ -2582,13 +2513,16 @@
         'line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segments (props & children) (dev-check props lilac-line-segments)
             let
-                line-style $ .unwrap-or (get props :style) nil
+                line-style $ phlox.util/prop props :style
                 segments $ decode-map-as
-                  .unwrap-or (get props :segments) ([])
-                  :: 'List 'Dynamic
+                  phlox.util/prop-or props :segments $ []
+                  quote $ List Dynamic
               create-element :graphics
                 assoc props :ops $ concat
-                  [] $ g :line-style line-style
+                  match line-style
+                    (:some style)
+                      [] $ g :line-style style
+                    (:none) ([])
                   mapcat segments line-segment->ops
                 , children
           :examples $ []
@@ -2619,14 +2553,17 @@
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
-                line-style $ .unwrap-or (get props :style) nil
+                line-style $ phlox.util/prop props :style
                 points $ decode-map-as
-                  .unwrap-or (get props :points) ([])
-                  :: 'List 'Dynamic
+                  phlox.util/prop-or props :points $ []
+                  quote $ List Dynamic
               create-element :graphics
                 assoc props :ops $ concat
-                  [] (g :line-style line-style)
-                    g :move-to $ .unwrap $ nth points 0
+                  match line-style
+                    (:some style)
+                      [] $ g :line-style style
+                    (:none) ([])
+                  [] $ g :move-to $ .unwrap (nth points 0)
                   -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
@@ -2644,8 +2581,9 @@
             reset! *dispatch-fn dispatch!
             let
                 wrap-dispatch $ fn (op & args)
+                  ; "an op dispatched without data carries nil, as before"
                   let
-                      data $ .unwrap-or (first args) nil
+                      data $ if (empty? args) nil $ .unwrap (first args)
                     if (list? op)
                       @*dispatch-fn $ :: :states op data
                       if (tag? op)
@@ -2668,7 +2606,7 @@
                   , 'Number
                 move $ decode-map-as
                   .unwrap-or (get @*stage-config :move) nil
-                  :: 'List 'Number
+                  quote $ List Number
               ffi-set-x!
                 ffi-position $ ffi-stage @*app
                 +
@@ -2697,7 +2635,7 @@
             let
                 move0 $ decode-map-as
                   .unwrap-or (get @*stage-config :move) nil
-                  :: 'List 'Number
+                  quote $ List Number
                 scale0 $ decode-map-as
                   .unwrap-or (get @*stage-config :scale) 1
                   , 'Number
@@ -2710,7 +2648,7 @@
                   swap! *stage-config update :move $ fn (prev)
                     unsafe-coerce
                       let
-                          prev0 $ decode-map-as prev $ :: 'List 'Number
+                          prev0 $ decode-map-as prev $ quote (List Number)
                           l $ vec-length prev0
                         if (< l 4) ([] 0 0)
                           &let
@@ -2750,7 +2688,7 @@
                 swap! *stage-config update :move $ fn (prev)
                   unsafe-coerce
                     let
-                        prev0 $ decode-map-as prev $ :: 'List 'Number
+                        prev0 $ decode-map-as prev $ quote (List Number)
                       complex/add
                         complex/minus prev0 $ complex/scale (complex/conjugate move) 0.05
                         complex/scale prev0 $ / (* 0.01 scale-change) scale0
@@ -2784,7 +2722,7 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-states (store cursor data)
             assoc store :states $ assoc-in
-              .unwrap-or (get store :states) nil
+              phlox.util/prop-or store :states $ {}
               conj cursor :data
               , data
           :examples $ []
@@ -2802,7 +2740,7 @@
           :code $ quote $ defn request-text! (e options cb) (dev-check options lilac-input)
             prompt-at!
               [] (-> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x) (-> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y)
-              decode-map-as options $ :: 'Map 'Tag 'Dynamic
+              decode-map-as options $ quote $ Map Tag Dynamic
               , cb
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic
@@ -2832,7 +2770,7 @@
                     when (fn? listener) (listener event dispatch!)
                     &doseq
                       pair $ decode-map-as (:children element)
-                        :: 'List $ :: 'List 'Dynamic
+                        quote $ List $ List Dynamic
                       let[] (k child) pair $ handle-event kind child event dispatch!
                   _ _ $ js/console.log "|unknown tree for handling event:" tree
                 js/console.log "|unknown tree for handling event:" tree
@@ -2889,10 +2827,13 @@
           :schema $ quote $ Fn Number (-> Number)
         'bound-x $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn bound-x (x lower higher)
-            js-ffi.contract/expect-number |Math.min $ js/Math.min (either higher js/+Infinity)
-              js/Math.max (either lower js/-Infinity) x
+            js-ffi.contract/expect-number |Math.min $ js/Math.min
+              .unwrap-or higher $ / 1 0
+              js/Math.max
+                .unwrap-or lower $ / -1 0
+                , x
           :examples $ []
-          :schema $ quote $ Fn Number Dynamic Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn Number (Option Dynamic) (Option Dynamic) (-> Number) (:features :js-ffi)
         'ffi-pi $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def ffi-pi 3.141592653589793
           :examples $ []
@@ -2913,41 +2854,48 @@
       :defs $ {}
         'first-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn first-value (items)
-            .unwrap-or (first items) nil
+            .unwrap $ first items
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic)
         'init-box-size $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-box-size (target size)
-            if (non-nil? size)
-              let
-                  size $ decode-map-as size $ :: 'List 'Number
-                set! (.-width target)
-                  .unwrap $ nth size 0
-                set! (.-height target)
-                  .unwrap $ nth size 1
+          :code $ quote $ defn init-box-size (target size-option)
+            match size-option
+              (:some size0)
+                let
+                    size $ decode-map-as size0 $ quote (List Number)
+                  set! (.-width target)
+                    .unwrap $ nth size 0
+                  set! (.-height target)
+                    .unwrap $ nth size 1
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-fill $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-fill (target color) (.!endFill target)
-            if (non-nil? color) (.!beginFill target color)
+          :code $ quote $ defn init-fill (target color-option) (.!endFill target)
+            match color-option
+              (:some color) (.!beginFill target color)
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-filters $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-filters (target filters)
-            if
-              and (non-nil? filters)
+          :code $ quote $ defn init-filters (target filters-option)
+            let
+                filters $ match filters-option
+                  (:some value) value
+                  (:none) ([])
+              if
                 not $ empty? filters
-              let
-                  filters-arr $ js-array
-                &doseq (ft filters)
-                  if
-                    and (list? ft)
-                      &= 2 $ count ft
-                    let[] (ctor options) ft $ phlox.core/ffi-push-array! filters-arr $ new ctor (to-js-data options)
-                    js/console.warn "|Unknown filter:" ft
-                set! (.-filters target) filters-arr
+                let
+                    filters-arr $ js-array
+                  &doseq (ft filters)
+                    if
+                      and (list? ft)
+                        &= 2 $ count ft
+                      let[] (ctor options) ft $ phlox.core/ffi-push-array! filters-arr $ new ctor (to-js-data options)
+                      js/console.warn "|Unknown filter:" ft
+                  set! (.-filters target) filters-arr
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -2955,53 +2903,52 @@
           :code $ quote $ defn init-geometry (data)
             let
                 geo $ new PIXI/Geometry
-                attrs $ .unwrap-or (get data :attributes) nil
-              &doseq (attr attrs)
-                phlox.core/ffi-geometry-add-attribute! geo
-                  .unwrap-or (get attr :id) nil
-                  to-js-data $ .unwrap-or (get attr :buffer) nil
-                  .unwrap-or (get attr :size) nil
-              phlox.core/ffi-geometry-add-index! geo $ to-js-data $ .unwrap-or (get data :index) nil
+              &doseq
+                attr $ phlox.util/prop-or data :attributes $ []
+                phlox.core/ffi-geometry-add-attribute! geo (phlox.util/require-prop attr :id)
+                  to-js-data $ phlox.util/require-prop attr :buffer
+                  phlox.util/require-prop attr :size
+              phlox.core/ffi-geometry-add-index! geo $ to-js-data $ phlox.util/require-prop data :index
               , geo
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'init-scale $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-scale (target scale)
-            when (non-nil? scale)
-              cond
-                  list? scale
-                  do
-                    phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
-                      decode-map-as
-                        .unwrap-or (first scale) 1
-                        , Number
-                    phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
-                      decode-map-as
-                        .unwrap-or (last scale) 1
-                        , Number
-                (number? scale)
-                  do
-                    phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
-                    phlox.core/ffi-set-y! (phlox.core/ffi-scale target) scale
-                (nil? scale)
-                  do
-                    phlox.core/ffi-set-x! (phlox.core/ffi-scale target) 1
-                    phlox.core/ffi-set-y! (phlox.core/ffi-scale target) 1
-                true $ js/console.error "|unknown scale" scale
+          :code $ quote $ defn init-scale (target scale-option)
+            match scale-option
+              (:some scale)
+                cond
+                    list? scale
+                    do
+                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
+                        decode-map-as
+                          .unwrap-or (first scale) 1
+                          , Number
+                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
+                        decode-map-as
+                          .unwrap-or (last scale) 1
+                          , Number
+                  (number? scale)
+                    do
+                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
+                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target) scale
+                  true $ js/console.error "|unknown scale:" scale
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-shader $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-shader (data uniforms)
+          :code $ quote $ defn init-shader (data uniforms-option)
             .!from PIXI/Shader
               .unwrap-or (get data :vertex-source) nil
               .unwrap-or (get data :fragment-source) nil
-              , uniforms
+              match uniforms-option
+                (:some uniforms) uniforms
+                (:none) js/undefined
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'last-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn last-value (items)
-            .unwrap-or (last items) nil
+            .unwrap $ last items
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic)
         'read-draw-mode-alias $ %{} 'CodeEntry (:doc |)
@@ -3026,23 +2973,23 @@
           :code $ quote $ defn render-circle (element dispatch!)
             let
                 target $ new PIXI/Graphics
-                props $ .unwrap-or (get element :props) nil
-                line-style $ .unwrap-or (get props :line-style) nil
-                position $ .unwrap-or (get props :position) nil
-                events $ .unwrap-or (get props :on) nil
-              init-fill target $ .unwrap-or (get props :fill) nil
+                props $ phlox.util/prop-or element :props $ {}
+                line-style $ phlox.util/prop props :line-style
+                position $ phlox.util/prop props :position
+                events $ phlox.util/prop props :on
+              init-fill target $ phlox.util/prop props :fill
               init-line-style target line-style
-              draw-circle target $ .unwrap-or (get props :radius) nil
+              draw-circle target $ phlox.util/prop props :radius
               init-events target events dispatch!
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-rotation target $ phlox.util/prop props :rotation
+              init-pivot target $ phlox.util/prop props :pivot
+              init-angle target $ phlox.util/prop props :angle
+              init-alpha target $ phlox.util/prop props :alpha
+              init-filters target $ phlox.util/prop props :filters
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
               , target
           :examples $ []
@@ -3051,26 +2998,24 @@
           :code $ quote $ defn render-container (element dispatch!)
             let
                 target $ new PIXI/Container
-                props $ .unwrap-or (get element :props) nil
+                props $ phlox.util/prop-or element :props $ {}
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-rotation target $ phlox.util/prop props :rotation
+              init-angle target $ phlox.util/prop props :angle
+              init-pivot target $ phlox.util/prop props :pivot
+              init-alpha target $ phlox.util/prop props :alpha
+              init-filters target $ phlox.util/prop props :filters
               , target
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'render-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-element (element dispatch!)
             if (element? element)
-              match
-                .unwrap-or (get element :name) nil
-                nil nil
+              match (phlox.util/prop-or element :name :unknown)
                 :container $ render-container element dispatch!
                 :graphics $ render-graphics element dispatch!
                 :circle $ render-circle element dispatch!
@@ -3079,7 +3024,7 @@
                 :mesh $ render-mesh element dispatch!
                 :image $ render-image element dispatch!
                 _ $ do
-                  println "|unknown tag:" $ .unwrap-or (get element :tag) nil
+                  println "|unknown tag:" $ phlox.util/prop element :tag
                   {}
               js/console.error "|Unknown element:" element
           :examples $ []
@@ -3088,21 +3033,21 @@
           :code $ quote $ defn render-graphics (element dispatch!)
             let
                 target $ new PIXI/Graphics
-                props $ .unwrap-or (get element :props) nil
-                ops $ .unwrap-or (get props :ops) nil
-                events $ .unwrap-or (get props :on) nil
+                props $ phlox.util/prop-or element :props $ {}
+                ops $ phlox.util/prop props :ops
+                events $ phlox.util/prop props :on
               ; dev-check props lilac-graphics
-              call-graphics-ops target ops
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
+              call-graphics-ops target $ .unwrap-or ops $ []
+              init-rotation target $ phlox.util/prop props :rotation
+              init-angle target $ phlox.util/prop props :angle
+              init-pivot target $ phlox.util/prop props :pivot
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-alpha target $ phlox.util/prop props :alpha
               init-events target events dispatch!
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-filters target $ phlox.util/prop props :filters
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
               , target
           :examples $ []
@@ -3110,20 +3055,20 @@
         'render-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-image (element dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                target $ .!from PIXI/Sprite $ .unwrap-or (get props :url) nil
-                events $ .unwrap-or (get props :on) nil
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
-              init-box-size target $ .unwrap-or (get props :size) nil
+                props $ phlox.util/prop-or element :props $ {}
+                target $ .!from PIXI/Sprite $ phlox.util/require-prop props :url
+                events $ phlox.util/prop props :on
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-pivot target $ phlox.util/prop props :pivot
+              init-rotation target $ phlox.util/prop props :rotation
+              init-angle target $ phlox.util/prop props :angle
+              init-alpha target $ phlox.util/prop props :alpha
+              init-box-size target $ phlox.util/prop props :size
               init-events target events dispatch!
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-filters target $ phlox.util/prop props :filters
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
               , target
           :examples $ []
@@ -3131,29 +3076,27 @@
         'render-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-mesh (element dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                geo $ init-geometry $ .unwrap-or (get props :geometry) nil
-                shader $ init-shader
-                  .unwrap-or (get props :shader) nil
-                  .unwrap-or (get props :uniforms) nil
-                draw-mode $ or
-                  read-draw-mode-alias $ .unwrap-or (get props :draw-mode) nil
-                  , js/undefined
+                props $ phlox.util/prop-or element :props $ {}
+                geo $ init-geometry $ phlox.util/require-prop props :geometry
+                shader $ init-shader (phlox.util/require-prop props :shader) (phlox.util/prop props :uniforms)
+                draw-mode $ match (phlox.util/prop props :draw-mode)
+                  (:some mode) (read-draw-mode-alias mode)
+                  (:none) js/undefined
                 target $ new PIXI/Mesh geo shader nil draw-mode
-                events $ .unwrap-or (get props :on) nil
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
+                events $ phlox.util/prop props :on
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-pivot target $ phlox.util/prop props :pivot
+              init-angle target $ phlox.util/prop props :angle
+              init-rotation target $ phlox.util/prop props :rotation
+              init-alpha target $ phlox.util/prop props :alpha
               init-events target events dispatch!
               if
                 = :center $ .unwrap-or (get props :align) :left
                 phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-filters target $ phlox.util/prop props :filters
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
               ; js/console.log target
               , target
@@ -3163,23 +3106,21 @@
           :code $ quote $ defn render-rect (element dispatch!)
             let
                 target $ new PIXI/Graphics
-                props $ .unwrap-or (get element :props) nil
-                events $ .unwrap-or (get props :on) nil
-              init-fill target $ .unwrap-or (get props :fill) nil
-              init-line-style target $ .unwrap-or (get props :line-style) nil
-              draw-rect target
-                .unwrap-or (get props :size) nil
-                .unwrap-or (get props :radius) nil
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
+                props $ phlox.util/prop-or element :props $ {}
+                events $ phlox.util/prop props :on
+              init-fill target $ phlox.util/prop props :fill
+              init-line-style target $ phlox.util/prop props :line-style
+              draw-rect target (phlox.util/prop props :size) (phlox.util/prop props :radius)
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-pivot target $ phlox.util/prop props :pivot
+              init-rotation target $ phlox.util/prop props :rotation
+              init-angle target $ phlox.util/prop props :angle
+              init-alpha target $ phlox.util/prop props :alpha
               init-events target events dispatch!
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-filters target $ phlox.util/prop props :filters
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
               , target
           :examples $ []
@@ -3187,56 +3128,61 @@
         'render-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-text (element dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                style $ .unwrap-or (get props :style) nil
+                props $ phlox.util/prop-or element :props $ {}
+                style $ phlox.util/prop-or props :style $ {}
                 text-style $ new PIXI/TextStyle $ convert-line-style style
-                target $ new PIXI/Text
-                  .unwrap-or (get props :text) nil
-                  , text-style
-              init-position target $ .unwrap-or (get props :position) nil
-              init-scale target $ .unwrap-or (get props :scale) nil
-              init-pivot target $ .unwrap-or (get props :pivot) nil
-              init-angle target $ .unwrap-or (get props :angle) nil
-              init-rotation target $ .unwrap-or (get props :rotation) nil
-              init-alpha target $ .unwrap-or (get props :alpha) nil
+                target $ new PIXI/Text (phlox.util/prop-or props :text |) text-style
+              init-position target $ phlox.util/prop props :position
+              init-scale target $ phlox.util/prop props :scale
+              init-pivot target $ phlox.util/prop props :pivot
+              init-angle target $ phlox.util/prop props :angle
+              init-rotation target $ phlox.util/prop props :rotation
+              init-alpha target $ phlox.util/prop props :alpha
               if
                 = :center $ .unwrap-or (get props :align) :left
                 phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
-              init-filters target $ .unwrap-or (get props :filters) nil
+              init-filters target $ phlox.util/prop props :filters
               render-children target
-                .unwrap-or (get element :children) nil
+                phlox.util/prop-or element :children $ []
                 , dispatch!
               , target
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
         'update-angle $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-angle (target v v0)
-            when (not= v v0)
-              set! (.-angle target) v
+          :code $ quote $ defn update-angle (target value-option value-option0)
+            when (not= value-option value-option0)
+              set! (.-angle target)
+                match value-option
+                  (:some value) value
+                  (:none) 0
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-box-size $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-box-size (target size size')
-            if (not= size size')
-              if (non-nil? size)
-                let
-                    size $ decode-map-as size $ :: 'List 'Number
-                  set! (.-width target)
-                    .unwrap $ nth size 0
-                  set! (.-height target)
-                    .unwrap $ nth size 1
-                do
-                  set! (.-width target) js/undefined
-                  set! (.-height target) js/undefined
+          :code $ quote $ defn update-box-size (target size-option size-option0)
+            if (not= size-option size-option0)
+              match size-option
+                (:some size0)
+                  let
+                      size $ decode-map-as size0 $ quote (List Number)
+                    set! (.-width target)
+                      .unwrap $ nth size 0
+                    set! (.-height target)
+                      .unwrap $ nth size 1
+                (:none)
+                  do
+                    set! (.-width target) js/undefined
+                    set! (.-height target) js/undefined
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-children (raw-children raw-old-children parent-container dispatch! options)
             let
-                children-dict $ decode-map-as raw-children $ :: 'List (:: 'List 'Dynamic)
-                old-children-dict $ decode-map-as raw-old-children $ :: 'List (:: 'List 'Dynamic)
+                children-dict $ decode-map-as raw-children $ quote
+                  List $ List Dynamic
+                old-children-dict $ decode-map-as raw-old-children $ quote
+                  List $ List Dynamic
               when dev? $ assert "|children should not contain nil element" $ and
                 every? (map children-dict last-value) non-nil?
                 every? (map old-children-dict last-value) non-nil?
@@ -3246,7 +3192,7 @@
                     idx 0
                     ops $ decode-map-as
                       .unwrap $ get list-ops :acc
-                      :: 'List $ :: 'List 'Dynamic
+                      quote $ List $ List Dynamic
                     xs children-dict
                     ys old-children-dict
                   when-not (empty? ops)
@@ -3285,85 +3231,52 @@
         'update-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-circle (element old-element target dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-                position $ .unwrap-or (get props :position) nil
-                position' $ .unwrap-or (get props' :position) nil
-                radius $ .unwrap-or (get props :radius) nil
-                radius' $ .unwrap-or (get props' :radius) nil
-                line-style $ .unwrap-or (get props :line-style) nil
-                line-style' $ .unwrap-or (get props' :line-style) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+                position $ phlox.util/prop props :position
+                position' $ phlox.util/prop props' :position
+                radius $ phlox.util/prop props :radius
+                radius' $ phlox.util/prop props' :radius
+                line-style $ phlox.util/prop props :line-style
+                line-style' $ phlox.util/prop props' :line-style
               when
                 or (not= position position') (not= radius radius') (not= line-style line-style')
-                  not=
-                    .unwrap-or (get props :fill) nil
-                    .unwrap-or (get props' :fill) nil
+                  not= (phlox.util/prop props :fill) (phlox.util/prop props' :fill)
                 .!clear target
-                init-fill target $ .unwrap-or (get props :fill) nil
+                init-fill target $ phlox.util/prop props :fill
                 init-line-style target line-style
-                draw-circle target $ .unwrap-or (get props :radius) nil
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-events target
-                .unwrap-or (get props :on) nil
-                .unwrap-or (get props' :on) nil
-                , dispatch!
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+                draw-circle target $ phlox.util/prop props :radius
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-container (element old-element target)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-draw-mode $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-draw-mode (target draw-mode draw-mode')
-            when (not= draw-mode draw-mode')
-              let
-                  m $ read-draw-mode-alias draw-mode
-                if (nil? m) (eprintln "|updating draw-mode to nil")
-                set! (.-drawMode target) m
+          :code $ quote $ defn update-draw-mode (target draw-mode-option draw-mode-option0)
+            when (not= draw-mode-option draw-mode-option0)
+              match draw-mode-option
+                (:some draw-mode)
+                  set! (.-drawMode target) (read-draw-mode-alias draw-mode)
+                (:none) (eprintln "|updating draw-mode to nil")
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3372,12 +3285,11 @@
             cond
                 or (nil? element) (nil? element)
                 js/console.error "|Not supposed to be empty"
-              (and (element? element) (element? old-element) (= (.unwrap-or (get element :name) nil) (.unwrap-or (get old-element :name) nil)))
+              (and (element? element) (element? old-element) (= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown)))
                 do
                   let
                       target $ .!getChildAt parent-element idx
-                    match
-                      .unwrap-or (get element :name) nil
+                    match (phlox.util/prop-or element :name :unknown)
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
                       :rect $ update-rect element old-element target dispatch!
@@ -3385,13 +3297,13 @@
                       :graphics $ update-graphics element old-element target dispatch!
                       :mesh $ update-mesh element old-element target dispatch!
                       :image $ update-image element old-element target dispatch!
-                      _ $ eprintln "|not implement yet for updating:" $ .unwrap-or (get element :name) nil
+                      _ $ eprintln "|not implement yet for updating:" $ phlox.util/prop-or element :name :unknown
                   update-children
-                    .unwrap-or (get element :children) nil
-                    .unwrap-or (get old-element :children) nil
+                    phlox.util/prop-or element :children $ []
+                    phlox.util/prop-or old-element :children $ []
                     .!getChildAt parent-element idx
                     , dispatch! options
-              (not= (.unwrap-or (get element :name) nil) (.unwrap-or (get old-element :name) nil))
+              (not= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown))
                 do (.!removeChildAt parent-element idx)
                   .!addChildAt parent-element (render-element element dispatch!) idx
               true $ js/console.warn "|Unknown case:" element old-element
@@ -3399,289 +3311,201 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Number Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'update-filters $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-filters (target filters filters0)
+          :code $ quote $ defn update-filters (target filters-option filters-option0)
             let
                 next-filters $ decode-map-as
-                  either filters $ []
-                  :: 'List $ :: 'List 'Dynamic
+                  match filters-option
+                    (:some value) value
+                    (:none) ([])
+                  quote $ List $ List Dynamic
                 prev-filters $ decode-map-as
-                  either filters0 $ []
-                  :: 'List $ :: 'List 'Dynamic
+                  match filters-option0
+                    (:some value) value
+                    (:none) ([])
+                  quote $ List $ List Dynamic
               if
                 not= (map next-filters last) (map prev-filters last)
                 if (empty? next-filters)
                   set! (.-filters target) nil
-                  init-filters target next-filters
+                  init-filters target $ Option :some next-filters
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-geometry $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-geometry (target geo geo')
-            when (not= geo geo')
-              -> target .-geometry $ set! $ init-geometry geo
+          :code $ quote $ defn update-geometry (target geo-option geo-option0)
+            when (not= geo-option geo-option0)
+              match geo-option
+                (:some geo)
+                  -> target .-geometry $ set! $ init-geometry geo
+                (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-graphics (element old-element target dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-                ops $ .unwrap-or (get props :ops) nil
-                ops' $ .unwrap-or (get props' :ops) nil
-              when (not= ops ops') (.!clear target) (call-graphics-ops target ops)
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
-              update-events target
-                .unwrap-or (get props :on) nil
-                .unwrap-or (get props' :on) nil
-                , dispatch!
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+                ops $ phlox.util/prop props :ops
+                ops' $ phlox.util/prop props' :ops
+              when (not= ops ops') (.!clear target)
+                call-graphics-ops target $ .unwrap-or ops $ []
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
+              update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-image (element old-element target dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-                position $ .unwrap-or (get props :position) nil
-                position' $ .unwrap-or (get props' :position) nil
-                size $ .unwrap-or (get props :size) nil
-                size' $ .unwrap-or (get props' :size) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+                position $ phlox.util/prop props :position
+                position' $ phlox.util/prop props' :position
+                size $ phlox.util/prop props :size
+                size' $ phlox.util/prop props' :size
               when
-                not=
-                  .unwrap-or (get props :url) nil
-                  .unwrap-or (get props' :url) nil
+                not= (phlox.util/prop props :url) (phlox.util/prop props' :url)
                 js/console.warn "|image url changes are not handling in updates"
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
-              update-box-size target
-                .unwrap-or (get props :size) nil
-                .unwrap-or (get props' :size) nil
-              update-events target
-                .unwrap-or (get props :on) nil
-                .unwrap-or (get props' :on) nil
-                , dispatch!
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
+              update-box-size target (phlox.util/prop props :size) (phlox.util/prop props' :size)
+              update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-mesh (element old-element target dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-                ops $ .unwrap-or (get props :ops) nil
-                ops' $ .unwrap-or (get props' :ops) nil
-              update-geometry target
-                .unwrap-or (get props :geometry) nil
-                .unwrap-or (get props' :geometry) nil
-              update-shader target
-                .unwrap-or (get props :shader) nil
-                .unwrap-or (get props' :shader) nil
-                .unwrap-or (get props :uniforms) nil
-              update-draw-mode target
-                .unwrap-or (get props :draw-mode) nil
-                .unwrap-or (get props' :draw-mode) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+                ops $ phlox.util/prop props :ops
+                ops' $ phlox.util/prop props' :ops
+              update-geometry target (phlox.util/prop props :geometry) (phlox.util/prop props' :geometry)
+              update-shader target (phlox.util/prop props :shader) (phlox.util/prop props' :shader) (phlox.util/prop props :uniforms)
+              update-draw-mode target (phlox.util/prop props :draw-mode) (phlox.util/prop props' :draw-mode)
               let
                   pointer $ -> target phlox.core/ffi-shader phlox.core/ffi-uniforms
                 ->
-                  .unwrap-or (get props :uniforms) nil
+                  phlox.util/prop-or props :uniforms $ js-object
                   , js/Object.entries $ phlox.core/ffi-for-each $ fn (arr & args)
                     if
                       not $ identical? (phlox.core/ffi-entry-value arr)
                         aget pointer $ phlox.core/ffi-entry-key arr
                       aset pointer (phlox.core/ffi-entry-key arr) (phlox.core/ffi-entry-value arr)
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
-              update-events target
-                .unwrap-or (get props :on) nil
-                .unwrap-or (get props' :on) nil
-                , dispatch!
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
+              update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rect (element old-element target dispatch!)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-                position $ .unwrap-or (get props :position) nil
-                position' $ .unwrap-or (get props' :position) nil
-                size $ .unwrap-or (get props :size) nil
-                size' $ .unwrap-or (get props' :size) nil
-                radius $ .unwrap-or (get props :radius) nil
-                radius' $ .unwrap-or (get props' :radius) nil
-                line-style $ .unwrap-or (get props :line-style) nil
-                line-style' $ .unwrap-or (get props' :line-style) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+                position $ phlox.util/prop props :position
+                position' $ phlox.util/prop props' :position
+                size $ phlox.util/prop props :size
+                size' $ phlox.util/prop props' :size
+                radius $ phlox.util/prop props :radius
+                radius' $ phlox.util/prop props' :radius
+                line-style $ phlox.util/prop props :line-style
+                line-style' $ phlox.util/prop props' :line-style
               when
                 or (not= size size') (not= radius radius') (not= line-style line-style')
-                  not=
-                    .unwrap-or (get props :fill) nil
-                    .unwrap-or (get props' :fill) nil
+                  not= (phlox.util/prop props :fill) (phlox.util/prop props' :fill)
                 .!clear target
-                init-fill target $ .unwrap-or (get props :fill) nil
+                init-fill target $ phlox.util/prop props :fill
                 init-line-style target line-style
-                draw-rect target size $ .unwrap-or (get props :radius) nil
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
-              update-events target
-                .unwrap-or (get props :on) nil
-                .unwrap-or (get props' :on) nil
-                , dispatch!
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+                draw-rect target size $ phlox.util/prop props :radius
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
+              update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-scale $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-scale (target scale scale')
-            when (not= scale scale')
-              cond
-                  list? scale
-                  do
-                    phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
-                      decode-map-as
-                        .unwrap-or (first scale) 1
-                        , Number
-                    phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
-                      decode-map-as
-                        .unwrap-or (last scale) 1
-                        , Number
-                (number? scale)
-                  do
-                    phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
-                    phlox.core/ffi-set-y! (phlox.core/ffi-scale target) scale
-                (nil? scale)
-                  do
-                    phlox.core/ffi-set-x! (phlox.core/ffi-scale target) 1
-                    phlox.core/ffi-set-y! (phlox.core/ffi-scale target) 1
-                true $ js/console.error "|unknown scale:" scale
+          :code $ quote $ defn update-scale (target scale-option scale-option0)
+            when (not= scale-option scale-option0)
+              let
+                  scale $ match scale-option
+                    (:some value) value
+                    (:none) 1
+                cond
+                    list? scale
+                    do
+                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
+                        decode-map-as
+                          .unwrap-or (first scale) 1
+                          , Number
+                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
+                        decode-map-as
+                          .unwrap-or (last scale) 1
+                          , Number
+                  (number? scale)
+                    do
+                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
+                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target) scale
+                  true $ js/console.error "|unknown scale:" scale
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-shader $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-shader (target shader shader' uniforms)
-            when (not= shader shader')
-              -> target .-shader $ set! $ init-shader shader uniforms
+          :code $ quote $ defn update-shader (target shader-option shader-option0 uniforms-option)
+            when (not= shader-option shader-option0)
+              match shader-option
+                (:some shader)
+                  -> target .-shader $ set! $ init-shader shader uniforms-option
+                (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-text (element old-element target)
             let
-                props $ .unwrap-or (get element :props) nil
-                props' $ .unwrap-or (get old-element :props) nil
-                text-style $ .unwrap-or (get props :style) nil
-                text-style' $ .unwrap-or (get props' :style) nil
+                props $ phlox.util/prop-or element :props $ {}
+                props' $ phlox.util/prop-or old-element :props $ {}
+                text-style $ phlox.util/prop props :style
+                text-style' $ phlox.util/prop props' :style
               when
-                not=
-                  .unwrap-or (get props :text) nil
-                  .unwrap-or (get props' :text) nil
-                set! (.-text target)
-                  .unwrap-or (get props :text) nil
+                not= (phlox.util/prop props :text) (phlox.util/prop props' :text)
+                set! (.-text target) (phlox.util/prop-or props :text |)
               when (not= text-style text-style')
                 let
-                    new-style $ new PIXI/TextStyle $ convert-line-style text-style
+                    new-style $ new PIXI/TextStyle $ convert-line-style
+                      .unwrap-or text-style $ {}
                   set! (.-style target) new-style
-              update-position target
-                .unwrap-or (get props :position) nil
-                .unwrap-or (get props' :position) nil
-              update-scale target
-                .unwrap-or (get props :scale) nil
-                .unwrap-or (get props' :scale) nil
-              update-rotation target
-                .unwrap-or (get props :rotation) nil
-                .unwrap-or (get props' :rotation) nil
-              update-angle target
-                .unwrap-or (get props :angle) nil
-                .unwrap-or (get props' :angle) nil
-              update-pivot target
-                .unwrap-or (get props :pivot) nil
-                .unwrap-or (get props' :pivot) nil
-              update-alpha target
-                .unwrap-or (get props :alpha) nil
-                .unwrap-or (get props' :alpha) nil
+              update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
+              update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
+              update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
+              update-angle target (phlox.util/prop props :angle) (phlox.util/prop props' :angle)
+              update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
+              update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
               if
-                not=
-                  .unwrap-or (get props :align) nil
-                  .unwrap-or (get props' :align) :left
+                not= (phlox.util/prop-or props :align :left) (phlox.util/prop-or props' :align :left)
                 if
                   = :center $ .unwrap-or (get props :align) :left
                   phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
                   phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) nil
-              update-filters target
-                .unwrap-or (get props :filters) nil
-                .unwrap-or (get props' :filters) nil
+              update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
@@ -3699,7 +3523,7 @@
             &doseq (pair ops)
               when (non-nil? pair)
                 let[] (op data)
-                  decode-map-as pair $ :: 'List 'Dynamic
+                  decode-map-as pair $ quote $ List Dynamic
                   match op
                     :move-to $ .!moveTo target
                       .unwrap $ first data
@@ -3707,22 +3531,22 @@
                     :line-to $ .!lineTo target
                       .unwrap $ first data
                       .unwrap $ last data
-                    :line-style $ init-line-style target data
+                    :line-style $ init-line-style target $ phlox.util/as-option data
                     :begin-fill $ .!beginFill target
                       .unwrap-or (get data :color) nil
                       .unwrap-or (get data :alpha) 1
                     :end-fill $ .!endFill target
                     :close-path $ .!closePath target
                     :arc $ let
-                        center $ .unwrap-or (get data :center) nil
+                        center $ phlox.util/require-prop data :center
                         radian $ cond
-                            non-nil? $ .unwrap-or (get data :radian) nil
-                            .unwrap-or (get data :radian) nil
-                          (non-nil? (.unwrap-or (get data :angle) nil))
+                            .some? $ phlox.util/prop data :radian
+                            phlox.util/require-prop data :radian
+                          (.some? (phlox.util/prop data :angle))
                             map
                               decode-map-as
                                 .unwrap-or (get data :angle) ([])
-                                :: 'List 'Number
+                                quote $ List Number
                               , angle->radian
                           true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
                       .!arc target
@@ -3733,8 +3557,8 @@
                         .unwrap $ last radian
                         .unwrap-or (get data :anticlockwise?) nil
                     :arc-to $ let
-                        p1 $ .unwrap-or (get data :p1) nil
-                        p2 $ .unwrap-or (get data :p2) nil
+                        p1 $ phlox.util/require-prop data :p1
+                        p2 $ phlox.util/require-prop data :p2
                       .!arcTo target
                         .unwrap $ first p1
                         .unwrap $ last p1
@@ -3742,9 +3566,9 @@
                         .unwrap $ last p2
                         .unwrap-or (get data :radius) nil
                     :bezier-to $ let
-                        p1 $ .unwrap-or (get data :p1) nil
-                        p2 $ .unwrap-or (get data :p2) nil
-                        to-p $ .unwrap-or (get data :to-p) nil
+                        p1 $ phlox.util/require-prop data :p1
+                        p2 $ phlox.util/require-prop data :p2
+                        to-p $ phlox.util/require-prop data :to-p
                       .!bezierCurveTo target
                         .unwrap $ first p1
                         .unwrap $ last p1
@@ -3753,8 +3577,8 @@
                         .unwrap $ first to-p
                         .unwrap $ last to-p
                     :quadratic-to $ let
-                        p1 $ .unwrap-or (get data :p1) nil
-                        to-p $ .unwrap-or (get data :to-p) nil
+                        p1 $ phlox.util/require-prop data :p1
+                        to-p $ phlox.util/require-prop data :to-p
                       .!quadraticCurveTo target
                         .unwrap $ first p1
                         .unwrap $ last p1
@@ -3766,107 +3590,135 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'draw-circle $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn draw-circle (target radius)
-            if (number? radius)
-              .!drawCircle target 0 0 $ use-number radius
-              js/console.warn "|Unknown radius" radius
+          :code $ quote $ defn draw-circle (target radius-option)
+            match radius-option
+              (:some radius)
+                if (number? radius)
+                  .!drawCircle target 0 0 $ use-number radius
+                  js/console.warn "|Unknown radius" radius
+              (:none) (js/console.warn "|Unknown radius" radius-option)
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'draw-rect $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn draw-rect (target size radius)
-            if (list? size)
-              if (non-nil? radius)
-                .!drawRoundedRect target 0 0
-                  use-number $ .unwrap $ first size
-                  use-number $ .unwrap $ last size
-                  , radius
-                .!drawRect target 0 0
-                  use-number $ .unwrap $ first size
-                  use-number $ .unwrap $ last size
-              js/console.warn "|Unknown size" size
+          :code $ quote $ defn draw-rect (target size-option radius-option)
+            match size-option
+              (:some size)
+                if (list? size)
+                  match radius-option
+                    (:some radius)
+                      .!drawRoundedRect target 0 0
+                        use-number $ .unwrap $ first size
+                        use-number $ .unwrap $ last size
+                        , radius
+                    (:none)
+                      .!drawRect target 0 0
+                        use-number $ .unwrap $ first size
+                        use-number $ .unwrap $ last size
+                  js/console.warn "|Unknown size" size
+              (:none) (js/console.warn "|Unknown size" size-option)
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-alpha $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-alpha (target alpha)
-            when (non-nil? alpha)
-              set! (-> target .-alpha) alpha
+          :code $ quote $ defn init-alpha (target value-option)
+            match value-option
+              (:some value)
+                set! (.-alpha target) value
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-angle $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-angle (target v)
-            when (non-nil? v)
-              set! (.-angle target) v
+          :code $ quote $ defn init-angle (target value-option)
+            match value-option
+              (:some value)
+                set! (.-angle target) value
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-events $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-events (target events dispatch!)
-            when (non-nil? events)
-              let
-                  checked-events $ decode-map-as events $ :: 'Map 'Tag 'Dynamic
-                set! (.-eventMode target) |dynamic
-                set! (.-buttonMode target) true
-                &doseq
-                  k $ keys checked-events
-                  let
-                      listener $ .unwrap $ get checked-events k
-                    .!on target (to-string k)
-                      fn (event)
-                        when (fn? listener) (listener event dispatch!)
+          :code $ quote $ defn init-events (target events-option dispatch!)
+            match events-option
+              (:some events)
+                let
+                    checked-events $ decode-map-as events $ quote (Map Tag Dynamic)
+                  set! (.-eventMode target) |dynamic
+                  set! (.-buttonMode target) true
+                  &doseq
+                    k $ keys checked-events
+                    let
+                        listener $ .unwrap $ get checked-events k
+                      .!on target (to-string k)
+                        fn (event)
+                          when (fn? listener) (listener event dispatch!)
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-line-style $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-line-style (target line-style)
-            when (non-nil? line-style)
-              .!lineStyle target $ js-object
-                :width $ use-number $ .unwrap-or (get line-style :width) nil
-                :color $ use-number $ .unwrap-or (get line-style :color) nil
-                :alpha $ .unwrap-or (get line-style :alpha) 1
-                :join $ read-line-join $ .unwrap-or (get line-style :join) nil
-                :cap $ read-line-cap $ .unwrap-or (get line-style :cap) nil
+          :code $ quote $ defn init-line-style (target line-style-option)
+            match line-style-option
+              (:some line-style)
+                .!lineStyle target $ js-object
+                  :width $ use-number $ phlox.util/prop-or line-style :width 0
+                  :color $ use-number $ phlox.util/prop-or line-style :color 0
+                  :alpha $ phlox.util/prop-or line-style :alpha 1
+                  :join $ read-line-join $ phlox.util/prop-or line-style :join :miter
+                  :cap $ read-line-cap $ phlox.util/prop-or line-style :cap :butt
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-pivot $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-pivot (target pivot)
-            when (non-nil? pivot)
-              phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
-                decode-map-as
-                  .unwrap-or (first pivot) 0
-                  , Number
-              phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
-                decode-map-as
-                  .unwrap-or (last pivot) 0
-                  , Number
+          :code $ quote $ defn init-pivot (target point-option)
+            match point-option
+              (:some point)
+                do
+                  phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
+                    if (list? point)
+                      decode-map-as
+                        .unwrap-or (first point) 0
+                        , Number
+                      , 0
+                  phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
+                    if (list? point)
+                      decode-map-as
+                        .unwrap-or (last point) 0
+                        , Number
+                      , 0
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-position $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-position (target point)
-            when (non-nil? point)
-              phlox.core/ffi-set-x! (phlox.core/ffi-position target)
-                if (list? point)
-                  decode-map-as
-                    .unwrap-or (first point) 0
-                    , Number
-                  , 0
-              phlox.core/ffi-set-y! (phlox.core/ffi-position target)
-                if (list? point)
-                  decode-map-as
-                    .unwrap-or (last point) 0
-                    , Number
-                  , 0
+          :code $ quote $ defn init-position (target point-option)
+            match point-option
+              (:some point)
+                do
+                  phlox.core/ffi-set-x! (phlox.core/ffi-position target)
+                    if (list? point)
+                      decode-map-as
+                        .unwrap-or (first point) 0
+                        , Number
+                      , 0
+                  phlox.core/ffi-set-y! (phlox.core/ffi-position target)
+                    if (list? point)
+                      decode-map-as
+                        .unwrap-or (last point) 0
+                        , Number
+                      , 0
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'init-rotation $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn init-rotation (target v)
-            when (non-nil? v)
-              set! (.-rotation target) v
+          :code $ quote $ defn init-rotation (target value-option)
+            match value-option
+              (:some value)
+                set! (.-rotation target) value
+              (:none) &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3891,80 +3743,96 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'update-alpha $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-alpha (target alpha alpha0)
-            when (not= alpha alpha0)
-              set! (-> target .-alpha) alpha
+          :code $ quote $ defn update-alpha (target value-option value-option0)
+            when (not= value-option value-option0)
+              set! (.-alpha target)
+                match value-option
+                  (:some value) value
+                  (:none) 1
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-events $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-events (target events old-events dispatch!)
-            when (non-nil? old-events)
-              let
-                  checked-events $ decode-map-as old-events $ :: 'Map 'Tag 'Dynamic
-                &doseq
-                  k $ keys checked-events
-                  .!off target $ to-string k
-            when (non-nil? events)
-              let
-                  checked-events $ decode-map-as events $ :: 'Map 'Tag 'Dynamic
-                &doseq
-                  k $ keys checked-events
-                  let
-                      listener $ .unwrap $ get checked-events k
-                    .!on target (to-string k)
-                      fn (event)
-                        when (fn? listener) (listener event dispatch!)
-            if (non-nil? events)
-              do
-                set! (.-buttonMode target) true
-                set! (.-eventMode target) |dynamic
-              do
-                set! (.-buttonMode target) false
-                set! (.-eventMode target) |none
+          :code $ quote $ defn update-events (target events-option old-events-option dispatch!)
+            match old-events-option
+              (:some old-events)
+                let
+                    checked-events $ decode-map-as old-events $ quote (Map Tag Dynamic)
+                  &doseq
+                    k $ keys checked-events
+                    .!off target $ to-string k
+              (:none) &unit
+            match events-option
+              (:some events)
+                let
+                    checked-events $ decode-map-as events $ quote (Map Tag Dynamic)
+                  &doseq
+                    k $ keys checked-events
+                    let
+                        listener $ .unwrap $ get checked-events k
+                      .!on target (to-string k)
+                        fn (event)
+                          when (fn? listener) (listener event dispatch!)
+                  set! (.-buttonMode target) true
+                  set! (.-eventMode target) |dynamic
+              (:none)
+                do
+                  set! (.-buttonMode target) false
+                  set! (.-eventMode target) |none
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-pivot $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-pivot (target pivot pivot0)
-            when (not= pivot pivot0)
-              phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
-                if (list? pivot)
-                  decode-map-as
-                    .unwrap-or (first pivot) 0
-                    , Number
-                  , 0
-              phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
-                if (list? pivot)
-                  decode-map-as
-                    .unwrap-or (last pivot) 0
-                    , Number
-                  , 0
+          :code $ quote $ defn update-pivot (target point-option point-option0)
+            when (not= point-option point-option0)
+              let
+                  point $ match point-option
+                    (:some value) value
+                    (:none) ([] 0 0)
+                phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
+                  if (list? point)
+                    decode-map-as
+                      .unwrap-or (first point) 0
+                      , Number
+                    , 0
+                phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
+                  if (list? point)
+                    decode-map-as
+                      .unwrap-or (last point) 0
+                      , Number
+                    , 0
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-position $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-position (target point point0)
-            when (not= point point0)
-              phlox.core/ffi-set-x! (phlox.core/ffi-position target)
-                if (list? point)
-                  decode-map-as
-                    .unwrap-or (first point) 0
-                    , Number
-                  , 0
-              phlox.core/ffi-set-y! (phlox.core/ffi-position target)
-                if (list? point)
-                  decode-map-as
-                    .unwrap-or (last point) 0
-                    , Number
-                  , 0
+          :code $ quote $ defn update-position (target point-option point-option0)
+            when (not= point-option point-option0)
+              let
+                  point $ match point-option
+                    (:some value) value
+                    (:none) ([] 0 0)
+                phlox.core/ffi-set-x! (phlox.core/ffi-position target)
+                  if (list? point)
+                    decode-map-as
+                      .unwrap-or (first point) 0
+                      , Number
+                    , 0
+                phlox.core/ffi-set-y! (phlox.core/ffi-position target)
+                  if (list? point)
+                    decode-map-as
+                      .unwrap-or (last point) 0
+                      , Number
+                    , 0
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-rotation $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn update-rotation (target v v0)
-            when (not= v v0)
-              set! (.-rotation target) v
+          :code $ quote $ defn update-rotation (target value-option value-option0)
+            when (not= value-option value-option0)
+              set! (.-rotation target)
+                match value-option
+                  (:some value) value
+                  (:none) 0
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3990,6 +3858,21 @@
           :code $ quote $ defref *ctx-instance nil
           :examples $ []
           :schema $ quote $ Ref Dynamic
+        'as-option $ %{} 'CodeEntry
+          :doc "|A value as an Option: an Option stays as it is, nil becomes none, anything else is present."
+          :code $ quote $ defn as-option (value)
+            cond
+                nil? value
+                Option :none
+              (and (enum? value) (= (&enum:definition value) (Option :some Option)))
+                if
+                  = :some $ &enum:nth value 0
+                  Option :some $ &enum:nth value 1
+                  Option :none
+              true $ Option :some value
+          :examples $ []
+          :schema $ quote $ Fn Dynamic
+            -> $ Option Dynamic
         'camel-case $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn camel-case (x)
             js-ffi.contract/expect-string |String.replace $ .!replace x (new js/RegExp |-[a-z])
@@ -4011,7 +3894,7 @@
         'convert-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn convert-line-style (props)
             ->
-              decode-map-as props $ :: 'Map 'Dynamic 'Dynamic
+              decode-map-as props $ quote $ Map Dynamic Dynamic
               to-pairs
               map $ fn (pair)
                 let[] (k v) pair $ let
@@ -4043,12 +3926,12 @@
         'detect-func-in-map? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-func-in-map? (params)
             if (empty? params) false $ let
-                p0 $ .unwrap-or (first params) nil
+                p0 $ .unwrap $ first params
               if
                 and (map? p0)
                   any? (to-pairs p0)
                     fn (pair)
-                      fn? $ .unwrap-or (last pair) nil
+                      fn? $ .unwrap $ last pair
                 , true $ recur $ rest params
           :examples $ []
           :schema $ quote $ Fn (List Dynamic) (-> Bool)
@@ -4077,6 +3960,25 @@
             phlox.core/ffi-text-width $ phlox.core/ffi-measure-text @*ctx-instance text
           :examples $ []
           :schema $ quote $ Fn String Number String (-> Number) (:features :js-ffi)
+        'prop $ %{} 'CodeEntry
+          :doc "|Read a prop of an untyped map as an Option: a nil map, a missing key, a nil value and a none value are all none; an Option value is used as it is."
+          :code $ quote $ defn prop (props key)
+            if (nil? props) (Option :none)
+              match (get props key)
+                (:some value) (as-option value)
+                (:none) (Option :none)
+          :examples $ []
+          :schema $ quote $ Fn M Tag
+            -> $ Option Dynamic
+            :generics M
+        'prop-or $ %{} 'CodeEntry
+          :doc "|Read a prop of an untyped map, or default when it is absent or nil."
+          :code $ quote $ defn prop-or (props key default)
+            match (prop props key)
+              (:some value) value
+              (:none) default
+          :examples $ []
+          :schema $ quote $ Fn M Tag Dynamic (-> Dynamic) (:generics M)
         'rand-color $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rand-color ()
             floor $ * (random) 0xffffff
@@ -4085,7 +3987,7 @@
         'remove-nil-values $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-nil-values (dict)
             -> dict $ filter $ fn (pair)
-              non-nil? $ .unwrap-or (last pair) nil
+              non-nil? $ .unwrap $ last pair
           :examples $ []
           :schema $ quote $ Fn
             List $ List Dynamic
@@ -4094,6 +3996,15 @@
             :code $ quote $ assert=
               [] ([] 1 false) ([] 2 |a)
               remove-nil-values $ index-items $ [] nil false |a
+        'require-prop $ %{} 'CodeEntry
+          :doc "|Read a prop that must be present; raises with the key when it is absent or nil."
+          :code $ quote $ defn require-prop (props key)
+            match (prop props key)
+              (:some value) value
+              (:none)
+                raise $ str "|[phlox] missing " key
+          :examples $ []
+          :schema $ quote $ Fn M Tag (-> Dynamic) (:generics M)
         'use-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn use-number (x)
             if
@@ -4116,7 +4027,7 @@
               assoc :acc $ conj
                 decode-map-as
                   .unwrap $ get state :acc
-                  :: 'List $ :: 'List 'Dynamic
+                  quote $ List $ List Dynamic
                 [] kind key
               assoc :step $ + cost $ decode-map-as
                 .unwrap $ get state :step
