@@ -2912,26 +2912,11 @@
               , geo
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
-        'init-scale $ %{} 'CodeEntry (:doc |)
+        'init-scale $ %{} 'CodeEntry
+          :doc "|Apply an optional `:scale` prop; none leaves the PIXI default."
           :code $ quote $ defn init-scale (target scale-option)
             match scale-option
-              (:some scale)
-                cond
-                    list? scale
-                    do
-                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
-                        decode-map-as
-                          .unwrap-or (first scale) 1
-                          , Number
-                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
-                        decode-map-as
-                          .unwrap-or (last scale) 1
-                          , Number
-                  (number? scale)
-                    do
-                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
-                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target) scale
-                  true $ js/console.error "|unknown scale:" scale
+              (:some scale) (set-scale! target scale)
               (:none) &unit
             , &unit
           :examples $ []
@@ -2951,12 +2936,18 @@
             .unwrap $ last items
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic)
-        'read-draw-mode-alias $ %{} 'CodeEntry (:doc |)
+        'read-draw-mode-alias $ %{} 'CodeEntry
+          :doc "|Read a mesh `:draw-mode` prop: a tag alias or a PIXI draw mode number."
           :code $ quote $ defn read-draw-mode-alias (draw-mode)
-            if (tag? draw-mode)
-              match draw-mode (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
-                _ $ js/console.warn "|Unknown draw mode:" draw-mode
-              , draw-mode
+            match (try-decode-map-as draw-mode phlox.schema/DrawMode)
+              (:ok mode)
+                match mode
+                  (Tag alias)
+                    match alias (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
+                      _ $ do (js/console.warn "|Unknown draw mode:" draw-mode) js/undefined
+                  (Number n) n
+              (:err message)
+                do (js/console.warn "|Unknown draw mode:" draw-mode message) js/undefined
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'render-children $ %{} 'CodeEntry (:doc |)
@@ -3148,6 +3139,24 @@
               , target
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+        'set-scale! $ %{} 'CodeEntry
+          :doc "|Set a PIXI scale from a `:scale` prop: one factor for both axes, or `[] x y`."
+          :code $ quote $ defn set-scale! (target raw)
+            match (try-decode-map-as raw phlox.schema/Scale)
+              (:ok scale)
+                let[] (x y)
+                  match scale
+                    (Number n) ([] n n)
+                    (List xs)
+                      []
+                        .unwrap-or (first xs) 1
+                        .unwrap-or (last xs) 1
+                  phlox.core/ffi-set-x! (phlox.core/ffi-scale target) x
+                  phlox.core/ffi-set-y! (phlox.core/ffi-scale target) y
+              (:err message) (js/console.error "|unknown scale:" raw message)
+            , &unit
+          :examples $ []
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-angle (target value-option value-option0)
             when (not= value-option value-option0)
@@ -3442,29 +3451,13 @@
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
-        'update-scale $ %{} 'CodeEntry (:doc |)
+        'update-scale $ %{} 'CodeEntry
+          :doc "|Apply a changed `:scale` prop; a removed prop resets the scale to 1."
           :code $ quote $ defn update-scale (target scale-option scale-option0)
             when (not= scale-option scale-option0)
-              let
-                  scale $ match scale-option
-                    (:some value) value
-                    (:none) 1
-                cond
-                    list? scale
-                    do
-                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target)
-                        decode-map-as
-                          .unwrap-or (first scale) 1
-                          , Number
-                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target)
-                        decode-map-as
-                          .unwrap-or (last scale) 1
-                          , Number
-                  (number? scale)
-                    do
-                      phlox.core/ffi-set-x! (phlox.core/ffi-scale target) scale
-                      phlox.core/ffi-set-y! (phlox.core/ffi-scale target) scale
-                  true $ js/console.error "|unknown scale:" scale
+              set-scale! target $ match scale-option
+                (:some value) value
+                (:none) 1
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3845,11 +3838,22 @@
             phlox.render.draw :refer $ init-line-style
             |pixi.js :as PIXI
     'phlox.schema $ %{} 'FileEntry
-      :defs $ {} $ 'PhloxElement
-        %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct PhloxElement (:name 'Dynamic) (:props 'Dynamic) (:children 'Dynamic)
+      :defs $ {}
+        'DrawMode $ %{} 'CodeEntry
+          :doc "|A mesh `:draw-mode` prop: a tag alias such as :triangles, or a PIXI draw mode number."
+          :code $ quote $ defunion DrawMode Tag Number
+          :examples $ []
+          :schema $ quote UnionDef
+        'PhloxElement $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct PhloxElement (:name Dynamic) (:props Dynamic) (:children Dynamic)
           :examples $ []
           :schema $ quote StructDef
+        'Scale $ %{} 'CodeEntry
+          :doc "|A `:scale` prop: one factor for both axes, or `[] x y`."
+          :code $ quote $ defunion Scale Number
+            quote $ List Number
+          :examples $ []
+          :schema $ quote UnionDef
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.schema
     'phlox.util $ %{} 'FileEntry
