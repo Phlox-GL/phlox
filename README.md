@@ -27,7 +27,10 @@ Scale 的 List 分支保留 first/last 与空列表默认值语义，不把 List
 本地已通过正式 Caps strict / toolchain、immutable、362 个全部定义、完整 strict、
 原九项 native 测试、零 deprecated/dynamic-method 调用及原 168 上限、JS/Vite 构建。
 消费者全部 316 个定义、完整 strict、构建与 Snapshot 不变检查通过。
-尚未重复本轮浏览器交互，原精确远端 CI 与评审仍待验收；历史浏览器记录不作为本轮证据。
+本轮真实消费者的 16 个场景已逐一实际切换并渲染，Bezier 控制点拖动重绘通过。
+控制台无 error；Chord 示例保留已记录的项目 shuffle TODO 警告（circling-tree#60），
+已核实来源是示例自身的保序占位函数，未将它误报为 Calcit 运行时缺陷。
+本库 Demo 的其他控件未在本轮逐项复验；原精确远端 CI 已通过，外部自动评审尚未响应。
 现有 88 处 unsafe 和开放宿主/状态边界尚未清零；图形操作 g 的 List Dynamic 合同见
 [#97](https://github.com/Phlox-GL/phlox/issues/97)，不以伪泛型或带 Dynamic 的 union 隐藏。
 
