@@ -682,7 +682,7 @@
                       fn (e d!)
                         request-text! e
                           {}
-                            :initial $ phlox.util/prop state :text
+                            :initial $ phlox.util/prop-or state :text |
                             :style $ {} $ :color |blue
                           fn (result)
                             d! cursor $ assoc state :text result
@@ -701,7 +701,7 @@
                       fn (e d!)
                         request-text! e
                           {}
-                            :initial $ phlox.util/prop state :long-text
+                            :initial $ phlox.util/prop-or state :long-text |
                             :style $ {} $ :font-family font-code
                             :textarea? true
                           fn (result)
