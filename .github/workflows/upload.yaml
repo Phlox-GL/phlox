@@ -96,10 +96,10 @@ jobs:
         cat > "$consumer/deps.cirru" <<'EOF'
         {} (:calcit-version |0.34.2)
           :version |0.1.2
-          :dependencies $ {} (|Phlox-GL/phlox |0.9.0)
-            |Triadica/touch-control |0.0.35
-            |calcit-lang/js-ffi |0.2.9
-            |mvc-works/pointed-prompt |0.0.24
+          :dependencies $ {} (|Phlox-GL/phlox |0.9.1)
+            |Triadica/touch-control |0.0.37
+            |calcit-lang/js-ffi |0.2.10
+            |mvc-works/pointed-prompt |0.0.25
         EOF
         cd "$consumer"
         yarn add --exact @calcit/procs@0.34.2
