@@ -6,7 +6,35 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
-### 0.32.1 迁移候选：使用者影响
+### 0.9.0 待发版：使用者影响
+
+CLI / `@calcit/procs` 配对正式 **0.34.2**；消费者需整图同步、重新生成 JS 并重启开发服务。
+0.9.0 尚未发布，沿用 main 已准备的同一版本，不为配对补丁再开 alpha 或新 minor。
+依赖继续使用正式 Touch Control **0.0.35**、Pointed Prompt **0.0.24**、JS-FFI **0.2.9**。
+
+从旧 0.8.0 升级还需注意此前 main 已合入的改动：裸 nil 与 Option :none 的 prop 按缺省处理，
+Option :some v 保留显式值；更新时移除 alpha/angle/rotation 会复位为 1/0/0。
+必需字段通过 require-prop 读取。Scale 是 Number / List Number，DrawMode 是 Tag / Number；
+无效 scale（含非数字列表）由受检解码拒绝后记录 unknown scale，不再因旧列表解码路径抛错。
+Scale 的 List 分支保留 first/last 与空列表默认值语义，不把 List Number 当作长度 2 的证明。
+这些是本次 0.9.0 的既有接口迁移，不是新增的配对逻辑；应先验收消费者再使用正式 tag。
+
+本轮 Snapshot、公开 schema、全部原断言与渲染算法逐字节保持，只配对工具链/锁文件和说明。
+原真实消费者源码夹具改为 Circling Tree #67 的精确迁移提交 547b542：该源码已适配
+0.34.2 的 Map Tuple 回调，仍是明确的本地 Phlox 候选验收，不伪装成已发布 tag。
+原门禁、168 unresolved 上限、COS 内置 verify、隔离 PR 预览与生产路径保持。
+
+本地已通过正式 Caps strict / toolchain、immutable、362 个全部定义、完整 strict、
+原九项 native 测试、零 deprecated/dynamic-method 调用及原 168 上限、JS/Vite 构建。
+消费者全部 316 个定义、完整 strict、构建与 Snapshot 不变检查通过。
+本轮真实消费者的 16 个场景已逐一实际切换并渲染，Bezier 控制点拖动重绘通过。
+控制台无 error；Chord 示例保留已记录的项目 shuffle TODO 警告（circling-tree#60），
+已核实来源是示例自身的保序占位函数，未将它误报为 Calcit 运行时缺陷。
+本库 Demo 的其他控件未在本轮逐项复验；原精确远端 CI 已通过，外部自动评审尚未响应。
+现有 88 处 unsafe 和开放宿主/状态边界尚未清零；图形操作 g 的 List Dynamic 合同见
+[#97](https://github.com/Phlox-GL/phlox/issues/97)，不以伪泛型或带 Dynamic 的 union 隐藏。
+
+### 历史 0.32.1 迁移记录
 
 候选 `0.8.0` 将 CLI 与 `@calcit/procs` 配对正式 `0.32.1`，消费者需要整图
 升级、重新生成 JS 并重启开发服务。依赖使用已发布的 Touch Control `0.0.35`、
