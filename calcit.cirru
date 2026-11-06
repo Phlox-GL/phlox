@@ -319,8 +319,7 @@
           :code $ quote $ defn comp-container (store)
             let
                 cursor $ []
-                states $ decode-map-as (phlox.util/require-prop store :states)
-                  quote $ Map Tag Dynamic
+                states $ decode-map-as (phlox.util/require-prop store :states) (Map Tag Dynamic)
               group
                 {} $ :position $ [] 0 0
                 comp-tabs tabs (phlox.util/require-prop store :tab)
@@ -498,10 +497,10 @@
                     :uniforms $ let
                         base $ decode-map-as
                           .unwrap $ get state :base
-                          quote $ List Number
+                          List Number
                         offset $ decode-map-as
                           phlox.util/prop-or state :offset $ [] 0 0
-                          quote $ List Number
+                          List Number
                       js-object (:uSampler2 sample-texture)
                         :time $ decode-map-as
                           .unwrap $ get state :x
@@ -552,7 +551,7 @@
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
                         conj
-                          decode-map-as xs $ quote $ List Dynamic
+                          decode-map-as xs $ List Dynamic
                           let
                               id $ nanoid
                             {} (:id id)
@@ -572,7 +571,7 @@
                     d! cursor $ update state :messages $ fn (xs)
                       unsafe-coerce
                         ->
-                          decode-map-as xs $ quote $ List Dynamic
+                          decode-map-as xs $ List Dynamic
                           filter-not $ fn (x)
                             identical? (phlox.util/require-prop x :id) (phlox.util/require-prop message :id)
                         , Dynamic
@@ -856,10 +855,10 @@
                   inc $ decode-map-as x Number
               (:states cursor s)
                 update-states store
-                  decode-map-as cursor $ quote $ List Dynamic
+                  decode-map-as cursor $ List Dynamic
                   , s
               (:hydrate-storage d)
-                decode-map-as d $ quote $ Map Tag Dynamic
+                decode-map-as d $ Map Tag Dynamic
               _ $ do (eprintln "|unknown op" op) store
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) Dynamic String Number
@@ -945,10 +944,8 @@
           :code $ quote $ defn comp-arrow (states props) (; dev-check props lilac-arrow)
             let
                 color $ phlox.util/prop-or props :color $ hslx 0 0 100
-                from $ decode-map-as (phlox.util/require-prop props :from)
-                  quote $ List Number
-                to $ decode-map-as (phlox.util/require-prop props :to)
-                  quote $ List Number
+                from $ decode-map-as (phlox.util/require-prop props :from) (List Number)
+                to $ decode-map-as (phlox.util/require-prop props :to) (List Number)
                 width $ phlox.util/prop-or props :width 1
                 arg-length $ decode-map-as (phlox.util/prop-or props :arm-length 10) Number
                 on-change $ phlox.util/prop props :on-change
@@ -1001,7 +998,7 @@
                 color $ phlox.util/prop-or props :color $ hslx 0 0 100
                 position $ decode-map-as
                   phlox.util/prop-or props :position $ [] 0 0
-                  quote $ List Number
+                  List Number
                 width $ + 16 $ measure-text-width! button-text size font-family
                 align-right? $ phlox.util/prop-or props :align-right? false
               container
@@ -1050,7 +1047,7 @@
                   .unwrap-or (get states :data)
                     {} (:dragging? false)
                       :x0 $ [] 0 0
-                  quote $ Map Tag Dynamic
+                  Map Tag Dynamic
                 unit $ decode-map-as (phlox.util/prop-or props :unit 1) Number
                 radius $ decode-map-as (phlox.util/prop-or props :radius 8) Number
                 color $ phlox.util/prop-or props :color $ hslx 0 0 100
@@ -1083,12 +1080,10 @@
                                   x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                                   y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                                 let
-                                    x0 $ decode-map-as (phlox.util/require-prop state :x0)
-                                      quote $ List Number
+                                    x0 $ decode-map-as (phlox.util/require-prop state :x0) (List Number)
                                   on-change
                                     complex/add
-                                      decode-map-as (phlox.util/require-prop state :p0)
-                                        quote $ List Number
+                                      decode-map-as (phlox.util/require-prop state :p0) (List Number)
                                       []
                                         * unit $ - x $ .unwrap-or (first x0) 0
                                         * unit $ - y $ .unwrap-or (last x0) 0
@@ -1145,7 +1140,7 @@
             let
                 messages $ decode-map-as
                   phlox.util/prop-or options :messages $ []
-                  quote $ List Dynamic
+                  List Dynamic
                 bottom? $ phlox.util/prop-or options :bottom? false
                 base-position $ .unwrap-or (get options :position)
                   if bottom?
@@ -1363,7 +1358,7 @@
                 on-change $ phlox.util/prop props :on-change
                 position $ decode-map-as
                   phlox.util/prop-or props :position $ [] 0 0
-                  quote $ List Number
+                  List Number
                 on-move $ .unwrap-or (get props :on-move)
                   fn (pos d!) nil
                 border-color $ phlox.util/prop-or props :border-color $ hslx 240 80 80
@@ -1518,12 +1513,12 @@
                 step $ decode-map-as (phlox.util/prop-or options :step 36) Number
                 position $ decode-map-as
                   phlox.util/prop-or options :position $ [] 0 0
-                  quote $ List Number
+                  List Number
                 font-family $ phlox.util/prop-or options :font-family "|Josefin Sans, sans-serif"
               create-list :container ({})
                 -> tabs $ map-indexed $ fn (idx info)
                   let[] (tab title)
-                    decode-map-as info $ quote $ List Dynamic
+                    decode-map-as info $ List Dynamic
                     [] idx $ container
                       {} $ :position $ complex/add position
                         [] 0 $ * idx step
@@ -1628,8 +1623,7 @@
       :defs $ {}
         'MobileDetectHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait MobileDetectHost
-            .mobile $ quote $ Fn MobileDetectHost
-              -> $ JsNullish String
+            .mobile $ Fn MobileDetectHost $ -> (JsNullish String)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1692,9 +1686,9 @@
                   let
                       value $ .unwrap-or (get states k) ({})
                     if (map? value) value $ raise |expected-child-state-map
-                  quote $ Map Dynamic Dynamic
+                  Map Dynamic Dynamic
               assoc branch :cursor $ conj
-                decode-map-as parent-cursor $ quote $ List Dynamic
+                decode-map-as parent-cursor $ List Dynamic
                 , k
           :examples $ []
           :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic
@@ -1757,37 +1751,37 @@
               :tags $ #{} :unit
         'AppendableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait AppendableHost
-            .appendChild $ quote $ Fn AppendableHost Dynamic (-> Unit)
+            .appendChild $ Fn AppendableHost Dynamic $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'CanvasContextHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait CanvasContextHost (:font 'String)
-            .measureText $ quote $ Fn CanvasContextHost String (-> JsObject)
+            .measureText $ Fn CanvasContextHost String $ -> JsObject
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'CanvasHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait CanvasHost
-            .getContext $ quote $ Fn CanvasHost String (-> JsObject)
+            .getContext $ Fn CanvasHost String $ -> JsObject
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'ColorHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait ColorHost
-            .toNumber $ quote $ Fn ColorHost (-> Number)
+            .toNumber $ Fn ColorHost $ -> Number
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'DestroyableHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DestroyableHost
-            .destroy $ quote $ Fn DestroyableHost (-> Unit)
+            .destroy $ Fn DestroyableHost $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'DocumentHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait DocumentHost (:body 'JsObject)
-            .createElement $ quote $ Fn DocumentHost String (-> JsObject)
+            .createElement $ Fn DocumentHost String $ -> JsObject
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1798,7 +1792,7 @@
           :schema $ quote Trait
         'EventTargetHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait EventTargetHost
-            .addEventListener $ quote $ Fn EventTargetHost String
+            .addEventListener $ Fn EventTargetHost String
               Fn Dynamic $ -> Dynamic
               -> Unit
           :examples $ []
@@ -1806,28 +1800,28 @@
           :schema $ quote Trait
         'EventTargetWithOptionsHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait EventTargetWithOptionsHost
-            .addEventListener $ quote $ Fn EventTargetWithOptionsHost String
+            .addEventListener $ Fn EventTargetWithOptionsHost String
               Fn Dynamic $ -> Dynamic
-              , Dynamic (-> Unit)
+              , Dynamic $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'FontFaceObserverHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait FontFaceObserverHost
-            .load $ quote $ Fn FontFaceObserverHost (-> Dynamic)
+            .load $ Fn FontFaceObserverHost $ -> Dynamic
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'HsluvHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait HsluvHost (:hsluv_h 'Number) (:hsluv_s 'Number) (:hsluv_l 'Number) (:rgb_r 'Number) (:rgb_g 'Number) (:rgb_b 'Number)
-            .hsluvToRgb $ quote $ Fn HsluvHost (-> Unit)
+            .hsluvToRgb $ Fn HsluvHost $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'JsArrayHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait JsArrayHost
-            .push $ quote $ Fn JsArrayHost Dynamic (-> Number)
-            .forEach $ quote $ Fn JsArrayHost
+            .push $ Fn JsArrayHost Dynamic $ -> Number
+            .forEach $ Fn JsArrayHost
               Fn Dynamic $ -> Dynamic
               -> Unit
           :examples $ []
@@ -1840,7 +1834,7 @@
           :schema $ quote Trait
         'PixiAnchorHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiAnchorHost
-            .set $ quote $ Fn PixiAnchorHost Dynamic (-> Unit)
+            .set $ Fn PixiAnchorHost Dynamic $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1851,10 +1845,10 @@
           :schema $ quote Trait
         'PixiContainerHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiContainerHost
-            .addChild $ quote $ Fn PixiContainerHost Dynamic (-> Unit)
-            .addChildAt $ quote $ Fn PixiContainerHost Dynamic Number (-> Unit)
-            .getChildAt $ quote $ Fn PixiContainerHost Number (-> JsObject)
-            .removeChildAt $ quote $ Fn PixiContainerHost Number (-> Unit)
+            .addChild $ Fn PixiContainerHost Dynamic $ -> Unit
+            .addChildAt $ Fn PixiContainerHost Dynamic Number $ -> Unit
+            .getChildAt $ Fn PixiContainerHost Number $ -> JsObject
+            .removeChildAt $ Fn PixiContainerHost Number $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1870,8 +1864,8 @@
           :schema $ quote Trait
         'PixiGeometryHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiGeometryHost
-            .addAttribute $ quote $ Fn PixiGeometryHost Dynamic Dynamic Dynamic (-> Unit)
-            .addIndex $ quote $ Fn PixiGeometryHost Dynamic (-> Unit)
+            .addAttribute $ Fn PixiGeometryHost Dynamic Dynamic Dynamic $ -> Unit
+            .addIndex $ Fn PixiGeometryHost Dynamic $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1882,14 +1876,14 @@
           :schema $ quote Trait
         'PixiRendererHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiRendererHost (:plugins 'JsObject)
-            .render $ quote $ Fn PixiRendererHost Dynamic (-> Unit)
-            .resize $ quote $ Fn PixiRendererHost Number Number (-> Unit)
+            .render $ Fn PixiRendererHost Dynamic $ -> Unit
+            .resize $ Fn PixiRendererHost Number Number $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiScaleHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiScaleHost
-            .set $ quote $ Fn PixiScaleHost Number Number (-> Unit)
+            .set $ Fn PixiScaleHost Number Number $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1900,7 +1894,7 @@
           :schema $ quote Trait
         'PixiTickerHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiTickerHost
-            .stop $ quote $ Fn PixiTickerHost (-> Unit)
+            .stop $ Fn PixiTickerHost $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1911,7 +1905,7 @@
           :schema $ quote Trait
         'PromiseHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PromiseHost
-            .then $ quote $ Fn PromiseHost
+            .then $ Fn PromiseHost
               Fn Dynamic $ -> Dynamic
               -> Dynamic
           :examples $ []
@@ -1942,7 +1936,7 @@
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ decode-map-as children
-              quote $ List $ List Dynamic
+              List $ List Dynamic
           :examples $ []
           :schema $ quote $ Fn Tag Dynamic (List Dynamic) (-> phlox.schema/PhloxElement)
         'defcomp $ %{} 'CodeEntry (:doc |)
@@ -2370,14 +2364,14 @@
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
                   non-nil? @*drag-moving-cache
                 let
-                    prev $ decode-map-as @*drag-moving-cache $ quote (List Number)
+                    prev $ decode-map-as @*drag-moving-cache $ List Number
                     current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
                     delta $ complex/minus current prev
                   reset! *drag-moving-cache current
                   swap! *stage-config update :move $ fn (prev)
                     unsafe-coerce
                       complex/add
-                        decode-map-as prev $ quote $ List Number
+                        decode-map-as prev $ List Number
                         , delta
                       , Dynamic
                   render-stage-for-viewer!
@@ -2404,7 +2398,7 @@
                       swap! *stage-config update :move $ fn (pos)
                         unsafe-coerce
                           let
-                              pos0 $ decode-map-as pos $ quote (List Number)
+                              pos0 $ decode-map-as pos $ List Number
                               shift $ complex/minus pointer pos0
                             complex/minus pos0 $ complex/times shift $ [] (/ dy scale) 0
                           , Dynamic
@@ -2502,7 +2496,7 @@
         'line-segment->ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segment->ops (pair)
             let
-                pair0 $ decode-map-as pair $ quote (List Dynamic)
+                pair0 $ decode-map-as pair $ List Dynamic
               []
                 g :move-to $ .unwrap $ nth pair0 0
                 g :line-to $ .unwrap $ nth pair0 1
@@ -2516,7 +2510,7 @@
                 line-style $ phlox.util/prop props :style
                 segments $ decode-map-as
                   phlox.util/prop-or props :segments $ []
-                  quote $ List Dynamic
+                  List Dynamic
               create-element :graphics
                 assoc props :ops $ concat
                   match line-style
@@ -2556,7 +2550,7 @@
                 line-style $ phlox.util/prop props :style
                 points $ decode-map-as
                   phlox.util/prop-or props :points $ []
-                  quote $ List Dynamic
+                  List Dynamic
               create-element :graphics
                 assoc props :ops $ concat
                   match line-style
@@ -2606,7 +2600,7 @@
                   , 'Number
                 move $ decode-map-as
                   .unwrap-or (get @*stage-config :move) nil
-                  quote $ List Number
+                  List Number
               ffi-set-x!
                 ffi-position $ ffi-stage @*app
                 +
@@ -2635,7 +2629,7 @@
             let
                 move0 $ decode-map-as
                   .unwrap-or (get @*stage-config :move) nil
-                  quote $ List Number
+                  List Number
                 scale0 $ decode-map-as
                   .unwrap-or (get @*stage-config :scale) 1
                   , 'Number
@@ -2648,7 +2642,7 @@
                   swap! *stage-config update :move $ fn (prev)
                     unsafe-coerce
                       let
-                          prev0 $ decode-map-as prev $ quote (List Number)
+                          prev0 $ decode-map-as prev $ List Number
                           l $ vec-length prev0
                         if (< l 4) ([] 0 0)
                           &let
@@ -2688,7 +2682,7 @@
                 swap! *stage-config update :move $ fn (prev)
                   unsafe-coerce
                     let
-                        prev0 $ decode-map-as prev $ quote (List Number)
+                        prev0 $ decode-map-as prev $ List Number
                       complex/add
                         complex/minus prev0 $ complex/scale (complex/conjugate move) 0.05
                         complex/scale prev0 $ / (* 0.01 scale-change) scale0
@@ -2740,7 +2734,7 @@
           :code $ quote $ defn request-text! (e options cb) (dev-check options lilac-input)
             prompt-at!
               [] (-> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x) (-> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y)
-              decode-map-as options $ quote $ Map Tag Dynamic
+              decode-map-as options $ Map Tag Dynamic
               , cb
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic
@@ -2770,7 +2764,7 @@
                     when (fn? listener) (listener event dispatch!)
                     &doseq
                       pair $ decode-map-as (:children element)
-                        quote $ List $ List Dynamic
+                        List $ List Dynamic
                       let[] (k child) pair $ handle-event kind child event dispatch!
                   _ _ $ js/console.log "|unknown tree for handling event:" tree
                 js/console.log "|unknown tree for handling event:" tree
@@ -2862,7 +2856,7 @@
             match size-option
               (:some size0)
                 let
-                    size $ decode-map-as size0 $ quote (List Number)
+                    size $ decode-map-as size0 $ List Number
                   set! (.-width target)
                     .unwrap $ nth size 0
                   set! (.-height target)
@@ -3173,7 +3167,7 @@
               match size-option
                 (:some size0)
                   let
-                      size $ decode-map-as size0 $ quote (List Number)
+                      size $ decode-map-as size0 $ List Number
                     set! (.-width target)
                       .unwrap $ nth size 0
                     set! (.-height target)
@@ -3188,10 +3182,8 @@
         'update-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-children (raw-children raw-old-children parent-container dispatch! options)
             let
-                children-dict $ decode-map-as raw-children $ quote
-                  List $ List Dynamic
-                old-children-dict $ decode-map-as raw-old-children $ quote
-                  List $ List Dynamic
+                children-dict $ decode-map-as raw-children $ List (List Dynamic)
+                old-children-dict $ decode-map-as raw-old-children $ List (List Dynamic)
               when dev? $ assert "|children should not contain nil element" $ and
                 every? (map children-dict last-value) non-nil?
                 every? (map old-children-dict last-value) non-nil?
@@ -3201,7 +3193,7 @@
                     idx 0
                     ops $ decode-map-as
                       .unwrap $ get list-ops :acc
-                      quote $ List $ List Dynamic
+                      List $ List Dynamic
                     xs children-dict
                     ys old-children-dict
                   when-not (empty? ops)
@@ -3326,12 +3318,12 @@
                   match filters-option
                     (:some value) value
                     (:none) ([])
-                  quote $ List $ List Dynamic
+                  List $ List Dynamic
                 prev-filters $ decode-map-as
                   match filters-option0
                     (:some value) value
                     (:none) ([])
-                  quote $ List $ List Dynamic
+                  List $ List Dynamic
               if
                 not= (map next-filters last) (map prev-filters last)
                 if (empty? next-filters)
@@ -3516,7 +3508,7 @@
             &doseq (pair ops)
               when (non-nil? pair)
                 let[] (op data)
-                  decode-map-as pair $ quote $ List Dynamic
+                  decode-map-as pair $ List Dynamic
                   match op
                     :move-to $ .!moveTo target
                       .unwrap $ first data
@@ -3539,7 +3531,7 @@
                             map
                               decode-map-as
                                 .unwrap-or (get data :angle) ([])
-                                quote $ List Number
+                                List Number
                               , angle->radian
                           true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
                       .!arc target
@@ -3636,7 +3628,7 @@
             match events-option
               (:some events)
                 let
-                    checked-events $ decode-map-as events $ quote (Map Tag Dynamic)
+                    checked-events $ decode-map-as events $ Map Tag Dynamic
                   set! (.-eventMode target) |dynamic
                   set! (.-buttonMode target) true
                   &doseq
@@ -3750,7 +3742,7 @@
             match old-events-option
               (:some old-events)
                 let
-                    checked-events $ decode-map-as old-events $ quote (Map Tag Dynamic)
+                    checked-events $ decode-map-as old-events $ Map Tag Dynamic
                   &doseq
                     k $ keys checked-events
                     .!off target $ to-string k
@@ -3758,7 +3750,7 @@
             match events-option
               (:some events)
                 let
-                    checked-events $ decode-map-as events $ quote (Map Tag Dynamic)
+                    checked-events $ decode-map-as events $ Map Tag Dynamic
                   &doseq
                     k $ keys checked-events
                     let
@@ -3845,13 +3837,13 @@
           :examples $ []
           :schema $ quote UnionDef
         'PhloxElement $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct PhloxElement (:name Dynamic) (:props Dynamic) (:children Dynamic)
+          :code $ quote $ defstruct PhloxElement (:name Tag) (:props Dynamic)
+            :children $ List $ List Dynamic
           :examples $ []
           :schema $ quote StructDef
         'Scale $ %{} 'CodeEntry
           :doc "|A `:scale` prop: one factor for both axes, or `[] x y`."
-          :code $ quote $ defunion Scale Number
-            quote $ List Number
+          :code $ quote $ defunion Scale Number (List Number)
           :examples $ []
           :schema $ quote UnionDef
       :ns $ %{} 'NsEntry (:doc |)
@@ -3898,7 +3890,7 @@
         'convert-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn convert-line-style (props)
             ->
-              decode-map-as props $ quote $ Map Dynamic Dynamic
+              decode-map-as props $ Map Dynamic Dynamic
               to-pairs
               map $ fn (pair)
                 let[] (k v) pair $ let
@@ -4031,7 +4023,7 @@
               assoc :acc $ conj
                 decode-map-as
                   .unwrap $ get state :acc
-                  quote $ List $ List Dynamic
+                  List $ List Dynamic
                 [] kind key
               assoc :step $ + cost $ decode-map-as
                 .unwrap $ get state :step
