@@ -1786,7 +1786,7 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'DomEventHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait DomEventHost (:clientX 'Number) (:clientY 'Number) (:data 'JsObject) (:deltaY 'Number) (:key 'String) (:keyCode 'Number) (:ctrlKey 'Bool) (:metaKey 'Bool) (:shiftKey 'Bool)
+          :code $ quote $ deftrait DomEventHost (:clientX 'Number) (:clientY 'Number) (:data 'PixiEventDataHost) (:deltaY 'Number) (:key 'String) (:keyCode 'Number) (:ctrlKey 'Bool) (:metaKey 'Bool) (:shiftKey 'Bool)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1839,7 +1839,7 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiAppHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiAppHost (:renderer 'JsObject) (:stage 'JsObject) (:ticker 'JsObject) (:view 'JsObject)
+          :code $ quote $ deftrait PixiAppHost (:renderer 'PixiRendererHost) (:stage 'JsObject) (:ticker 'JsObject) (:view 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1853,12 +1853,12 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiDisplayHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiDisplayHost (:anchor 'JsObject) (:pivot 'JsObject) (:position 'JsObject) (:scale 'JsObject) (:shader 'JsObject)
+          :code $ quote $ deftrait PixiDisplayHost (:anchor 'PixiAnchorHost) (:pivot 'PixiVectorHost) (:position 'PixiVectorHost) (:scale 'PixiVectorHost) (:shader 'PixiShaderHost)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiEventDataHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiEventDataHost (:global 'JsObject)
+          :code $ quote $ deftrait PixiEventDataHost (:global 'PixiVectorHost)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1875,7 +1875,7 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiRendererHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiRendererHost (:plugins 'JsObject)
+          :code $ quote $ deftrait PixiRendererHost (:plugins 'PixiPluginsHost)
             .render $ Fn PixiRendererHost Dynamic $ -> Unit
             .resize $ Fn PixiRendererHost Number Number $ -> Unit
           :examples $ []
@@ -1900,6 +1900,7 @@
           :schema $ quote Trait
         'PixiVectorHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiVectorHost (:x 'Number) (:y 'Number)
+            .set $ Fn PixiVectorHost Number Number $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1951,12 +1952,9 @@
           :examples $ []
           :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-accessibility $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-accessibility (plugins)
-            unsafe-coerce
-              .-accessibility $ unsafe-coerce plugins PixiPluginsHost
-              , JsObject
+          :code $ quote $ defn ffi-accessibility (plugins) (.-accessibility plugins)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiPluginsHost (-> JsObject) (:features :js-ffi)
         'ffi-add-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-add-child (parent child)
             .!addChild (unsafe-coerce parent PixiContainerHost) child
@@ -1982,11 +1980,9 @@
             , Dynamic (-> Unit) (:features :js-ffi)
         'ffi-anchor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-anchor (target)
-            unsafe-coerce
-              .-anchor $ unsafe-coerce target PixiDisplayHost
-              , JsObject
+            .-anchor $ unsafe-coerce target PixiDisplayHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiAnchorHost) (:features :js-ffi)
         'ffi-append-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-append-child (parent child)
             .!appendChild (unsafe-coerce parent AppendableHost) child
@@ -2054,11 +2050,9 @@
           :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
         'ffi-event-data $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-data (event)
-            unsafe-coerce
-              .-data $ unsafe-coerce event DomEventHost
-              , JsObject
+            .-data $ unsafe-coerce event DomEventHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiEventDataHost) (:features :js-ffi)
         'ffi-event-delta-y $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-delta-y (event)
             unsafe-coerce
@@ -2115,12 +2109,9 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
         'ffi-global $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-global (data)
-            unsafe-coerce
-              .-global $ unsafe-coerce data PixiEventDataHost
-              , JsObject
+          :code $ quote $ defn ffi-global (data) (.-global data)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiEventDataHost (-> PixiVectorHost) (:features :js-ffi)
         'ffi-load-font $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-load-font (font)
             .!load $ unsafe-coerce font FontFaceObserverHost
@@ -2143,36 +2134,27 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-object-x $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-object-x (value)
-            .-x $ unsafe-coerce value PixiVectorHost
+          :code $ quote $ defn ffi-object-x (value) (.-x value)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn PixiVectorHost (-> Number) (:features :js-ffi)
         'ffi-object-y $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-object-y (value)
-            .-y $ unsafe-coerce value PixiVectorHost
+          :code $ quote $ defn ffi-object-y (value) (.-y value)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn PixiVectorHost (-> Number) (:features :js-ffi)
         'ffi-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-pivot (target)
-            unsafe-coerce
-              .-pivot $ unsafe-coerce target PixiDisplayHost
-              , JsObject
+            .-pivot $ unsafe-coerce target PixiDisplayHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiVectorHost) (:features :js-ffi)
         'ffi-plugins $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-plugins (renderer)
-            unsafe-coerce
-              .-plugins $ unsafe-coerce renderer PixiRendererHost
-              , JsObject
+          :code $ quote $ defn ffi-plugins (renderer) (.-plugins renderer)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiRendererHost (-> PixiPluginsHost) (:features :js-ffi)
         'ffi-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-position (target)
-            unsafe-coerce
-              .-position $ unsafe-coerce target PixiDisplayHost
-              , JsObject
+            .-position $ unsafe-coerce target PixiDisplayHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiVectorHost) (:features :js-ffi)
         'ffi-push-array! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-push-array! (xs x)
             js-ffi.contract/expect-number |Array.push $ .!push (unsafe-coerce xs JsArrayHost) x
@@ -2183,37 +2165,27 @@
           :examples $ []
           :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'ffi-render $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-render (renderer stage)
-            .!render (unsafe-coerce renderer PixiRendererHost) stage
-            , &unit
+          :code $ quote $ defn ffi-render (renderer stage) (.render renderer stage) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiRendererHost Dynamic (-> Unit) (:features :js-ffi)
         'ffi-renderer $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-renderer (app)
-            unsafe-coerce
-              .-renderer $ unsafe-coerce app PixiAppHost
-              , JsObject
+            .-renderer $ unsafe-coerce app PixiAppHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiRendererHost) (:features :js-ffi)
         'ffi-resize $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-resize (renderer width height)
-            .!resize (unsafe-coerce renderer PixiRendererHost) width height
-            , &unit
+          :code $ quote $ defn ffi-resize (renderer width height) (.resize renderer width height) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Number Number (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiRendererHost Number Number (-> Unit) (:features :js-ffi)
         'ffi-scale $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-scale (target)
-            unsafe-coerce
-              .-scale $ unsafe-coerce target PixiDisplayHost
-              , JsObject
+            .-scale $ unsafe-coerce target PixiDisplayHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiVectorHost) (:features :js-ffi)
         'ffi-set-anchor! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-set-anchor! (anchor value)
-            .!set (unsafe-coerce anchor PixiAnchorHost) value
-            , &unit
+          :code $ quote $ defn ffi-set-anchor! (anchor value) (.set anchor value) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiAnchorHost Dynamic (-> Unit) (:features :js-ffi)
         'ffi-set-font! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-font! (context font)
             set!
@@ -2223,34 +2195,26 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic String (-> Unit) (:features :js-ffi)
         'ffi-set-scale! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-set-scale! (target x y)
-            .!set (unsafe-coerce target PixiScaleHost) x y
-            , &unit
+          :code $ quote $ defn ffi-set-scale! (target x y) (.set target x y) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Number Number (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiVectorHost Number Number (-> Unit) (:features :js-ffi)
         'ffi-set-x! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-x! (target value)
-            set!
-              .-x $ unsafe-coerce target PixiVectorHost
-              , value
+            set! (.-x target) value
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Number (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiVectorHost Number (-> Unit) (:features :js-ffi)
         'ffi-set-y! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-y! (target value)
-            set!
-              .-y $ unsafe-coerce target PixiVectorHost
-              , value
+            set! (.-y target) value
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Number (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiVectorHost Number (-> Unit) (:features :js-ffi)
         'ffi-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-shader (target)
-            unsafe-coerce
-              .-shader $ unsafe-coerce target PixiDisplayHost
-              , JsObject
+            .-shader $ unsafe-coerce target PixiDisplayHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiShaderHost) (:features :js-ffi)
         'ffi-sin $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-sin (value)
             js-ffi.contract/expect-number |Math.sin $ js/Math.sin value
@@ -2292,12 +2256,9 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
         'ffi-uniforms $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-uniforms (shader)
-            unsafe-coerce
-              .-uniforms $ unsafe-coerce shader PixiShaderHost
-              , JsObject
+          :code $ quote $ defn ffi-uniforms (shader) (.-uniforms shader)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiShaderHost (-> JsObject) (:features :js-ffi)
         'ffi-view $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-view (app)
             unsafe-coerce
