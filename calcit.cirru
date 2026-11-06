@@ -1647,9 +1647,9 @@
     'phlox.core $ %{} 'FileEntry
       :defs $ {}
         '*app $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *app nil
+          :code $ quote $ defref *app (Option :none)
           :examples $ []
-          :schema $ quote $ Ref Dynamic
+          :schema $ quote $ Ref (Option PixiAppHost)
         '*dispatch-fn $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *dispatch-fn
             fn (& args) nil
@@ -1845,7 +1845,7 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiAppHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiAppHost (:renderer 'PixiRendererHost) (:stage 'PixiDisplayHost) (:ticker 'JsObject) (:view 'JsObject)
+          :code $ quote $ deftrait PixiAppHost (:renderer 'PixiRendererHost) (:stage 'PixiDisplayHost) (:ticker 'PixiTickerHost) (:view 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -2169,10 +2169,9 @@
           :examples $ []
           :schema $ quote $ Fn PixiRendererHost Dynamic (-> Unit) (:features :js-ffi)
         'ffi-renderer $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-renderer (app)
-            .-renderer $ unsafe-coerce app PixiAppHost
+          :code $ quote $ defn ffi-renderer (app) (.-renderer app)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiRendererHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiAppHost (-> PixiRendererHost) (:features :js-ffi)
         'ffi-resize $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-resize (renderer width height) (.resize renderer width height) &unit
           :examples $ []
@@ -2219,16 +2218,13 @@
           :examples $ []
           :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-stage $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-stage (app)
-            .-stage $ unsafe-coerce app PixiAppHost
+          :code $ quote $ defn ffi-stage (app) (.-stage app)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiAppHost (-> PixiDisplayHost) (:features :js-ffi)
         'ffi-stop $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-stop (target)
-            .!stop $ unsafe-coerce target PixiTickerHost
-            , &unit
+          :code $ quote $ defn ffi-stop (target) (.stop target) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiTickerHost (-> Unit) (:features :js-ffi)
         'ffi-text-width $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-text-width (metrics)
             unsafe-coerce
@@ -2245,23 +2241,17 @@
             -> Dynamic
             :features :js-ffi
         'ffi-ticker $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-ticker (app)
-            unsafe-coerce
-              .-ticker $ unsafe-coerce app PixiAppHost
-              , JsObject
+          :code $ quote $ defn ffi-ticker (app) (.-ticker app)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiAppHost (-> PixiTickerHost) (:features :js-ffi)
         'ffi-uniforms $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-uniforms (shader) (.-uniforms shader)
           :examples $ []
           :schema $ quote $ Fn PixiShaderHost (-> JsObject) (:features :js-ffi)
         'ffi-view $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-view (app)
-            unsafe-coerce
-              .-view $ unsafe-coerce app PixiAppHost
-              , JsObject
+          :code $ quote $ defn ffi-view (app) (.-view app)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiAppHost (-> JsObject) (:features :js-ffi)
         'ffi-window-height $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-window-height ()
             let
@@ -2301,6 +2291,11 @@
           :schema $ quote $ Fn Tag & Dynamic
             -> $ List Dynamic
             :features :js-ffi
+        'get-app $ %{} 'CodeEntry
+          :doc "|the Pixi application created by render!, fails before the first render"
+          :code $ quote $ defn get-app () (.unwrap @*app)
+          :examples $ []
+          :schema $ quote $ Fn (-> PixiAppHost) (:features :js-ffi)
         'graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
           :examples $ []
@@ -2401,16 +2396,17 @@
         'init-pixi-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pixi-app! (options)
             let
-                pixi-app $ new PIXI/Application $ js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2)
+                raw-app $ new PIXI/Application $ js-object (:antialias true) (:autoDensity true) (:autoStart false) (:resolution 2)
                   :width $ ffi-window-width
                   :height $ ffi-window-height
                   :backgroundColor $ phlox.util/prop-or options :background-color $ hslx 0 0 0
                   :interactive $ phlox.util/prop-or options :interactive true
                   :backgroundAlpha $ phlox.util/prop-or options :background-alpha 1
+                pixi-app $ js-cast raw-app 'phlox.core/PixiAppHost
               ffi-stop $ ffi-ticker pixi-app
-              -> PIXI/Ticker .-shared $ ffi-stop
-              -> PIXI/Ticker .-system $ ffi-stop
-              reset! *app pixi-app
+              ffi-stop $ js-cast (.-shared PIXI/Ticker) 'phlox.core/PixiTickerHost
+              ffi-stop $ js-cast (.-system PIXI/Ticker) 'phlox.core/PixiTickerHost
+              reset! *app $ Option :some pixi-app
               let
                   el $ ffi-view pixi-app
                 -> js/document ffi-document-body $ ffi-append-child el
@@ -2421,7 +2417,7 @@
                 render-stage-for-viewer!
               , pixi-app
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag Dynamic) (-> PixiAppHost) (:features :js-ffi)
         'lilac-arc $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-arc nil
           :examples $ []
@@ -2486,7 +2482,9 @@
           :code $ quote $ defn mount-app! (app dispatch!)
             let
                 element-tree $ render-element app dispatch!
-              ffi-add-child (ffi-stage @*app) element-tree
+              ffi-add-child
+                ffi-stage $ get-app
+                , element-tree
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit)
         'on-control-event $ %{} 'CodeEntry (:doc |)
@@ -2525,10 +2523,13 @@
           :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'render! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render! (expanded-app dispatch! options)
-            when
-              ffi-nullish? $ unsafe-coerce @*app Dynamic
-              init-pixi-app! options
-              aset js/window |_phloxTree @*app
+            match @*app
+              (:some _app) &unit
+              (:none)
+                let
+                    app $ init-pixi-app! options
+                  aset js/window |_phloxTree app
+                  , &unit
             reset! *dispatch-fn dispatch!
             let
                 wrap-dispatch $ fn (op & args)
@@ -2559,17 +2560,17 @@
                   .unwrap-or (get @*stage-config :move) nil
                   List Number
               ffi-set-x!
-                ffi-position $ ffi-stage @*app
+                ffi-position $ ffi-stage $ get-app
                 +
                   * 0.5 $ ffi-number js/window.innerWidth
                   .unwrap-or (nth move 0) 0
               ffi-set-y!
-                ffi-position $ ffi-stage @*app
+                ffi-position $ ffi-stage $ get-app
                 +
                   * 0.5 $ ffi-number js/window.innerHeight
                   .unwrap-or (nth move 1) 0
-              -> @*app ffi-stage ffi-scale $ ffi-set-scale! scale scale
-            -> @*app ffi-renderer $ ffi-render $ ffi-stage @*app
+              -> (get-app) ffi-stage ffi-scale $ ffi-set-scale! scale scale
+            -> (get-app) ffi-renderer $ ffi-render $ ffi-stage (get-app)
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'rerender-app! $ %{} 'CodeEntry (:doc |)
@@ -2577,7 +2578,7 @@
             update-children
               [] $ [] 0 app
               [] $ [] 0 @*tree-element
-              ffi-stage @*app
+              ffi-stage $ get-app
               , dispatch! options
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
