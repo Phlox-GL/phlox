@@ -132,7 +132,7 @@
                     :up $ fn (e d!) (println :up)
                   {}
           :examples $ []
-          :schema $ quote $ Fn Bool Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Bool Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.keyboard
           :require $ phlox.core :refer $ g hslx rect circle text container graphics create-list
@@ -195,7 +195,7 @@
                     :title "|max 10"
                     :max 10
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-slider-point-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point-demo (states)
             let
@@ -249,7 +249,7 @@
                       d! cursor $ assoc state :f value
                     :max 10
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-spin-slider-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider-demo (states)
             let
@@ -272,7 +272,7 @@
                       d! cursor $ assoc state :pos pos
                     :label |dgemo
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.slider-demo
           :require
@@ -297,7 +297,7 @@
                   :on-change $ fn (from to d!)
                     d! cursor $ assoc (assoc state :from from) :to to
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-buttons $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-buttons ()
             container
@@ -354,7 +354,7 @@
                   :radius 10
                   :fill 0xffffff
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-curves $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-curves ()
             container ({})
@@ -535,7 +535,7 @@
                     :on-change $ fn (value d!)
                       d! cursor $ assoc state :zoom value
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-messages-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-messages-demo (states)
             let
@@ -576,7 +576,7 @@
                             identical? (phlox.util/require-prop x :id) (phlox.util/require-prop message :id)
                         , Dynamic
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-points-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-points-demo (states)
             let
@@ -624,7 +624,7 @@
                     :on-change $ fn (position d!)
                       d! cursor $ assoc state :p5 position
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-shadow-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-shadow-demo ()
             container
@@ -664,7 +664,7 @@
                   :on-change $ fn (value d!)
                     d! cursor $ assoc state :value value
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-text-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-text-input (states)
             let
@@ -712,7 +712,7 @@
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'grid-row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-row (x)
             -> (range 40)
@@ -891,51 +891,51 @@
         'lilac-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-circle nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-color $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-color nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-container nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-event-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-event-map nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-graphics nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-line-segments $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-line-segments nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-line-style nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-point nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-polyline nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-rect nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-text nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-text-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-text-style nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.check
     'phlox.comp.arrow $ %{} 'FileEntry
@@ -977,7 +977,7 @@
                     g :move-to to
                     g :line-to $ complex/add to arm-right
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.arrow
           :require
@@ -1022,11 +1022,11 @@
                   :position $ [] 8 8
                   :style $ {} (:fill color) (:font-size size) (:font-family font-family)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'lilac-button $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-button nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.button
           :require
@@ -1118,15 +1118,15 @@
                           :style $ {} (:fill color) (:font-size 10) (:line-height 10) (:font-family "|Menlo, monospace") (:align :center)
                       []
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-cursor nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-drag-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-drag-point nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.drag-point
           :require
@@ -1173,15 +1173,15 @@
                       :align-right? true
                       :on-pointertap $ fn (e d!) (on-pointertap message d!)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'lilac-message-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-message-list nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-messages $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-messages nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.messages
           :require
@@ -1277,7 +1277,7 @@
                       :font-size 13
                       :font-family "|Arial, sans-serif"
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-slider-point (states props)
             dev-check
@@ -1342,7 +1342,7 @@
                     :position $ [] 20 3
                     :style $ {} (:fill color) (:font-size 10) (:font-family "|Menlo, monospace")
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-spin-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-spin-slider (states props)
             let
@@ -1436,19 +1436,19 @@
                       :position $ complex/add position $ [] 0 -20
                       :style $ {} (:fill color) (:font-size 13) (:font-family "|Josefin Sans, sans-serif")
           :examples $ []
-          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Dynamic Dynamic) Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'lilac-cursor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-cursor nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-slider $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-slider nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-slider-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-slider-point nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.slider
           :require
@@ -1499,7 +1499,7 @@
         'lilac-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-switch nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.switch
           :require
@@ -1535,7 +1535,7 @@
                           :font-family font-family
                         :position $ [] 10 2
           :examples $ []
-          :schema $ quote $ Fn (List Dynamic) Dynamic Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn (List Dynamic) Dynamic Dynamic Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.comp.tabs
           :require
@@ -1919,7 +1919,7 @@
         'circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn clear-phlox-caches! () &unit
           :examples $ []
@@ -1927,18 +1927,18 @@
         'container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-element (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ index-items children
           :examples $ []
-          :schema $ quote $ Fn Tag Dynamic (List Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn Tag (Map Tag Dynamic) (List Dynamic) (-> phlox.schema/PhloxElement)
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ decode-map-as children
               List $ List Dynamic
           :examples $ []
-          :schema $ quote $ Fn Tag Dynamic (List Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn Tag (Map Tag Dynamic) (List Dynamic) (-> phlox.schema/PhloxElement)
         'defcomp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro defcomp (name params & body)
             quasiquote $ defn ~name ~params ~@body
@@ -2347,12 +2347,12 @@
         'graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group (props & children) (dev-check props lilac-container)
             noted "|which is an alias of container" $ create-element :container props children
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-drag-moving (el)
             ffi-add-event-listener el |mousedown $ fn (event)
@@ -2440,7 +2440,7 @@
         'image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'init-pixi-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pixi-app! (options)
             let
@@ -2468,31 +2468,31 @@
         'lilac-arc $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-arc nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-arc-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-arc-to nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-begin-fill $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-begin-fill nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-bezier-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-bezier-to nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-image nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-mesh nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'lilac-quadratic-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-quadratic-to nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'line-segment->ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn line-segment->ops (pair)
             let
@@ -2520,11 +2520,11 @@
                   mapcat segments line-segment->ops
                 , children
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mesh (props & children) (dev-check props lilac-mesh) (create-element :mesh props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'mount-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-app! (app dispatch!)
             let
@@ -2561,11 +2561,11 @@
                   -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'render! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render! (expanded-app dispatch! options)
             when
@@ -2666,7 +2666,7 @@
         'text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
           :examples $ []
-          :schema $ quote $ Fn Dynamic & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
@@ -2729,7 +2729,7 @@
         'lilac-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def lilac-input nil
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote Nil
         'request-text! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn request-text! (e options cb) (dev-check options lilac-input)
             prompt-at!
@@ -3837,7 +3837,8 @@
           :examples $ []
           :schema $ quote UnionDef
         'PhloxElement $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct PhloxElement (:name Tag) (:props Dynamic)
+          :code $ quote $ defstruct PhloxElement (:name Tag)
+            :props $ Map Tag Dynamic
             :children $ List $ List Dynamic
           :examples $ []
           :schema $ quote StructDef
