@@ -1838,8 +1838,14 @@
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
+        'PixiAnchoredHost $ %{} 'CodeEntry
+          :doc "|A Pixi Sprite or Text: a display object that also has an anchor point."
+          :code $ quote $ deftrait PixiAnchoredHost (:anchor 'PixiAnchorHost)
+          :examples $ []
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+          :schema $ quote Trait
         'PixiAppHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiAppHost (:renderer 'PixiRendererHost) (:stage 'JsObject) (:ticker 'JsObject) (:view 'JsObject)
+          :code $ quote $ deftrait PixiAppHost (:renderer 'PixiRendererHost) (:stage 'PixiDisplayHost) (:ticker 'JsObject) (:view 'JsObject)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1853,9 +1859,10 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiDisplayHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiDisplayHost (:anchor 'PixiAnchorHost) (:pivot 'PixiVectorHost) (:position 'PixiVectorHost) (:scale 'PixiVectorHost) (:shader 'PixiShaderHost)
+          :code $ quote $ deftrait PixiDisplayHost (:alpha 'Number) (:angle 'Number) (:rotation 'Number) (:pivot 'PixiVectorHost) (:position 'PixiVectorHost) (:scale 'PixiVectorHost)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+            :writable $ #{} :alpha :angle :rotation
           :schema $ quote Trait
         'PixiEventDataHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiEventDataHost (:global 'PixiVectorHost)
@@ -1866,6 +1873,12 @@
           :code $ quote $ deftrait PixiGeometryHost
             .addAttribute $ Fn PixiGeometryHost Dynamic Dynamic Dynamic $ -> Unit
             .addIndex $ Fn PixiGeometryHost Dynamic $ -> Unit
+          :examples $ []
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+          :schema $ quote Trait
+        'PixiMeshHost $ %{} 'CodeEntry
+          :doc "|A Pixi Mesh: a display object that also carries its shader."
+          :code $ quote $ deftrait PixiMeshHost (:shader 'PixiShaderHost)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1979,10 +1992,9 @@
             Fn Dynamic $ -> Dynamic
             , Dynamic (-> Unit) (:features :js-ffi)
         'ffi-anchor $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-anchor (target)
-            .-anchor $ unsafe-coerce target PixiDisplayHost
+          :code $ quote $ defn ffi-anchor (target) (.-anchor target)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiAnchorHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiAnchoredHost (-> PixiAnchorHost) (:features :js-ffi)
         'ffi-append-child $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-append-child (parent child)
             .!appendChild (unsafe-coerce parent AppendableHost) child
@@ -2142,19 +2154,17 @@
           :examples $ []
           :schema $ quote $ Fn PixiVectorHost (-> Number) (:features :js-ffi)
         'ffi-pivot $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-pivot (target)
-            .-pivot $ unsafe-coerce target PixiDisplayHost
+          :code $ quote $ defn ffi-pivot (target) (.-pivot target)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiVectorHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiDisplayHost (-> PixiVectorHost) (:features :js-ffi)
         'ffi-plugins $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-plugins (renderer) (.-plugins renderer)
           :examples $ []
           :schema $ quote $ Fn PixiRendererHost (-> PixiPluginsHost) (:features :js-ffi)
         'ffi-position $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-position (target)
-            .-position $ unsafe-coerce target PixiDisplayHost
+          :code $ quote $ defn ffi-position (target) (.-position target)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiVectorHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiDisplayHost (-> PixiVectorHost) (:features :js-ffi)
         'ffi-push-array! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-push-array! (xs x)
             js-ffi.contract/expect-number |Array.push $ .!push (unsafe-coerce xs JsArrayHost) x
@@ -2178,10 +2188,9 @@
           :examples $ []
           :schema $ quote $ Fn PixiRendererHost Number Number (-> Unit) (:features :js-ffi)
         'ffi-scale $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-scale (target)
-            .-scale $ unsafe-coerce target PixiDisplayHost
+          :code $ quote $ defn ffi-scale (target) (.-scale target)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiVectorHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiDisplayHost (-> PixiVectorHost) (:features :js-ffi)
         'ffi-set-anchor! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-anchor! (anchor value) (.set anchor value) &unit
           :examples $ []
@@ -2211,10 +2220,9 @@
           :examples $ []
           :schema $ quote $ Fn PixiVectorHost Number (-> Unit) (:features :js-ffi)
         'ffi-shader $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-shader (target)
-            .-shader $ unsafe-coerce target PixiDisplayHost
+          :code $ quote $ defn ffi-shader (target) (.-shader target)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> PixiShaderHost) (:features :js-ffi)
+          :schema $ quote $ Fn PixiMeshHost (-> PixiShaderHost) (:features :js-ffi)
         'ffi-sin $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-sin (value)
             js-ffi.contract/expect-number |Math.sin $ js/Math.sin value
@@ -2222,11 +2230,9 @@
           :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-stage $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-stage (app)
-            unsafe-coerce
-              .-stage $ unsafe-coerce app PixiAppHost
-              , JsObject
+            .-stage $ unsafe-coerce app PixiAppHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PixiDisplayHost) (:features :js-ffi)
         'ffi-stop $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-stop (target)
             .!stop $ unsafe-coerce target PixiTickerHost
@@ -2875,7 +2881,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'init-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-shader (data uniforms-option)
             .!from PIXI/Shader
@@ -2918,7 +2924,7 @@
         'render-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-circle (element dispatch!)
             let
-                target $ new PIXI/Graphics
+                target $ js-cast (new PIXI/Graphics) 'phlox.core/PixiDisplayHost
                 props $ phlox.util/prop-or element :props $ {}
                 line-style $ phlox.util/prop props :line-style
                 position $ phlox.util/prop props :position
@@ -2943,7 +2949,7 @@
         'render-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-container (element dispatch!)
             let
-                target $ new PIXI/Container
+                target $ js-cast (new PIXI/Container) 'phlox.core/PixiDisplayHost
                 props $ phlox.util/prop-or element :props $ {}
               render-children target
                 phlox.util/prop-or element :children $ []
@@ -2978,7 +2984,7 @@
         'render-graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-graphics (element dispatch!)
             let
-                target $ new PIXI/Graphics
+                target $ js-cast (new PIXI/Graphics) 'phlox.core/PixiDisplayHost
                 props $ phlox.util/prop-or element :props $ {}
                 ops $ phlox.util/prop props :ops
                 events $ phlox.util/prop props :on
@@ -3002,7 +3008,9 @@
           :code $ quote $ defn render-image (element dispatch!)
             let
                 props $ phlox.util/prop-or element :props $ {}
-                target $ .!from PIXI/Sprite $ phlox.util/require-prop props :url
+                target $ js-cast
+                  .!from PIXI/Sprite $ phlox.util/require-prop props :url
+                  , 'phlox.core/PixiDisplayHost
                 events $ phlox.util/prop props :on
               init-position target $ phlox.util/prop props :position
               init-scale target $ phlox.util/prop props :scale
@@ -3028,7 +3036,7 @@
                 draw-mode $ match (phlox.util/prop props :draw-mode)
                   (:some mode) (read-draw-mode-alias mode)
                   (:none) js/undefined
-                target $ new PIXI/Mesh geo shader nil draw-mode
+                target $ js-cast (new PIXI/Mesh geo shader nil draw-mode) 'phlox.core/PixiDisplayHost
                 events $ phlox.util/prop props :on
               init-position target $ phlox.util/prop props :position
               init-scale target $ phlox.util/prop props :scale
@@ -3039,7 +3047,9 @@
               init-events target events dispatch!
               if
                 = :center $ .unwrap-or (get props :align) :left
-                phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
+                phlox.core/ffi-set-anchor!
+                  phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
+                  , 0.5
               init-filters target $ phlox.util/prop props :filters
               render-children target
                 phlox.util/prop-or element :children $ []
@@ -3051,7 +3061,7 @@
         'render-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-rect (element dispatch!)
             let
-                target $ new PIXI/Graphics
+                target $ js-cast (new PIXI/Graphics) 'phlox.core/PixiDisplayHost
                 props $ phlox.util/prop-or element :props $ {}
                 events $ phlox.util/prop props :on
               init-fill target $ phlox.util/prop props :fill
@@ -3077,7 +3087,9 @@
                 props $ phlox.util/prop-or element :props $ {}
                 style $ phlox.util/prop-or props :style $ {}
                 text-style $ new PIXI/TextStyle $ convert-line-style style
-                target $ new PIXI/Text (phlox.util/prop-or props :text |) text-style
+                target $ js-cast
+                  new PIXI/Text (phlox.util/prop-or props :text |) text-style
+                  , 'phlox.core/PixiDisplayHost
               init-position target $ phlox.util/prop props :position
               init-scale target $ phlox.util/prop props :scale
               init-pivot target $ phlox.util/prop props :pivot
@@ -3086,7 +3098,9 @@
               init-alpha target $ phlox.util/prop props :alpha
               if
                 = :center $ .unwrap-or (get props :align) :left
-                phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
+                phlox.core/ffi-set-anchor!
+                  phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
+                  , 0.5
               init-filters target $ phlox.util/prop props :filters
               render-children target
                 phlox.util/prop-or element :children $ []
@@ -3111,7 +3125,7 @@
               (:err message) (js/console.error "|unknown scale:" raw message)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-angle (target value-option value-option0)
             when (not= value-option value-option0)
@@ -3121,7 +3135,7 @@
                   (:none) 0
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-box-size (target size-option size-option0)
             if (not= size-option size-option0)
@@ -3217,7 +3231,7 @@
               update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-container (element old-element target)
             let
@@ -3231,7 +3245,7 @@
               update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost (-> Unit) (:features :js-ffi)
         'update-draw-mode $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-draw-mode (target draw-mode-option draw-mode-option0)
             when (not= draw-mode-option draw-mode-option0)
@@ -3250,7 +3264,7 @@
               (and (element? element) (element? old-element) (= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown)))
                 do
                   let
-                      target $ .!getChildAt parent-element idx
+                      target $ js-cast (.!getChildAt parent-element idx) 'phlox.core/PixiDisplayHost
                     match (phlox.util/prop-or element :name :unknown)
                       :container $ update-container element old-element target
                       :circle $ update-circle element old-element target dispatch!
@@ -3321,7 +3335,7 @@
               update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-image (element old-element target dispatch!)
             let
@@ -3344,7 +3358,7 @@
               update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-mesh (element old-element target dispatch!)
             let
@@ -3356,7 +3370,7 @@
               update-shader target (phlox.util/prop props :shader) (phlox.util/prop props' :shader) (phlox.util/prop props :uniforms)
               update-draw-mode target (phlox.util/prop props :draw-mode) (phlox.util/prop props' :draw-mode)
               let
-                  pointer $ -> target phlox.core/ffi-shader phlox.core/ffi-uniforms
+                  pointer $ -> (js-cast target 'phlox.core/PixiMeshHost) phlox.core/ffi-shader phlox.core/ffi-uniforms
                 ->
                   phlox.util/prop-or props :uniforms $ js-object
                   , js/Object.entries $ phlox.core/ffi-for-each $ fn (arr & args)
@@ -3373,7 +3387,7 @@
               update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rect (element old-element target dispatch!)
             let
@@ -3403,7 +3417,7 @@
               update-events target (phlox.util/prop props :on) (phlox.util/prop props' :on) dispatch!
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-scale $ %{} 'CodeEntry
           :doc "|Apply a changed `:scale` prop; a removed prop resets the scale to 1."
           :code $ quote $ defn update-scale (target scale-option scale-option0)
@@ -3413,7 +3427,7 @@
                 (:none) 1
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-shader (target shader-option shader-option0 uniforms-option)
             when (not= shader-option shader-option0)
@@ -3449,11 +3463,15 @@
                 not= (phlox.util/prop-or props :align :left) (phlox.util/prop-or props' :align :left)
                 if
                   = :center $ .unwrap-or (get props :align) :left
-                  phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) 0.5
-                  phlox.core/ffi-set-anchor! (phlox.core/ffi-anchor target) nil
+                  phlox.core/ffi-set-anchor!
+                    phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
+                    , 0.5
+                  phlox.core/ffi-set-anchor!
+                    phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
+                    , nil
               update-filters target (phlox.util/prop props :filters) (phlox.util/prop props' :filters)
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic phlox.core/PixiDisplayHost (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.render
           :require (|pixi.js :as PIXI)
@@ -3574,7 +3592,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'init-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-angle (target value-option)
             match value-option
@@ -3583,7 +3601,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'init-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-events (target events-option dispatch!)
             match events-option
@@ -3637,7 +3655,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'init-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-position (target point-option)
             match point-option
@@ -3658,7 +3676,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'init-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-rotation (target value-option)
             match value-option
@@ -3667,7 +3685,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'read-line-cap $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-line-cap (x)
             match x
@@ -3697,7 +3715,7 @@
                   (:none) 1
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-events (target events-option old-events-option dispatch!)
             match old-events-option
@@ -3749,7 +3767,7 @@
                     , 0
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-position (target point-option point-option0)
             when (not= point-option point-option0)
@@ -3771,7 +3789,7 @@
                     , 0
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rotation (target value-option value-option0)
             when (not= value-option value-option0)
@@ -3781,7 +3799,7 @@
                   (:none) 0
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.render.draw
           :require
