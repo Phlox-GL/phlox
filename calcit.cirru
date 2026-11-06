@@ -1980,7 +1980,7 @@
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic String
-            Fn Dynamic $ -> Dynamic
+            Fn DomEventHost $ -> Dynamic
             -> Unit
             :features :js-ffi
         'ffi-add-event-listener-options $ %{} 'CodeEntry (:doc |)
@@ -1989,7 +1989,7 @@
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic String
-            Fn Dynamic $ -> Dynamic
+            Fn DomEventHost $ -> Dynamic
             , Dynamic (-> Unit) (:features :js-ffi)
         'ffi-anchor $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-anchor (target) (.-anchor target)
@@ -2046,52 +2046,42 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'ffi-event-client-x $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-client-x (event)
-            .-clientX $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-client-x (event) (.-clientX event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Number) (:features :js-ffi)
         'ffi-event-client-y $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-client-y (event)
-            .-clientY $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-client-y (event) (.-clientY event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Number) (:features :js-ffi)
         'ffi-event-ctrl? $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-ctrl? (event)
-            .-ctrlKey $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-ctrl? (event) (.-ctrlKey event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Bool) (:features :js-ffi)
         'ffi-event-data $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-data (event)
             .-data $ unsafe-coerce event DomEventHost
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> PixiEventDataHost) (:features :js-ffi)
         'ffi-event-delta-y $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-delta-y (event)
-            unsafe-coerce
-              .-deltaY $ unsafe-coerce event DomEventHost
-              , Number
+          :code $ quote $ defn ffi-event-delta-y (event) (.-deltaY event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Number) (:features :js-ffi)
         'ffi-event-key $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-key (event)
-            .-key $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-key (event) (.-key event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> String) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> String) (:features :js-ffi)
         'ffi-event-key-code $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-key-code (event)
-            .-keyCode $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-key-code (event) (.-keyCode event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Number) (:features :js-ffi)
         'ffi-event-meta? $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-meta? (event)
-            .-metaKey $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-meta? (event) (.-metaKey event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Bool) (:features :js-ffi)
         'ffi-event-shift? $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-event-shift? (event)
-            .-shiftKey $ unsafe-coerce event DomEventHost
+          :code $ quote $ defn ffi-event-shift? (event) (.-shiftKey event)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
+          :schema $ quote $ Fn DomEventHost (-> Bool) (:features :js-ffi)
         'ffi-for-each $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-for-each (items callback)
             .!forEach (unsafe-coerce items JsArrayHost) callback
@@ -2775,7 +2765,7 @@
               :meta? $ phlox.core/ffi-event-meta? event
               :shift? $ phlox.core/ffi-event-shift? event
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn phlox.core/DomEventHost
             -> $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.keyboard
