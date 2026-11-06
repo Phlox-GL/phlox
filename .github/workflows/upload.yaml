@@ -94,15 +94,15 @@ jobs:
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         # Only stage the target graph/runtime; leave consumer Snapshot untouched.
         cat > "$consumer/deps.cirru" <<'EOF'
-        {} (:calcit-version |0.34.2)
+        {} (:calcit-version |0.35.1)
           :version |0.1.2
-          :dependencies $ {} (|Phlox-GL/phlox |0.9.1)
-            |Triadica/touch-control |0.0.37
-            |calcit-lang/js-ffi |0.2.10
-            |mvc-works/pointed-prompt |0.0.25
+          :dependencies $ {} (|Phlox-GL/phlox |0.9.2)
+            |Triadica/touch-control |0.0.38
+            |calcit-lang/js-ffi |0.2.13
+            |mvc-works/pointed-prompt |0.0.26
         EOF
         cd "$consumer"
-        yarn add --exact @calcit/procs@0.34.2
+        yarn add --exact @calcit/procs@0.35.1
         # Proposed consumer migration source at an exact commit; do not rewrite its Snapshot.
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > "$RUNNER_TEMP/consumer-strict.json"

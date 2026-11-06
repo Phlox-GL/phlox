@@ -6,7 +6,13 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
-### 0.9.1 候选：使用者影响
+### 0.9.2 候选的使用者影响
+
+配对正式 Calcit CLI / `@calcit/procs` 0.35.1、Touch Control 0.0.38、Pointed Prompt 0.0.26 与 JS-FFI 0.2.13。升级时重新解析完整依赖图并生成 JS。
+
+直接构造 `PhloxElement` 时，名称须为 Tag，子节点须使用原来的成对列表。通过 `create-element` 和 `create-list` 构造的组件已采用这个形状。props、子项 payload 和混合 key 仍保留开放合同。
+
+### 历史 0.9.1 配对
 
 CLI / `@calcit/procs` 继续配对正式 **0.34.2**。依赖图同步到已发布的 Touch Control
 **0.0.37**、Pointed Prompt **0.0.25**、JS-FFI **0.2.10**；消费者需整图同步并重新生成 JS。
