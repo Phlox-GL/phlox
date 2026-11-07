@@ -80,7 +80,7 @@ jobs:
       uses: actions/checkout@v7.0.1
       with:
         repository: Phlox-GL/circling-tree
-        ref: 547b5424f2f21a77d91f0e7e376c1e6f8c7336fb
+        ref: 3561b14e335f017e78b0e27e4d71f138a0a3c6ce
         path: .calcit/consumer
         persist-credentials: false
 
@@ -94,7 +94,7 @@ jobs:
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         # Only stage the target graph/runtime; leave consumer Snapshot untouched.
         cat > "$consumer/deps.cirru" <<'EOF'
-        {} (:calcit-version |0.35.1)
+        {} (:calcit-version |0.36.0)
           :version |0.1.2
           :dependencies $ {} (|Phlox-GL/phlox |0.9.2)
             |Triadica/touch-control |0.0.38
@@ -102,7 +102,7 @@ jobs:
             |mvc-works/pointed-prompt |0.0.26
         EOF
         cd "$consumer"
-        yarn add --exact @calcit/procs@0.35.1
+        yarn add --exact @calcit/procs@0.36.0
         # Proposed consumer migration source at an exact commit; do not rewrite its Snapshot.
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > "$RUNNER_TEMP/consumer-strict.json"
