@@ -1794,7 +1794,7 @@
         'EventTargetHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait EventTargetHost
             .addEventListener $ Fn EventTargetHost String
-              Fn Dynamic $ -> Dynamic
+              Fn phlox.core/DomEventHost $ -> Dynamic
               -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
@@ -1802,14 +1802,14 @@
         'EventTargetWithOptionsHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait EventTargetWithOptionsHost
             .addEventListener $ Fn EventTargetWithOptionsHost String
-              Fn Dynamic $ -> Dynamic
+              Fn phlox.core/DomEventHost $ -> Dynamic
               , Dynamic $ -> Unit
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'FontFaceObserverHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait FontFaceObserverHost
-            .load $ Fn FontFaceObserverHost $ -> Dynamic
+            .load $ Fn FontFaceObserverHost $ -> phlox.core/PromiseHost
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1884,7 +1884,7 @@
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
         'PixiPluginsHost $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ deftrait PixiPluginsHost (:accessibility 'JsObject)
+          :code $ quote $ deftrait PixiPluginsHost (:accessibility 'DestroyableHost)
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
@@ -1968,28 +1968,22 @@
         'ffi-accessibility $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-accessibility (plugins) (.-accessibility plugins)
           :examples $ []
-          :schema $ quote $ Fn PixiPluginsHost (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn PixiPluginsHost (-> DestroyableHost) (:features :js-ffi)
         'ffi-add-child $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-add-child (parent child)
-            .!addChild (unsafe-coerce parent PixiContainerHost) child
-            , &unit
+          :code $ quote $ defn ffi-add-child (parent child) (.addChild parent child) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn PixiContainerHost Dynamic (-> Unit) (:features :js-ffi)
         'ffi-add-event-listener $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-add-event-listener (target event callback)
-            .!addEventListener (unsafe-coerce target EventTargetHost) event callback
-            , &unit
+          :code $ quote $ defn ffi-add-event-listener (target event callback) (.addEventListener target event callback) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic String
+          :schema $ quote $ Fn EventTargetHost String
             Fn DomEventHost $ -> Dynamic
             -> Unit
             :features :js-ffi
         'ffi-add-event-listener-options $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-add-event-listener-options (target event callback options)
-            .!addEventListener (unsafe-coerce target EventTargetWithOptionsHost) event callback options
-            , &unit
+          :code $ quote $ defn ffi-add-event-listener-options (target event callback options) (.addEventListener target event callback options) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic String
+          :schema $ quote $ Fn EventTargetWithOptionsHost String
             Fn DomEventHost $ -> Dynamic
             , Dynamic (-> Unit) (:features :js-ffi)
         'ffi-anchor $ %{} 'CodeEntry (:doc |)
@@ -2021,11 +2015,9 @@
           :examples $ []
           :schema $ quote $ Fn DocumentHost String (-> JsObject) (:features :js-ffi)
         'ffi-destroy $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-destroy (target)
-            .!destroy $ unsafe-coerce target DestroyableHost
-            , &unit
+          :code $ quote $ defn ffi-destroy (target) (.destroy target) &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn DestroyableHost (-> Unit) (:features :js-ffi)
         'ffi-document-body $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-document-body (document) (.-body document)
           :examples $ []
@@ -2108,9 +2100,9 @@
           :schema $ quote $ Fn PixiEventDataHost (-> PixiVectorHost) (:features :js-ffi)
         'ffi-load-font $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-load-font (font)
-            .!load $ unsafe-coerce font FontFaceObserverHost
+            .load $ js-cast font 'phlox.core/FontFaceObserverHost
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> PromiseHost) (:features :js-ffi)
         'ffi-measure-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-measure-text (context text) (.measureText context text)
           :examples $ []
@@ -2217,10 +2209,9 @@
           :examples $ []
           :schema $ quote $ Fn TextMetricsHost (-> Number) (:features :js-ffi)
         'ffi-then $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-then (promise callback)
-            .!then (unsafe-coerce promise PromiseHost) callback
+          :code $ quote $ defn ffi-then (promise callback) (.then promise callback)
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn PromiseHost
             Fn Dynamic $ -> Dynamic
             -> Dynamic
             :features :js-ffi
@@ -2291,10 +2282,10 @@
           :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
         'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-drag-moving (el)
-            ffi-add-event-listener el |mousedown $ fn (event)
+            ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mousedown $ fn (event)
               reset! *drag-moving-cache $ [] (ffi-event-client-x event) (ffi-event-client-y event)
-            ffi-add-event-listener el |mouseup $ fn (event) (reset! *drag-moving-cache nil)
-            ffi-add-event-listener el |mousemove $ fn (event)
+            ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mouseup $ fn (event) (reset! *drag-moving-cache nil)
+            ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mousemove $ fn (event)
               if
                 and
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
@@ -2311,7 +2302,7 @@
                         , delta
                       , Dynamic
                   render-stage-for-viewer!
-            ffi-add-event-listener-options el |wheel
+            ffi-add-event-listener-options (js-cast el 'phlox.core/EventTargetWithOptionsHost) |wheel
               fn (event)
                 if
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
@@ -2396,7 +2387,7 @@
                 -> (js-cast js/document 'phlox.core/DocumentHost) ffi-document-body $ ffi-append-child el
                 handle-drag-moving el
               -> pixi-app ffi-renderer ffi-plugins ffi-accessibility $ ffi-destroy
-              ffi-add-event-listener js/window |resize $ fn (event)
+              ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |resize $ fn (event)
                 -> pixi-app ffi-renderer $ ffi-resize (ffi-window-width) (ffi-window-height)
                 render-stage-for-viewer!
               , pixi-app
@@ -2467,10 +2458,12 @@
             let
                 element-tree $ render-element app dispatch!
               ffi-add-child
-                ffi-stage $ get-app
+                js-cast
+                  ffi-stage $ get-app
+                  , 'phlox.core/PixiContainerHost
                 , element-tree
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit)
+          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'on-control-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-control-event (elapsed states delta)
             if (:left-b? states) (reset-stage-config!)
@@ -2733,11 +2726,11 @@
             :tags $ #{} :unit
         'handle-keyboard-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-keyboard-events (*tree-element dispatch!)
-            phlox.core/ffi-add-event-listener js/window |keydown $ fn (event)
+            phlox.core/ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |keydown $ fn (event)
               handle-event :down (get-value *tree-element) (wrap-event event) dispatch!
-            phlox.core/ffi-add-event-listener js/window |keyup $ fn (event)
+            phlox.core/ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |keyup $ fn (event)
               handle-event :up (get-value *tree-element) (wrap-event event) dispatch!
-            phlox.core/ffi-add-event-listener js/window |keypress $ fn (event)
+            phlox.core/ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |keypress $ fn (event)
               handle-event :press (get-value *tree-element) (wrap-event event) dispatch!
           :examples $ []
           :schema $ quote $ Fn (Ref Dynamic) Dynamic (-> Unit) (:features :js-ffi)
