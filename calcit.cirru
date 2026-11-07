@@ -1589,7 +1589,7 @@
                 - n $ floor $ * (random) (* 2 n)
                 - m0 $ floor $ * (random) (* 2 m0)
           :examples $ []
-          :schema $ quote $ Fn Number & Number
+          :schema $ quote $ Fn Number (& Number)
             -> $ List Number
             :features :js-ffi
         'rebase $ %{} 'CodeEntry (:doc |)
@@ -1934,7 +1934,7 @@
         'circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn clear-phlox-caches! () &unit
           :examples $ []
@@ -1942,7 +1942,7 @@
         'container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-element (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ index-items children
@@ -1958,7 +1958,7 @@
           :code $ quote $ defmacro defcomp (name params & body)
             quasiquote $ defn ~name ~params ~@body
           :examples $ []
-          :schema $ quote $ Macro SyntaxSymbol SyntaxList & Syntax
+          :schema $ quote $ Macro SyntaxSymbol SyntaxList (& Syntax)
             -> $ Definition Fn
         'ffi-abs $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-abs (value)
@@ -2263,7 +2263,7 @@
                     _ $ js/console.warn "|not supported:" op
                   [] op data
           :examples $ []
-          :schema $ quote $ Fn Tag & Dynamic
+          :schema $ quote $ Fn Tag (& Dynamic)
             -> $ List Dynamic
             :features :js-ffi
         'get-app $ %{} 'CodeEntry
@@ -2274,12 +2274,12 @@
         'graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group (props & children) (dev-check props lilac-container)
             noted "|which is an alias of container" $ create-element :container props children
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-drag-moving (el)
             ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mousedown $ fn (event)
@@ -2367,7 +2367,7 @@
         'image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'init-pixi-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pixi-app! (options)
             let
@@ -2448,11 +2448,11 @@
                   mapcat segments line-segment->ops
                 , children
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mesh (props & children) (dev-check props lilac-mesh) (create-element :mesh props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'mount-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-app! (app dispatch!)
             let
@@ -2493,11 +2493,11 @@
                   -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'render! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render! (expanded-app dispatch! options)
             match @*app
@@ -2601,7 +2601,7 @@
         'text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) & Dynamic (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
         'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
