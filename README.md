@@ -6,7 +6,11 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
-### 0.9.2 候选的使用者影响
+### 0.9.3 候选：Calcit 0.37.0
+
+配对正式 Calcit CLI / `@calcit/procs` **0.37.0**、Touch Control 0.0.39、Pointed Prompt 0.0.27，JS-FFI 保持 0.2.13（与 Respo 0.19.5 同一条线）。源码快照在 0.37 下无需改写，`edit format` 无变化，公开合同不变。仍在 0.35.1 / 0.36.0 的消费者保留 0.9.2。
+
+### 历史 0.9.2 使用者影响
 
 配对正式 Calcit CLI / `@calcit/procs` 0.35.1、Touch Control 0.0.38、Pointed Prompt 0.0.26 与 JS-FFI 0.2.13。升级时重新解析完整依赖图并生成 JS。
 
