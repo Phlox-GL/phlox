@@ -1757,9 +1757,10 @@
           :schema $ quote Trait
         'CanvasContextHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait CanvasContextHost (:font 'String)
-            .measureText $ Fn CanvasContextHost String $ -> JsObject
+            .measureText $ Fn CanvasContextHost String $ -> phlox.core/TextMetricsHost
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+            :writable $ #{} :font
           :schema $ quote Trait
         'CanvasHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait CanvasHost
@@ -2016,12 +2017,9 @@
           :examples $ []
           :schema $ quote $ Fn Number (-> Number) (:features :js-ffi)
         'ffi-create-element $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-create-element (document tag)
-            unsafe-coerce
-              .!createElement (unsafe-coerce document DocumentHost) tag
-              , JsObject
+          :code $ quote $ defn ffi-create-element (document tag) (.createElement document tag)
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn DocumentHost String (-> JsObject) (:features :js-ffi)
         'ffi-destroy $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-destroy (target)
             .!destroy $ unsafe-coerce target DestroyableHost
@@ -2029,12 +2027,9 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
         'ffi-document-body $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-document-body (document)
-            unsafe-coerce
-              .-body $ unsafe-coerce document DocumentHost
-              , JsObject
+          :code $ quote $ defn ffi-document-body (document) (.-body document)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn DocumentHost (-> JsObject) (:features :js-ffi)
         'ffi-entry-key $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-entry-key (entry)
             .-0 $ unsafe-coerce entry JsEntryHost
@@ -2104,12 +2099,9 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'ffi-get-context $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-get-context (element kind)
-            unsafe-coerce
-              .!getContext (unsafe-coerce element CanvasHost) kind
-              , JsObject
+          :code $ quote $ defn ffi-get-context (element kind) (.getContext element kind)
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn CanvasHost String (-> JsObject) (:features :js-ffi)
         'ffi-global $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-global (data) (.-global data)
           :examples $ []
@@ -2120,12 +2112,9 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
         'ffi-measure-text $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-measure-text (context text)
-            unsafe-coerce
-              .!measureText (unsafe-coerce context CanvasContextHost) text
-              , JsObject
+          :code $ quote $ defn ffi-measure-text (context text) (.measureText context text)
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> JsObject) (:features :js-ffi)
+          :schema $ quote $ Fn CanvasContextHost String (-> TextMetricsHost) (:features :js-ffi)
         'ffi-nullish? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-nullish? (value)
             nil? $ unsafe-coerce value Dynamic
@@ -2186,12 +2175,10 @@
           :schema $ quote $ Fn PixiAnchorHost Dynamic (-> Unit) (:features :js-ffi)
         'ffi-set-font! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-font! (context font)
-            set!
-              .-font $ unsafe-coerce context CanvasContextHost
-              , font
+            set! (.-font context) font
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn CanvasContextHost String (-> Unit) (:features :js-ffi)
         'ffi-set-scale! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-set-scale! (target x y) (.set target x y) &unit
           :examples $ []
@@ -2226,12 +2213,9 @@
           :examples $ []
           :schema $ quote $ Fn PixiTickerHost (-> Unit) (:features :js-ffi)
         'ffi-text-width $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-text-width (metrics)
-            unsafe-coerce
-              .-width $ unsafe-coerce metrics TextMetricsHost
-              , Number
+          :code $ quote $ defn ffi-text-width (metrics) (.-width metrics)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
+          :schema $ quote $ Fn TextMetricsHost (-> Number) (:features :js-ffi)
         'ffi-then $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-then (promise callback)
             .!then (unsafe-coerce promise PromiseHost) callback
@@ -2409,7 +2393,7 @@
               reset! *app $ Option :some pixi-app
               let
                   el $ ffi-view pixi-app
-                -> js/document ffi-document-body $ ffi-append-child el
+                -> (js-cast js/document 'phlox.core/DocumentHost) ffi-document-body $ ffi-append-child el
                 handle-drag-moving el
               -> pixi-app ffi-renderer ffi-plugins ffi-accessibility $ ffi-destroy
               ffi-add-event-listener js/window |resize $ fn (event)
@@ -3822,9 +3806,9 @@
     'phlox.util $ %{} 'FileEntry
       :defs $ {}
         '*ctx-instance $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *ctx-instance nil
+          :code $ quote $ defref *ctx-instance (Option :none)
           :examples $ []
-          :schema $ quote $ Ref Dynamic
+          :schema $ quote $ Ref (Option phlox.core/CanvasContextHost)
         'as-option $ %{} 'CodeEntry
           :doc "|A value as an Option: an Option stays as it is, nil becomes none, anything else is present."
           :code $ quote $ defn as-option (value)
@@ -3918,13 +3902,18 @@
             -> $ List $ List Dynamic
         'measure-text-width! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn measure-text-width! (text size font-family)
-            when
-              phlox.core/ffi-nullish? $ unsafe-coerce @*ctx-instance Dynamic
-              let
-                  el $ phlox.core/ffi-create-element js/document |canvas
-                reset! *ctx-instance $ phlox.core/ffi-get-context el |2d
-            phlox.core/ffi-set-font! @*ctx-instance $ str size "|px " font-family
-            phlox.core/ffi-text-width $ phlox.core/ffi-measure-text @*ctx-instance text
+            let
+                ctx $ match @*ctx-instance
+                  (:some ctx) ctx
+                  (:none)
+                    let
+                        document $ js-cast js/document 'phlox.core/DocumentHost
+                        el $ js-cast (phlox.core/ffi-create-element document |canvas) 'phlox.core/CanvasHost
+                        created $ js-cast (phlox.core/ffi-get-context el |2d) 'phlox.core/CanvasContextHost
+                      reset! *ctx-instance $ Option :some created
+                      , created
+              phlox.core/ffi-set-font! ctx $ str size "|px " font-family
+              phlox.core/ffi-text-width $ phlox.core/ffi-measure-text ctx text
           :examples $ []
           :schema $ quote $ Fn String Number String (-> Number) (:features :js-ffi)
         'prop $ %{} 'CodeEntry
