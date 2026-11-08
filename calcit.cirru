@@ -2785,7 +2785,7 @@
           :code $ quote $ defn first-value (items)
             .unwrap $ first items
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic)
+          :schema $ quote $ Fn (List T) (-> T) (:generics T)
         'init-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-box-size (target size-option)
             match size-option
@@ -2849,7 +2849,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (-> Unit) (:features :js-ffi)
         'init-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-shader (data uniforms-option)
             .!from PIXI/Shader
@@ -2864,7 +2864,7 @@
           :code $ quote $ defn last-value (items)
             .unwrap $ last items
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic)
+          :schema $ quote $ Fn (List T) (-> T) (:generics T)
         'read-draw-mode-alias $ %{} 'CodeEntry
           :doc "|Read a mesh `:draw-mode` prop: a tag alias or a PIXI draw mode number."
           :code $ quote $ defn read-draw-mode-alias (draw-mode)
@@ -2913,7 +2913,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-container (element dispatch!)
             let
@@ -2931,7 +2931,7 @@
               init-filters target $ phlox.util/prop props :filters
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-element (element dispatch!)
             if (element? element)
@@ -2971,7 +2971,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-image (element dispatch!)
             let
@@ -2994,7 +2994,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-mesh (element dispatch!)
             let
@@ -3025,7 +3025,7 @@
               ; js/console.log target
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-rect (element dispatch!)
             let
@@ -3048,7 +3048,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-text (element dispatch!)
             let
@@ -3075,7 +3075,7 @@
                 , dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'set-scale! $ %{} 'CodeEntry
           :doc "|Set a PIXI scale from a `:scale` prop: one factor for both axes, or `[] x y`."
           :code $ quote $ defn set-scale! (target raw)
@@ -3395,7 +3395,7 @@
                 (:none) 1
             , &unit
           :examples $ []
-          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (Option Dynamic) (-> Unit) (:features :js-ffi)
         'update-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-shader (target shader-option shader-option0 uniforms-option)
             when (not= shader-option shader-option0)
@@ -3454,71 +3454,75 @@
           :code $ quote $ defn call-graphics-ops (target ops)
             &doseq (pair ops)
               when (non-nil? pair)
-                let[] (op data)
-                  decode-map-as pair $ List Dynamic
+                let
+                    command $ decode-map-as pair $ List Dynamic
+                    op $ .unwrap $ first command
                   match op
-                    :move-to $ .!moveTo target
-                      .unwrap $ first data
-                      .unwrap $ last data
-                    :line-to $ .!lineTo target
-                      .unwrap $ first data
-                      .unwrap $ last data
-                    :line-style $ init-line-style target $ phlox.util/as-option data
-                    :begin-fill $ .!beginFill target
-                      .unwrap-or (get data :color) nil
-                      .unwrap-or (get data :alpha) 1
                     :end-fill $ .!endFill target
                     :close-path $ .!closePath target
-                    :arc $ let
-                        center $ phlox.util/require-prop data :center
-                        radian $ cond
-                            .some? $ phlox.util/prop data :radian
-                            phlox.util/require-prop data :radian
-                          (.some? (phlox.util/prop data :angle))
-                            map
-                              decode-map-as
-                                .unwrap-or (get data :angle) ([])
-                                List Number
-                              , angle->radian
-                          true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
-                      .!arc target
-                        .unwrap $ first center
-                        .unwrap $ last center
-                        .unwrap-or (get data :radius) nil
-                        .unwrap $ first radian
-                        .unwrap $ last radian
-                        .unwrap-or (get data :anticlockwise?) nil
-                    :arc-to $ let
-                        p1 $ phlox.util/require-prop data :p1
-                        p2 $ phlox.util/require-prop data :p2
-                      .!arcTo target
-                        .unwrap $ first p1
-                        .unwrap $ last p1
-                        .unwrap $ first p2
-                        .unwrap $ last p2
-                        .unwrap-or (get data :radius) nil
-                    :bezier-to $ let
-                        p1 $ phlox.util/require-prop data :p1
-                        p2 $ phlox.util/require-prop data :p2
-                        to-p $ phlox.util/require-prop data :to-p
-                      .!bezierCurveTo target
-                        .unwrap $ first p1
-                        .unwrap $ last p1
-                        .unwrap $ first p2
-                        .unwrap $ last p2
-                        .unwrap $ first to-p
-                        .unwrap $ last to-p
-                    :quadratic-to $ let
-                        p1 $ phlox.util/require-prop data :p1
-                        to-p $ phlox.util/require-prop data :to-p
-                      .!quadraticCurveTo target
-                        .unwrap $ first p1
-                        .unwrap $ last p1
-                        .unwrap $ first to-p
-                        .unwrap $ last to-p
                     :begin-hole $ .!beginHole target
                     :end-hole $ .!endHole target
-                    _ $ js/console.warn "|not supported op:" op data
+                    _ $ let
+                        data $ .unwrap $ .get command 1
+                      match op
+                        :move-to $ .!moveTo target
+                          .unwrap $ first data
+                          .unwrap $ last data
+                        :line-to $ .!lineTo target
+                          .unwrap $ first data
+                          .unwrap $ last data
+                        :line-style $ init-line-style target $ phlox.util/as-option data
+                        :begin-fill $ .!beginFill target
+                          .unwrap-or (get data :color) nil
+                          .unwrap-or (get data :alpha) 1
+                        :arc $ let
+                            center $ phlox.util/require-prop data :center
+                            radian $ cond
+                                .some? $ phlox.util/prop data :radian
+                                phlox.util/require-prop data :radian
+                              (.some? (phlox.util/prop data :angle))
+                                map
+                                  decode-map-as
+                                    .unwrap-or (get data :angle) ([])
+                                    List Number
+                                  , angle->radian
+                              true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
+                          .!arc target
+                            .unwrap $ first center
+                            .unwrap $ last center
+                            .unwrap-or (get data :radius) nil
+                            .unwrap $ first radian
+                            .unwrap $ last radian
+                            .unwrap-or (get data :anticlockwise?) nil
+                        :arc-to $ let
+                            p1 $ phlox.util/require-prop data :p1
+                            p2 $ phlox.util/require-prop data :p2
+                          .!arcTo target
+                            .unwrap $ first p1
+                            .unwrap $ last p1
+                            .unwrap $ first p2
+                            .unwrap $ last p2
+                            .unwrap-or (get data :radius) nil
+                        :bezier-to $ let
+                            p1 $ phlox.util/require-prop data :p1
+                            p2 $ phlox.util/require-prop data :p2
+                            to-p $ phlox.util/require-prop data :to-p
+                          .!bezierCurveTo target
+                            .unwrap $ first p1
+                            .unwrap $ last p1
+                            .unwrap $ first p2
+                            .unwrap $ last p2
+                            .unwrap $ first to-p
+                            .unwrap $ last to-p
+                        :quadratic-to $ let
+                            p1 $ phlox.util/require-prop data :p1
+                            to-p $ phlox.util/require-prop data :to-p
+                          .!quadraticCurveTo target
+                            .unwrap $ first p1
+                            .unwrap $ last p1
+                            .unwrap $ first to-p
+                            .unwrap $ last to-p
+                        _ $ js/console.warn "|not supported op:" op data
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'draw-circle $ %{} 'CodeEntry (:doc |)

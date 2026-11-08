@@ -63,7 +63,7 @@ jobs:
 
     - name: Keep unresolved weak types from growing
       env:
-        UNRESOLVED_LIMIT: "132"
+        UNRESOLVED_LIMIT: "128"
       run: |
         set -euo pipefail
         actual="$(calcit calcit.cirru analyze weak-types --summary-only --format json | jq -e '.data.summary.intents.unresolved')"
@@ -94,7 +94,7 @@ jobs:
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         # Only stage the target graph/runtime; leave consumer Snapshot untouched.
         cat > "$consumer/deps.cirru" <<'EOF'
-        {} (:calcit-version |0.37.0)
+        {} (:calcit-version |0.38.0)
           :version |0.1.3
           :dependencies $ {} (|Phlox-GL/phlox |0.9.3)
             |Triadica/touch-control |0.0.39
@@ -102,7 +102,7 @@ jobs:
             |mvc-works/pointed-prompt |0.0.27
         EOF
         cd "$consumer"
-        yarn add --exact @calcit/procs@0.37.0
+        yarn add --exact @calcit/procs@0.38.0
         # Proposed consumer migration source at an exact commit; do not rewrite its Snapshot.
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > "$RUNNER_TEMP/consumer-strict.json"
