@@ -540,23 +540,23 @@
           :code $ quote $ defn comp-messages-demo (states)
             let
                 cursor $ phlox.util/prop-or states :cursor $ []
-                state $ .unwrap-or (get states :data)
-                  {}
-                    :messages $ []
-                    :bottom? false
+                state $ decode-map-as
+                  .unwrap-or (get states :data)
+                    {}
+                      :messages $ []
+                      :bottom? false
+                  Map Tag Dynamic
               container ({})
                 comp-button $ {} (:text "|Add message")
                   :position $ [] 120 200
                   :on-pointertap $ fn (e d!)
-                    d! cursor $ update state :messages $ fn (xs)
-                      unsafe-coerce
-                        conj
-                          decode-map-as xs $ List Dynamic
-                          let
-                              id $ nanoid
-                            {} (:id id)
-                              :text $ str "|Messages of " id
-                        , Dynamic
+                    d! cursor $ assoc state :messages $ conj
+                      decode-map-as (phlox.util/require-prop state :messages)
+                        List $ Map Tag String
+                      let
+                          id $ nanoid
+                        {} (:id id)
+                          :text $ str "|Messages of " id
                 comp-switch $ {}
                   :value $ phlox.util/prop state :bottom?
                   :title "|At bottom"
@@ -568,13 +568,16 @@
                   :messages $ phlox.util/prop state :messages
                   :bottom? $ phlox.util/prop state :bottom?
                   :on-pointertap $ fn (message d!)
-                    d! cursor $ update state :messages $ fn (xs)
-                      unsafe-coerce
-                        ->
-                          decode-map-as xs $ List Dynamic
-                          filter-not $ fn (x)
-                            identical? (phlox.util/require-prop x :id) (phlox.util/require-prop message :id)
-                        , Dynamic
+                    d! cursor $ assoc state :messages $ let
+                        clicked-id $ decode-map-as (phlox.util/require-prop message :id) String
+                      filter-not
+                        decode-map-as (phlox.util/require-prop state :messages)
+                          List $ Map Tag String
+                        fn (x)
+                          hint-fn $ Fn (Map Tag String) (-> Bool)
+                          identical?
+                            .unwrap $ get x :id
+                            , clicked-id
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-points-demo $ %{} 'CodeEntry (:doc |)
