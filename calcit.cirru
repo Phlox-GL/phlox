@@ -872,9 +872,9 @@
                 toggled $ updater store (:: :toggle-keyboard) |test 0
                 counted $ updater toggled (:: :counted) |test 0
                 incremented $ updater counted (:: :add-x) |test 0
-              assert= (Option :some true) (get toggled :keyboard-on?)
-              assert= (Option :some 1) (get counted :counted)
-              assert= (Option :some 1) (get incremented :x)
+              assert= (Some true) (get toggled :keyboard-on?)
+              assert= (Some 1) (get counted :counted)
+              assert= (Some 1) (get incremented :x)
             :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.updater
@@ -1015,12 +1015,12 @@
                 rect $ {} (:fill fill)
                   :size $ [] width 32
                   :on $ match (phlox.util/prop props :on)
-                    (:some on) (Option :some on)
+                    (:some on) (Some on)
                     (:none)
                       match (phlox.util/prop props :on-pointertap)
                         (:some tap)
-                          Option :some $ {} $ :pointertap tap
-                        (:none) (Option :none)
+                          Some $ {} $ :pointertap tap
+                        (:none) None
                 text $ {} (:text button-text)
                   :position $ [] 8 8
                   :style $ {} (:fill color) (:font-size size) (:font-family font-family)
@@ -1194,7 +1194,7 @@
     'phlox.comp.slider $ %{} 'FileEntry
       :defs $ {}
         '*prev-spin-point $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *prev-spin-point (Option :none)
+          :code $ quote $ defref *prev-spin-point None
           :examples $ []
           :schema $ quote $ Ref
             Option $ List Number
@@ -1376,7 +1376,7 @@
                           x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
                         reset! *spin-pivot $ [] x y
-                        reset! *prev-spin-point $ Option :some $ [] 0 0
+                        reset! *prev-spin-point $ Some $ [] 0 0
                         d! cursor $ assoc state :dragging? true
                     :globalpointermove $ fn (e d!)
                       let
@@ -1390,7 +1390,7 @@
                               prev-point @*prev-spin-point
                             if
                               < (vec-length current-point) (&* 0.5 radius)
-                              reset! *prev-spin-point $ Option :none
+                              reset! *prev-spin-point None
                               do
                                 when-let (prev-point prev-point)
                                   let
@@ -1408,12 +1408,10 @@
                                           phlox.util/prop props :max
                                         , d!
                                       js/console.warn "|missing :on-change for spin-slider"
-                                reset! *prev-spin-point $ Option :some current-point
-                    :pointerup $ fn (e d!)
-                      reset! *prev-spin-point $ Option :none
+                                reset! *prev-spin-point $ Some current-point
+                    :pointerup $ fn (e d!) (reset! *prev-spin-point None)
                       d! cursor $ assoc state :dragging? false
-                    :pointerupoutside $ fn (e d!)
-                      reset! *prev-spin-point $ Option :none
+                    :pointerupoutside $ fn (e d!) (reset! *prev-spin-point None)
                       d! cursor $ assoc state :dragging? false
                 text $ {}
                   :text $ str $ match (phlox.util/prop props :value)
@@ -1650,7 +1648,7 @@
     'phlox.core $ %{} 'FileEntry
       :defs $ {}
         '*app $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *app (Option :none)
+          :code $ quote $ defref *app None
           :examples $ []
           :schema $ quote $ Ref (Option PixiAppHost)
         '*dispatch-fn $ %{} 'CodeEntry (:doc |)
@@ -1678,9 +1676,9 @@
           :examples $ []
           :schema $ quote $ Ref (Map Tag Dynamic)
         '*tree-element $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *tree-element (Option :none)
+          :code $ quote $ defref *tree-element None
           :examples $ []
-          :schema $ quote $ Ref (Option phlox.schema/PhloxElement)
+          :schema $ quote $ Ref (Option schema/PhloxElement)
         '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn >> (states k)
             let
@@ -1937,7 +1935,7 @@
         'circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn circle (props & children) (dev-check props lilac-circle) (create-element :circle props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'clear-phlox-caches! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn clear-phlox-caches! () &unit
           :examples $ []
@@ -1945,18 +1943,18 @@
         'container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn container (props & children) (dev-check props lilac-container) (create-element :container props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'create-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-element (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ index-items children
           :examples $ []
-          :schema $ quote $ Fn Tag (Map Tag Dynamic) (List Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn Tag (Map Tag Dynamic) (List Dynamic) (-> schema/PhloxElement)
         'create-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create-list (tag props children)
             schema/PhloxElement :name tag :props props :children $ remove-nil-values $ decode-map-as children
               List $ List Dynamic
           :examples $ []
-          :schema $ quote $ Fn Tag (Map Tag Dynamic) (List Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn Tag (Map Tag Dynamic) (List Dynamic) (-> schema/PhloxElement)
         'defcomp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro defcomp (name params & body)
             quasiquote $ defn ~name ~params ~@body
@@ -2277,12 +2275,12 @@
         'graphics $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn graphics (props & children) (dev-check props lilac-graphics) (create-element :graphics props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group (props & children) (dev-check props lilac-container)
             noted "|which is an alias of container" $ create-element :container props children
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-drag-moving (el)
             ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mousedown $ fn (event)
@@ -2370,7 +2368,7 @@
         'image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn image (props & children) (dev-check props lilac-image) (create-element :image props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'init-pixi-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pixi-app! (options)
             let
@@ -2384,7 +2382,7 @@
               ffi-stop $ ffi-ticker pixi-app
               ffi-stop $ js-cast (.-shared PIXI/Ticker) 'phlox.core/PixiTickerHost
               ffi-stop $ js-cast (.-system PIXI/Ticker) 'phlox.core/PixiTickerHost
-              reset! *app $ Option :some pixi-app
+              reset! *app $ Some pixi-app
               let
                   el $ ffi-view pixi-app
                 -> (js-cast js/document 'phlox.core/DocumentHost) ffi-document-body $ ffi-append-child el
@@ -2451,11 +2449,11 @@
                   mapcat segments line-segment->ops
                 , children
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mesh (props & children) (dev-check props lilac-mesh) (create-element :mesh props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'mount-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-app! (app dispatch!)
             let
@@ -2466,7 +2464,7 @@
                   , 'phlox.core/PixiContainerHost
                 , element-tree
           :examples $ []
-          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/PhloxElement Dynamic (-> Unit) (:features :js-ffi)
         'on-control-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-control-event (elapsed states delta)
             if (:left-b? states) (reset-stage-config!)
@@ -2496,11 +2494,11 @@
                   -> points rest $ map $ fn (p) (g :line-to p)
                 , children
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rect (props & children) (dev-check props lilac-rect) (create-element :rect props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'render! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render! (expanded-app dispatch! options)
             match @*app
@@ -2526,10 +2524,10 @@
                 (:none)
                   do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
                 (:some _) (rerender-app! expanded-app wrap-dispatch options)
-              reset! *tree-element $ Option :some expanded-app
+              reset! *tree-element $ Some expanded-app
             render-stage-for-viewer!
           :examples $ []
-          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/PhloxElement Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-stage-for-viewer! ()
             let
@@ -2561,7 +2559,7 @@
               ffi-stage $ get-app
               , dispatch! options
           :examples $ []
-          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/PhloxElement Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'reset-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reset-stage-config! ()
             let
@@ -2604,7 +2602,7 @@
         'text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn text (props & children) (dev-check props lilac-text) (create-element :text props children)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> phlox.schema/PhloxElement)
+          :schema $ quote $ Fn (Map Tag Dynamic) (& Dynamic) (-> schema/PhloxElement)
         'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
@@ -3270,7 +3268,7 @@
                 not= (map next-filters last) (map prev-filters last)
                 if (empty? next-filters)
                   set! (.-filters target) nil
-                  init-filters target $ Option :some next-filters
+                  init-filters target $ Some next-filters
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3523,7 +3521,7 @@
                             .unwrap $ last to-p
                         _ $ js/console.warn "|not supported op:" op data
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'draw-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn draw-circle (target radius-option)
             match radius-option
@@ -3534,7 +3532,7 @@
               (:none) (js/console.warn "|Unknown radius" radius-option)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (-> Unit) (:features :js-ffi)
         'draw-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn draw-rect (target size-option radius-option)
             match size-option
@@ -3554,7 +3552,7 @@
               (:none) (js/console.warn "|Unknown size" size-option)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (Option Dynamic) (-> Unit) (:features :js-ffi)
         'init-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-alpha (target value-option)
             match value-option
@@ -3591,7 +3589,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (Option Dynamic) Dynamic (-> Unit) (:features :js-ffi)
         'init-line-style $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-line-style (target line-style-option)
             match line-style-option
@@ -3605,7 +3603,7 @@
               (:none) &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (-> Unit) (:features :js-ffi)
         'init-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn init-pivot (target point-option)
             match point-option
@@ -3716,7 +3714,7 @@
                   set! (.-eventMode target) |none
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (Option Dynamic) (Option Dynamic) Dynamic (-> Unit) (:features :js-ffi)
         'update-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-pivot (target point-option point-option0)
             when (not= point-option point-option0)
@@ -3802,7 +3800,7 @@
     'phlox.util $ %{} 'FileEntry
       :defs $ {}
         '*ctx-instance $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *ctx-instance (Option :none)
+          :code $ quote $ defref *ctx-instance None
           :examples $ []
           :schema $ quote $ Ref (Option phlox.core/CanvasContextHost)
         'as-option $ %{} 'CodeEntry
@@ -3810,13 +3808,13 @@
           :code $ quote $ defn as-option (value)
             cond
                 nil? value
-                Option :none
-              (and (enum? value) (= (&enum:definition value) (Option :some Option)))
+                , None
+              (and (enum? value) (= (&enum:definition value) (Some Option)))
                 if
                   = :some $ &enum:nth value 0
-                  Option :some $ &enum:nth value 1
-                  Option :none
-              true $ Option :some value
+                  Some $ &enum:nth value 1
+                  , None
+              true $ Some value
           :examples $ []
           :schema $ quote $ Fn Dynamic
             -> $ Option Dynamic
@@ -3906,7 +3904,7 @@
                         document $ js-cast js/document 'phlox.core/DocumentHost
                         el $ js-cast (phlox.core/ffi-create-element document |canvas) 'phlox.core/CanvasHost
                         created $ js-cast (phlox.core/ffi-get-context el |2d) 'phlox.core/CanvasContextHost
-                      reset! *ctx-instance $ Option :some created
+                      reset! *ctx-instance $ Some created
                       , created
               phlox.core/ffi-set-font! ctx $ str size "|px " font-family
               phlox.core/ffi-text-width $ phlox.core/ffi-measure-text ctx text
@@ -3915,10 +3913,9 @@
         'prop $ %{} 'CodeEntry
           :doc "|Read a prop of an untyped map as an Option: a nil map, a missing key, a nil value and a none value are all none; an Option value is used as it is."
           :code $ quote $ defn prop (props key)
-            if (nil? props) (Option :none)
-              match (get props key)
-                (:some value) (as-option value)
-                (:none) (Option :none)
+            if (nil? props) None $ match (get props key)
+              (:some value) (as-option value)
+              (:none) None
           :examples $ []
           :schema $ quote $ Fn M Tag
             -> $ Option Dynamic

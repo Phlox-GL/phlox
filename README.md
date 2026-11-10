@@ -8,11 +8,11 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前工具链与使用者影响
 
-配对正式 Calcit CLI / `@calcit/procs` **0.40.0**、Touch Control 0.0.39、Pointed Prompt 0.0.27 和 JS-FFI 0.2.13。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+配对正式 Calcit CLI / `@calcit/procs` **0.41.0**、Touch Control 0.0.39、Pointed Prompt 0.0.27 和 JS-FFI 0.2.13。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
 
 `render!` 的根节点参数是具名 `PhloxElement`。用 `container` 或其他 Phlox 构造函数生成根节点。升级后请完整刷新页面，以重新初始化渲染器持有的根节点状态。
 
-各图元渲染函数返回明确的 `PixiDisplayHost`。列表首尾读取保留泛型元素类型，缩放仍用 `Scale` union 校验单值和双轴列表。
+各图元渲染函数返回明确的 `PixiDisplayHost`，绘制入口也使用该宿主类型。绘图和事件属性按实际 `Option` 形状传递。列表首尾读取保留泛型元素类型，缩放仍用 `Scale` union 校验单值和双轴列表。
 
 ### 历史 0.9.2 使用者影响
 

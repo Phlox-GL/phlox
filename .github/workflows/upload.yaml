@@ -80,7 +80,7 @@ jobs:
       uses: actions/checkout@v7.0.1
       with:
         repository: Phlox-GL/circling-tree
-        ref: 74cc9d01a21b809d8872330af44c2e75202c092f
+        ref: 00c9964c64b670ecdb6747ba7ba0d99b0cb16751
         path: .calcit/consumer
         persist-credentials: false
 
