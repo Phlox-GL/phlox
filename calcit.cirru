@@ -2903,7 +2903,7 @@
           :code $ quote $ defn render-circle (element dispatch!)
             let
                 target $ js-cast (new PIXI/Graphics) 'phlox.core/PixiDisplayHost
-                props $ phlox.util/prop-or element :props $ {}
+                props $ :props element
                 line-style $ phlox.util/prop props :line-style
                 position $ phlox.util/prop props :position
                 events $ phlox.util/prop props :on
@@ -2918,20 +2918,16 @@
               init-angle target $ phlox.util/prop props :angle
               init-alpha target $ phlox.util/prop props :alpha
               init-filters target $ phlox.util/prop props :filters
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+              render-children target (:children element) dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-container (element dispatch!)
             let
                 target $ js-cast (new PIXI/Container) 'phlox.core/PixiDisplayHost
-                props $ phlox.util/prop-or element :props $ {}
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+                props $ :props element
+              render-children target (:children element) dispatch!
               init-position target $ phlox.util/prop props :position
               init-scale target $ phlox.util/prop props :scale
               init-rotation target $ phlox.util/prop props :rotation
@@ -2941,21 +2937,24 @@
               init-filters target $ phlox.util/prop props :filters
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-element (element dispatch!)
-            if (element? element)
-              match (phlox.util/prop-or element :name :unknown)
-                :container $ render-container element dispatch!
-                :graphics $ render-graphics element dispatch!
-                :circle $ render-circle element dispatch!
-                :rect $ render-rect element dispatch!
-                :text $ render-text element dispatch!
-                :mesh $ render-mesh element dispatch!
-                :image $ render-image element dispatch!
-                _ $ do
-                  println "|unknown tag:" $ phlox.util/prop element :tag
-                  {}
+            if
+              and (struct? element) (&struct:matches? element phlox.schema/PhloxElement)
+              let
+                  node $ assert-type element phlox.schema/PhloxElement
+                match (:name node)
+                  :container $ render-container node dispatch!
+                  :graphics $ render-graphics node dispatch!
+                  :circle $ render-circle node dispatch!
+                  :rect $ render-rect node dispatch!
+                  :text $ render-text node dispatch!
+                  :mesh $ render-mesh node dispatch!
+                  :image $ render-image node dispatch!
+                  _ $ do
+                    println "|unknown tag:" $ phlox.util/prop element :tag
+                    {}
               js/console.error "|Unknown element:" element
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic (-> Dynamic) (:features :js-ffi)
@@ -2963,7 +2962,7 @@
           :code $ quote $ defn render-graphics (element dispatch!)
             let
                 target $ js-cast (new PIXI/Graphics) 'phlox.core/PixiDisplayHost
-                props $ phlox.util/prop-or element :props $ {}
+                props $ :props element
                 ops $ phlox.util/prop props :ops
                 events $ phlox.util/prop props :on
               ; dev-check props lilac-graphics
@@ -2976,16 +2975,14 @@
               init-alpha target $ phlox.util/prop props :alpha
               init-events target events dispatch!
               init-filters target $ phlox.util/prop props :filters
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+              render-children target (:children element) dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-image $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-image (element dispatch!)
             let
-                props $ phlox.util/prop-or element :props $ {}
+                props $ :props element
                 target $ js-cast
                   .!from PIXI/Sprite $ phlox.util/require-prop props :url
                   , 'phlox.core/PixiDisplayHost
@@ -2999,16 +2996,14 @@
               init-box-size target $ phlox.util/prop props :size
               init-events target events dispatch!
               init-filters target $ phlox.util/prop props :filters
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+              render-children target (:children element) dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-mesh $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-mesh (element dispatch!)
             let
-                props $ phlox.util/prop-or element :props $ {}
+                props $ :props element
                 geo $ init-geometry $ phlox.util/require-prop props :geometry
                 shader $ init-shader (phlox.util/require-prop props :shader) (phlox.util/prop props :uniforms)
                 draw-mode $ match (phlox.util/prop props :draw-mode)
@@ -3029,18 +3024,16 @@
                   phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
                   , 0.5
               init-filters target $ phlox.util/prop props :filters
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+              render-children target (:children element) dispatch!
               ; js/console.log target
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-rect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-rect (element dispatch!)
             let
                 target $ js-cast (new PIXI/Graphics) 'phlox.core/PixiDisplayHost
-                props $ phlox.util/prop-or element :props $ {}
+                props $ :props element
                 events $ phlox.util/prop props :on
               init-fill target $ phlox.util/prop props :fill
               init-line-style target $ phlox.util/prop props :line-style
@@ -3053,16 +3046,14 @@
               init-alpha target $ phlox.util/prop props :alpha
               init-events target events dispatch!
               init-filters target $ phlox.util/prop props :filters
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+              render-children target (:children element) dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'render-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-text (element dispatch!)
             let
-                props $ phlox.util/prop-or element :props $ {}
+                props $ :props element
                 style $ phlox.util/prop-or props :style $ {}
                 text-style $ new PIXI/TextStyle $ convert-line-style style
                 target $ js-cast
@@ -3080,12 +3071,10 @@
                   phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
                   , 0.5
               init-filters target $ phlox.util/prop props :filters
-              render-children target
-                phlox.util/prop-or element :children $ []
-                , dispatch!
+              render-children target (:children element) dispatch!
               , target
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> phlox.core/PixiDisplayHost) (:features :js-ffi)
         'set-scale! $ %{} 'CodeEntry
           :doc "|Set a PIXI scale from a `:scale` prop: one factor for both axes, or `[] x y`."
           :code $ quote $ defn set-scale! (target raw)
