@@ -1678,9 +1678,9 @@
           :examples $ []
           :schema $ quote $ Ref (Map Tag Dynamic)
         '*tree-element $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *tree-element nil
+          :code $ quote $ defref *tree-element (Option :none)
           :examples $ []
-          :schema $ quote $ Ref Dynamic
+          :schema $ quote $ Ref (Option phlox.schema/PhloxElement)
         '>> $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn >> (states k)
             let
@@ -2466,7 +2466,7 @@
                   , 'phlox.core/PixiContainerHost
                 , element-tree
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (-> Unit) (:features :js-ffi)
         'on-control-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-control-event (elapsed states delta)
             if (:left-b? states) (reset-stage-config!)
@@ -2522,14 +2522,14 @@
                         @*dispatch-fn $ :: op data
                         @*dispatch-fn op
               ; js/console.log |render! expanded-app
-              if
-                ffi-nullish? $ unsafe-coerce @*tree-element Dynamic
-                do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
-                rerender-app! expanded-app wrap-dispatch options
-              reset! *tree-element expanded-app
+              match @*tree-element
+                (:none)
+                  do (mount-app! expanded-app wrap-dispatch) (handle-keyboard-events *tree-element wrap-dispatch)
+                (:some _) (rerender-app! expanded-app wrap-dispatch options)
+              reset! *tree-element $ Option :some expanded-app
             render-stage-for-viewer!
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-stage-for-viewer! ()
             let
@@ -2557,11 +2557,11 @@
           :code $ quote $ defn rerender-app! (app dispatch! options) (; js/console.log "|rerender tree" app @*tree-element)
             update-children
               [] $ [] 0 app
-              [] $ [] 0 @*tree-element
+              [] $ [] 0 $ .unwrap @*tree-element
               ffi-stage $ get-app
               , dispatch! options
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.schema/PhloxElement Dynamic (Map Tag Dynamic) (-> Unit) (:features :js-ffi)
         'reset-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reset-stage-config! ()
             let
@@ -2729,14 +2729,21 @@
             :tags $ #{} :unit
         'handle-keyboard-events $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-keyboard-events (*tree-element dispatch!)
-            phlox.core/ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |keydown $ fn (event)
-              handle-event :down (get-value *tree-element) (wrap-event event) dispatch!
-            phlox.core/ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |keyup $ fn (event)
-              handle-event :up (get-value *tree-element) (wrap-event event) dispatch!
-            phlox.core/ffi-add-event-listener (js-cast js/window 'phlox.core/EventTargetHost) |keypress $ fn (event)
-              handle-event :press (get-value *tree-element) (wrap-event event) dispatch!
+            let
+                target $ js-cast js/window 'phlox.core/EventTargetHost
+                handle! $ fn (kind event)
+                  hint-fn $ Fn Tag phlox.core/DomEventHost $ -> Unit
+                  match @*tree-element
+                    (:none) &unit
+                    (:some tree)
+                      handle-event kind tree (wrap-event event) dispatch!
+              phlox.core/ffi-add-event-listener target |keydown $ fn (event) (handle! :down event)
+              phlox.core/ffi-add-event-listener target |keyup $ fn (event) (handle! :up event)
+              phlox.core/ffi-add-event-listener target |keypress $ fn (event) (handle! :press event)
           :examples $ []
-          :schema $ quote $ Fn (Ref Dynamic) Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn
+            Ref $ Option phlox.schema/PhloxElement
+            , Dynamic (-> Unit) (:features :js-ffi)
         'wrap-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn wrap-event (event)
             {} (:event event)
