@@ -3984,8 +3984,9 @@
                 .unwrap $ get state :step
                 , Number
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) Tag Dynamic Number
+          :schema $ quote $ Fn (Map Tag Dynamic) Tag K Number
             -> $ Map Tag Dynamic
+            :generics K
         'find-minimal-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn find-minimal-ops (state xs ys)
             cond
@@ -4027,8 +4028,9 @@
                           , Number
                       , solution-a solution-b
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (List Dynamic) (List Dynamic)
+          :schema $ quote $ Fn (Map Tag Dynamic) (List K) (List K)
             -> $ Map Tag Dynamic
+            :generics K
           :tests $ [] $ %{} 'TestEntry (:name |legacy-simple-changes)
             :code $ quote $ do
               assert=
