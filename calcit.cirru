@@ -3868,7 +3868,7 @@
               pairs-map
               to-js-data
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn T (-> Dynamic) (:generics T) (:features :js-ffi)
         'detect-func-in-map? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-func-in-map? (params)
             if (empty? params) false $ let
@@ -3880,7 +3880,7 @@
                       fn? $ .unwrap $ last pair
                 , true $ recur $ rest params
           :examples $ []
-          :schema $ quote $ Fn (List Dynamic) (-> Bool)
+          :schema $ quote $ Fn (List T) (-> Bool) (:generics T)
         'element? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn element? (x)
             and (struct? x)
@@ -3888,13 +3888,14 @@
                 (:some definition) (= definition schema/PhloxElement)
                 (:none) false
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Bool)
+          :schema $ quote $ Fn T (-> Bool) (:generics T)
         'index-items $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn index-items (xs)
             -> xs $ map-indexed $ fn (idx x) ([] idx x)
           :examples $ []
-          :schema $ quote $ Fn (List Dynamic)
+          :schema $ quote $ Fn (List T)
             -> $ List $ List Dynamic
+            :generics T
         'measure-text-width! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn measure-text-width! (text size font-family)
             let
@@ -3962,7 +3963,7 @@
                 not $ js/isNaN x
               , x $ do (js/console.error "|Invalid number:" x) nil
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn T (-> Dynamic) (:generics T) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.util
           :require
