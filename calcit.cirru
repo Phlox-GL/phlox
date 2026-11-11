@@ -1657,9 +1657,10 @@
           :examples $ []
           :schema $ quote $ Ref Dynamic
         '*drag-moving-cache $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *drag-moving-cache nil
+          :code $ quote $ defref *drag-moving-cache None
           :examples $ []
-          :schema $ quote $ Ref Dynamic
+          :schema $ quote $ Ref
+            Option $ List Number
         '*events-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *events-element nil
           :examples $ []
@@ -2284,25 +2285,25 @@
         'handle-drag-moving $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-drag-moving (el)
             ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mousedown $ fn (event)
-              reset! *drag-moving-cache $ [] (ffi-event-client-x event) (ffi-event-client-y event)
-            ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mouseup $ fn (event) (reset! *drag-moving-cache nil)
+              reset! *drag-moving-cache $ Some $ [] (ffi-event-client-x event) (ffi-event-client-y event)
+            ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mouseup $ fn (event) (reset! *drag-moving-cache None)
             ffi-add-event-listener (js-cast el 'phlox.core/EventTargetHost) |mousemove $ fn (event)
-              if
-                and
-                  or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
-                  non-nil? @*drag-moving-cache
-                let
-                    prev $ decode-map-as @*drag-moving-cache $ List Number
-                    current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
-                    delta $ complex/minus current prev
-                  reset! *drag-moving-cache current
-                  swap! *stage-config update :move $ fn (prev)
-                    unsafe-coerce
-                      complex/add
-                        decode-map-as prev $ List Number
-                        , delta
-                      , Dynamic
-                  render-stage-for-viewer!
+              when
+                or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
+                match @*drag-moving-cache
+                  (:none) &unit
+                  (:some prev)
+                    let
+                        current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
+                        delta $ complex/minus current prev
+                      reset! *drag-moving-cache $ Some current
+                      swap! *stage-config update :move $ fn (prev)
+                        unsafe-coerce
+                          complex/add
+                            decode-map-as prev $ List Number
+                            , delta
+                          , Dynamic
+                      render-stage-for-viewer!
             ffi-add-event-listener-options (js-cast el 'phlox.core/EventTargetWithOptionsHost) |wheel
               fn (event)
                 if
@@ -2687,7 +2688,7 @@
         'get-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-value (*x) @*x
           :examples $ []
-          :schema $ quote $ Fn (Ref Dynamic) (-> Dynamic)
+          :schema $ quote $ Fn (Ref T) (-> T) (:generics T)
         'handle-event $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn handle-event (kind tree event dispatch!)
             when (non-nil? tree)
