@@ -8,7 +8,9 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前工具链与使用者影响
 
-配对正式 Calcit CLI / `@calcit/procs` **0.41.1**、Touch Control 0.0.39、Pointed Prompt 0.0.27 和 JS-FFI 0.2.13。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+配对正式 Calcit CLI / `@calcit/procs` **0.42.1**、Touch Control 0.0.39、Pointed Prompt 0.0.27 和 JS-FFI 0.2.13。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+
+渲染差分的内部 `phlox.util.lcs` 现在使用 `LcsState<K>` 和 `ChildChange<K>`。直接调用内部差分工具时，用 `(lcs-state-0)` 初始化并按结构体字段读取结果。
 
 `render!` 的根节点参数是具名 `PhloxElement`。用 `container` 或其他 Phlox 构造函数生成根节点。升级后请完整刷新页面，以重新初始化渲染器持有的根节点状态。
 
