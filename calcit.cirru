@@ -132,7 +132,7 @@
                     :up $ fn (e d!) (println :up)
                   {}
           :examples $ []
-          :schema $ quote $ Fn Bool Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn Bool Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.comp.keyboard
           :require $ phlox.core :refer $ g hslx rect circle text container graphics create-list
@@ -332,7 +332,7 @@
                   :gradients $ comp-gradients
                   :keyboard $ comp-keyboard
                     decode-map-as (phlox.util/require-prop store :keyboard-on?) Bool
-                    phlox.util/prop-or store :counted 0
+                    decode-map-as (phlox.util/prop-or store :counted 0) Number
                   :buttons $ comp-buttons
                   :slider $ comp-slider-demo $ >> states :slider
                   :points $ comp-points-demo $ >> states :points
@@ -2881,13 +2881,22 @@
               (:ok mode)
                 match mode
                   (Tag alias)
-                    match alias (:line-loop 0) (:line-strip 1) (:lines 2) (:points 3) (:triangle-fan 4) (:triangle-strip 5) (:triangles 6)
-                      _ $ do (js/console.warn "|Unknown draw mode:" draw-mode) js/undefined
-                  (Number n) n
+                    match alias
+                      :line-loop $ Some 0
+                      :line-strip $ Some 1
+                      :lines $ Some 2
+                      :points $ Some 3
+                      :triangle-fan $ Some 4
+                      :triangle-strip $ Some 5
+                      :triangles $ Some 6
+                      _ $ do (js/console.warn "|Unknown draw mode:" draw-mode) None
+                  (Number n) (Some n)
               (:err message)
-                do (js/console.warn "|Unknown draw mode:" draw-mode message) js/undefined
+                do (js/console.warn "|Unknown draw mode:" draw-mode message) None
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic
+            -> $ Option Number
+            :features :js-ffi
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (target children dispatch!)
             &doseq (child-pair children)
@@ -3006,7 +3015,10 @@
                 geo $ init-geometry $ phlox.util/require-prop props :geometry
                 shader $ init-shader (phlox.util/require-prop props :shader) (phlox.util/prop props :uniforms)
                 draw-mode $ match (phlox.util/prop props :draw-mode)
-                  (:some mode) (read-draw-mode-alias mode)
+                  (:some mode)
+                    match (read-draw-mode-alias mode)
+                      (:some n) n
+                      (:none) js/undefined
                   (:none) js/undefined
                 target $ js-cast (new PIXI/Mesh geo shader nil draw-mode) 'phlox.core/PixiDisplayHost
                 events $ phlox.util/prop props :on
@@ -3217,11 +3229,14 @@
             when (not= draw-mode-option draw-mode-option0)
               match draw-mode-option
                 (:some draw-mode)
-                  set! (.-drawMode target) (read-draw-mode-alias draw-mode)
+                  set! (.-drawMode target)
+                    match (read-draw-mode-alias draw-mode)
+                      (:some n) n
+                      (:none) js/undefined
                 (:none) (eprintln "|updating draw-mode to nil")
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (Option Dynamic) (-> Unit) (:features :js-ffi)
         'update-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-element (element old-element parent-element idx dispatch! options)
             cond
