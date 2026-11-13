@@ -2026,15 +2026,13 @@
           :examples $ []
           :schema $ quote $ Fn DocumentHost (-> JsObject) (:features :js-ffi)
         'ffi-entry-key $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-entry-key (entry)
-            .-0 $ unsafe-coerce entry JsEntryHost
+          :code $ quote $ defn ffi-entry-key (entry) (.-0 entry)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> String) (:features :js-ffi)
+          :schema $ quote $ Fn JsEntryHost (-> String) (:features :js-ffi)
         'ffi-entry-value $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-entry-value (entry)
-            .-1 $ unsafe-coerce entry JsEntryHost
+          :code $ quote $ defn ffi-entry-value (entry) (.-1 entry)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :js-ffi)
+          :schema $ quote $ Fn JsEntryHost (-> Dynamic) (:features :js-ffi)
         'ffi-event-client-x $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-client-x (event) (.-clientX event)
           :examples $ []
@@ -3368,10 +3366,13 @@
                 ->
                   phlox.util/prop-or props :uniforms $ js-object
                   , js/Object.entries $ phlox.core/ffi-for-each $ fn (arr & args)
-                    if
-                      not $ identical? (phlox.core/ffi-entry-value arr)
-                        aget pointer $ phlox.core/ffi-entry-key arr
-                      aset pointer (phlox.core/ffi-entry-key arr) (phlox.core/ffi-entry-value arr)
+                    let
+                        entry $ unsafe-coerce arr phlox.core/JsEntryHost
+                        key $ phlox.core/ffi-entry-key entry
+                        value $ phlox.core/ffi-entry-value entry
+                      if
+                        not $ identical? value $ aget pointer key
+                        aset pointer key value
               update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
               update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
               update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
