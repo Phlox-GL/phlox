@@ -2490,6 +2490,8 @@
                   (:arc center radius angle)
                     g :arc $ {} (:center center) (:radius radius) (:angle angle)
                   (:close-path) (g :close-path)
+                  (:line-style color width alpha)
+                    g :line-style $ {} (:color color) (:width width) (:alpha alpha)
           :examples $ []
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
@@ -3817,6 +3819,7 @@
             :line-to $ List Number
             :arc (List Number) Number $ List Number
             :close-path
+            :line-style Number Number Number
           :examples $ []
           :schema $ quote EnumDef
         'PhloxElement $ %{} 'CodeEntry (:doc |)
