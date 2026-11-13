@@ -1831,6 +1831,14 @@
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
+        'JsEntriesHost $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ deftrait JsEntriesHost
+            .forEach $ Fn JsEntriesHost
+              Fn phlox.core/JsEntryHost $ -> Unit
+              -> Unit
+          :examples $ []
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+          :schema $ quote Trait
         'JsEntryHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait JsEntryHost (:0 'String) (:1 'Dynamic)
           :examples $ []
@@ -3363,16 +3371,17 @@
               update-draw-mode target (phlox.util/prop props :draw-mode) (phlox.util/prop props' :draw-mode)
               let
                   pointer $ -> (js-cast target 'phlox.core/PixiMeshHost) phlox.core/ffi-shader phlox.core/ffi-uniforms
-                ->
-                  phlox.util/prop-or props :uniforms $ js-object
-                  , js/Object.entries $ phlox.core/ffi-for-each $ fn (arr & args)
-                    let
-                        entry $ unsafe-coerce arr phlox.core/JsEntryHost
-                        key $ phlox.core/ffi-entry-key entry
-                        value $ phlox.core/ffi-entry-value entry
-                      if
-                        not $ identical? value $ aget pointer key
-                        aset pointer key value
+                  entries $ js-cast
+                    js/Object.entries $ phlox.util/prop-or props :uniforms $ js-object
+                    , 'phlox.core/JsEntriesHost
+                .forEach entries $ fn (entry & args)
+                  let
+                      key $ phlox.core/ffi-entry-key entry
+                      value $ phlox.core/ffi-entry-value entry
+                    if
+                      not $ identical? value $ aget pointer key
+                      aset pointer key value
+                  , &unit
               update-position target (phlox.util/prop props :position) (phlox.util/prop props' :position)
               update-scale target (phlox.util/prop props :scale) (phlox.util/prop props' :scale)
               update-rotation target (phlox.util/prop props :rotation) (phlox.util/prop props' :rotation)
