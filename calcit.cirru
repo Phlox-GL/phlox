@@ -2479,6 +2479,20 @@
                   .unwrap-or (nth scales 1) 0
           :examples $ []
           :schema $ quote $ Fn Number touch-control.core/ControlState touch-control.core/ControlDelta (-> Unit) (:features :js-ffi :state)
+        'path-graphics $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn path-graphics (position ops)
+            hint-fn $ Fn (List Number) (List schema/PathOp) (-> schema/PhloxElement) (:features :js-ffi)
+            graphics $ {} (:position position)
+              :ops $ map ops $ fn (op)
+                match op
+                  (:move-to point) (g :move-to point)
+                  (:line-to point) (g :line-to point)
+                  (:arc center radius angle)
+                    g :arc $ {} (:center center) (:radius radius) (:angle angle)
+                  (:close-path) (g :close-path)
+                  (:line-style color width alpha)
+                    g :line-style $ {} (:color color) (:width width) (:alpha alpha)
+          :examples $ []
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
@@ -3799,6 +3813,15 @@
           :code $ quote $ defunion DrawMode Tag Number
           :examples $ []
           :schema $ quote UnionDef
+        'PathOp $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum PathOp
+            :move-to $ List Number
+            :line-to $ List Number
+            :arc (List Number) Number $ List Number
+            :close-path
+            :line-style Number Number Number
+          :examples $ []
+          :schema $ quote EnumDef
         'PhloxElement $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct PhloxElement (:name Tag)
             :props $ Map Tag Dynamic
