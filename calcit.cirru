@@ -4074,6 +4074,10 @@
         :code $ quote $ ns phlox.util.lcs
     'phlox.util.styles $ %{} 'FileEntry
       :defs $ {}
+        'LayoutValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion LayoutValue Number Tag
+          :examples $ []
+          :schema $ quote UnionDef
         'font-code $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def font-code "|Source Code Pro, Menlo, Ubuntu Mono, Consolas, monospace"
           :examples $ []
@@ -4091,7 +4095,7 @@
           :code $ quote $ def layout-expand
             {} (:flex 1) (:overflow :auto)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag LayoutValue
         'layout-row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def layout-row
             {} (:display |flex) (:align-items |stretch) (:flex-direction |row)
