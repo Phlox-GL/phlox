@@ -1672,11 +1672,9 @@
           :schema $ quote $ Ref Dynamic
         '*stage-config $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *stage-config
-            {}
-              :move $ [] 0 0
-              :scale 1
+            StageConfig :move ([] 0 0) :scale 1
           :examples $ []
-          :schema $ quote $ Ref (Map Tag Dynamic)
+          :schema $ quote $ Ref StageConfig
         '*tree-element $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *tree-element None
           :examples $ []
@@ -1937,6 +1935,12 @@
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
+        'StageConfig $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct StageConfig
+            :move $ List Number
+            :scale Number
+          :examples $ []
+          :schema $ quote StructDef
         'TextMetricsHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait TextMetricsHost (:width 'Number)
           :examples $ []
@@ -2304,12 +2308,10 @@
                         current $ [] (ffi-event-client-x event) (ffi-event-client-y event)
                         delta $ complex/minus current prev
                       reset! *drag-moving-cache $ Some current
-                      swap! *stage-config update :move $ fn (prev)
-                        unsafe-coerce
-                          complex/add
-                            decode-map-as prev $ List Number
-                            , delta
-                          , Dynamic
+                      let
+                          config @*stage-config
+                        reset! *stage-config $ struct-with config $ :move
+                          complex/add (:move config) delta
                       render-stage-for-viewer!
             ffi-add-event-listener-options (js-cast el 'phlox.core/EventTargetWithOptionsHost) |wheel
               fn (event)
@@ -2317,9 +2319,8 @@
                   or (ffi-event-meta? event) (ffi-event-ctrl? event) (ffi-event-shift? event)
                   let
                       dy $ * 0.001 $ ffi-event-delta-y event
-                      scale $ decode-map-as
-                        .unwrap-or (get @*stage-config :scale) 1
-                        , 'Number
+                      config @*stage-config
+                      scale $ :scale config
                       pointer $ complex/minus
                         [] (ffi-event-client-x event) (ffi-event-client-y event)
                         []
@@ -2331,17 +2332,13 @@
                           < (ffi-event-delta-y event) 0
                         and (>= scale 4)
                           > (ffi-event-delta-y event) 0
-                      swap! *stage-config update :move $ fn (pos)
-                        unsafe-coerce
-                          let
-                              pos0 $ decode-map-as pos $ List Number
-                              shift $ complex/minus pointer pos0
-                            complex/minus pos0 $ complex/times shift $ [] (/ dy scale) 0
-                          , Dynamic
-                      swap! *stage-config update :scale $ fn (x)
-                        unsafe-coerce
-                          + (decode-map-as x Number) dy
-                          , Dynamic
+                      let
+                          pos $ :move config
+                          shift $ complex/minus pointer pos
+                        reset! *stage-config $ struct-with config
+                          :move $ complex/minus pos $ complex/times shift
+                            [] (/ dy scale) 0
+                          :scale $ + scale dy
                       render-stage-for-viewer!
               js-object $ :passive true
           :examples $ []
@@ -2553,12 +2550,9 @@
         'render-stage-for-viewer! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-stage-for-viewer! ()
             let
-                scale $ decode-map-as
-                  .unwrap-or (get @*stage-config :scale) nil
-                  , 'Number
-                move $ decode-map-as
-                  .unwrap-or (get @*stage-config :move) nil
-                  List Number
+                config @*stage-config
+                scale $ :scale config
+                move $ :move config
               ffi-set-x!
                 ffi-position $ ffi-stage $ get-app
                 +
@@ -2585,38 +2579,23 @@
         'reset-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reset-stage-config! ()
             let
-                move0 $ decode-map-as
-                  .unwrap-or (get @*stage-config :move) nil
-                  List Number
-                scale0 $ decode-map-as
-                  .unwrap-or (get @*stage-config :scale) 1
-                  , 'Number
+                config @*stage-config
+                move0 $ :move config
+                scale0 $ :scale config
               when
                 or
                   not= ([] 0 0) move0
                   not= 1 scale0
-                if
-                  not= ([] 0 0) move0
-                  swap! *stage-config update :move $ fn (prev)
-                    unsafe-coerce
-                      let
-                          prev0 $ decode-map-as prev $ List Number
-                          l $ vec-length prev0
-                        if (< l 4) ([] 0 0)
-                          &let
-                            move-back $ complex/times prev0 $ [] (&/ -4 l) 0
-                            complex/add prev0 move-back
-                      , Dynamic
-                if (not= scale0 1)
-                  swap! *stage-config update :scale $ fn (prev)
-                    unsafe-coerce
-                      let
-                          delta $ - scale0 1
-                          prev0 $ decode-map-as prev Number
-                        if
-                          > 0.01 $ ffi-abs delta
-                          , 1 $ + prev0 $ if (> delta 0) -0.01 0.01
-                      , Dynamic
+                let
+                    l $ vec-length move0
+                    move $ if (< l 4) ([] 0 0)
+                      complex/add move0 $ complex/times move0 $ [] (&/ -4 l) 0
+                    delta $ - scale0 1
+                    scale $ if
+                      > 0.01 $ ffi-abs delta
+                      , 1 $ + scale0
+                        if (> delta 0) -0.01 0.01
+                  reset! *stage-config $ StageConfig :move move :scale scale
                 render-stage-for-viewer!
               , &unit
           :examples $ []
@@ -2628,30 +2607,21 @@
         'update-stage-config! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-stage-config! (move scale-change)
             let
-                scale0 $ decode-map-as
-                  .unwrap-or (get @*stage-config :scale) 1
-                  , 'Number
+                config @*stage-config
+                scale0 $ :scale config
               when
                 and
                   or
                     not= ([] 0 0) move
                     not= 0 scale-change
                   not $ and (> scale-change 0) (>= scale0 8)
-                swap! *stage-config update :move $ fn (prev)
-                  unsafe-coerce
-                    let
-                        prev0 $ decode-map-as prev $ List Number
-                      complex/add
-                        complex/minus prev0 $ complex/scale (complex/conjugate move) 0.05
-                        complex/scale prev0 $ / (* 0.01 scale-change) scale0
-                    , Dynamic
-                swap! *stage-config update :scale $ fn (prev)
-                  unsafe-coerce
-                    let
-                        prev0 $ decode-map-as prev Number
-                        next $ &+ prev0 $ * 0.01 scale-change
-                      &max 0.2 $ &min next 8
-                    , Dynamic
+                let
+                    prev $ :move config
+                    next-move $ complex/add
+                      complex/minus prev $ complex/scale (complex/conjugate move) 0.05
+                      complex/scale prev $ / (* 0.01 scale-change) scale0
+                    next-scale $ &+ scale0 $ * 0.01 scale-change
+                  reset! *stage-config $ StageConfig :move next-move :scale $ &max 0.2 (&min next-scale 8)
                 render-stage-for-viewer!
               , &unit
           :examples $ []
