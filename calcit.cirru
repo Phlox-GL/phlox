@@ -2492,10 +2492,27 @@
                   (:line-to point) (g :line-to point)
                   (:arc center radius angle)
                     g :arc $ {} (:center center) (:radius radius) (:angle angle)
+                  (:directed-arc center radius angle anticlockwise?)
+                    g :arc $ {} (:center center) (:radius radius) (:angle angle) (:anticlockwise? anticlockwise?)
+                  (:quadratic-to control end)
+                    g :quadratic-to $ {} (:p1 control) (:to-p end)
                   (:close-path) (g :close-path)
                   (:line-style color width alpha)
                     g :line-style $ {} (:color color) (:width width) (:alpha alpha)
           :examples $ []
+          :tests $ [] $ %{} 'TestEntry (:name |directed-arc-and-quadratic-payloads)
+            :code $ quote $ let
+                point $ [] 1 2
+                end $ [] 3 4
+                angles $ [] 0 1
+                shape $ path-graphics point $ [] (schema/PathOp :quadratic-to point end) (schema/PathOp :directed-arc point 8 angles true) (schema/PathOp :directed-arc point 8 angles false) (schema/PathOp :arc point 8 angles)
+              assert=
+                []
+                  [] :quadratic-to $ {} (:p1 point) (:to-p end)
+                  [] :arc $ {} (:center point) (:radius 8) (:angle angles) (:anticlockwise? true)
+                  [] :arc $ {} (:center point) (:radius 8) (:angle angles) (:anticlockwise? false)
+                  [] :arc $ {} (:center point) (:radius 8) (:angle angles)
+                .unwrap $ get (:props shape) :ops
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
@@ -3798,6 +3815,8 @@
             :move-to $ List Number
             :line-to $ List Number
             :arc (List Number) Number $ List Number
+            :directed-arc (List Number) Number (List Number) Bool
+            :quadratic-to (List Number) (List Number)
             :close-path
             :line-style Number Number Number
           :examples $ []
