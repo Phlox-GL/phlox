@@ -3853,8 +3853,9 @@
                   , None
               true $ Some value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Option Dynamic
+            :generics Input
         'camel-case $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn camel-case (x)
             js-ffi.contract/expect-string |String.replace $ .!replace x (new js/RegExp |-[a-z])
@@ -3965,7 +3966,7 @@
               (:some value) value
               (:none) default
           :examples $ []
-          :schema $ quote $ Fn M Tag Dynamic (-> Dynamic) (:generics M)
+          :schema $ quote $ Fn M Tag Default (-> Dynamic) (:generics M Default)
         'rand-color $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn rand-color ()
             floor $ * (random) 0xffffff
@@ -3977,8 +3978,9 @@
               non-nil? $ .unwrap $ last pair
           :examples $ []
           :schema $ quote $ Fn
-            List $ List Dynamic
-            -> $ List $ List Dynamic
+            List $ List T
+            -> $ List $ List T
+            :generics T
           :tests $ [] $ %{} 'TestEntry (:name |nil-filter-keeps-false-and-keys)
             :code $ quote $ assert=
               [] ([] 1 false) ([] 2 |a)
