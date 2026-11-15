@@ -280,6 +280,10 @@
             phlox.comp.slider :refer $ comp-slider comp-slider-point comp-spin-slider
     'phlox.app.container $ %{} 'FileEntry
       :defs $ {}
+        'TabField $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion TabField Tag String
+          :examples $ []
+          :schema $ quote UnionDef
         'comp-arrows-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-arrows-demo (states)
             let
@@ -745,7 +749,7 @@
           :code $ quote $ def tabs
             [] ([] :drafts |Drafts) ([] :grids |Grids) ([] :curves |Curves) ([] :gradients |Gradients) ([] :keyboard |Keyboard) ([] :slider |Slider) ([] :buttons |Buttons) ([] :points |Points) ([] :switch |Switch) ([] :input |Input) ([] :messages |Messages) ([] :slider-point "|Slider Point") ([] :spin-slider "|Spin Slider") ([] :arrows |Arrows) ([] :shadow |Shadow) ([] :mesh |Mesh)
           :examples $ []
-          :schema $ quote $ List (List Dynamic)
+          :schema $ quote $ List (List TabField)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.app.container
           :require
@@ -2500,6 +2504,7 @@
                   (:line-style color width alpha)
                     g :line-style $ {} (:color color) (:width width) (:alpha alpha)
           :examples $ []
+          :schema $ quote $ Fn (List Number) (List schema/PathOp) (-> schema/PhloxElement) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |directed-arc-and-quadratic-payloads)
             :code $ quote $ let
                 point $ [] 1 2
