@@ -719,7 +719,7 @@
                     :style $ {} (:font-size 14)
                       :fill $ hslx 0 0 80
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> phlox.schema/PhloxElement) (:features :js-ffi :state)
         'grid-row $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-row (x)
             -> (range 40)
@@ -2483,7 +2483,7 @@
                 update-stage-config!
                   map move $ fn (x)
                     * x (ffi-abs x) 0.02
-                  .unwrap-or (nth scales 1) 0
+                  nth scales 1
           :examples $ []
           :schema $ quote $ Fn Number touch-control.core/ControlState touch-control.core/ControlDelta (-> Unit) (:features :js-ffi :state)
         'path-graphics $ %{} 'CodeEntry (:doc |)
@@ -2690,7 +2690,7 @@
           :schema $ quote $ Fn Dynamic Dynamic
             Fn String $ -> Unit
             -> Unit
-            :features :js-ffi
+            :features :js-ffi :state
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.input
           :require

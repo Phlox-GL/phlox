@@ -8,7 +8,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前工具链与使用者影响
 
-配对正式 Calcit CLI / `@calcit/procs` **0.42.1**、Touch Control 0.0.39、Pointed Prompt 0.0.27 和 JS-FFI 0.2.13。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+配对正式 Calcit CLI / `@calcit/procs` **0.43.0**、Touch Control 0.0.41、Pointed Prompt 0.0.28 和 JS-FFI 0.2.18。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
 
 渲染差分的内部 `phlox.util.lcs` 现在使用 `LcsState<K>` 和 `ChildChange<K>`。直接调用内部差分工具时，用 `(lcs-state-0)` 初始化并按结构体字段读取结果。
 
@@ -31,8 +31,8 @@ CLI / `@calcit/procs` 继续配对正式 **0.34.2**。依赖图同步到已发�
 本次修复 Demo 单/多行输入：`:initial` 传实际文本，避免把 Option 枚举交给 String 解码器（[#99](https://github.com/Phlox-GL/phlox/issues/99)）。
 公开类型、控件默认值、几何公式和 HUD 保持；Pixi.js 仍为 7.x；
 npm `@quamolit/touch-control` 0.0.13 仅提供 CSS，与 Calcit 模块的版本独立。
-原九项测试、完整 strict、168 unresolved 上限和真实 Circling Tree 源码夹具均保留。
-夹具固定到 547b542，并明确使用本地未发布 Phlox 候选，不冒充 Caps 已发布依赖。
+原有测试、完整 strict、100 unresolved 上限和真实 Circling Tree 源码夹具均保留。
+夹具固定到 Circling Tree 的 0.43 迁移提交 afea586，并明确使用本地未发布 Phlox 候选，不冒充 Caps 已发布依赖。
 
 从旧 0.8.0 升级还需注意 0.9.0 的既有行为：裸 nil 与 Option :none 的 prop 按缺省处理，
 Option :some v 保留显式值；移除 alpha/angle/rotation 会复位为 1/0/0。
