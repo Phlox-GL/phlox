@@ -408,7 +408,7 @@
                     :radius 20
                     :angle $ [] 0 300
                     :anticlockwise? false
-                  g :end-fill nil
+                  g :end-fill
                   ; g :line-to $ [] 400 400
               polyline $ {}
                 :style $ {} (:width 4)
@@ -2269,14 +2269,14 @@
                     :line-to $ dev-check-message "|check :line-to" data lilac-point
                     :line-style $ dev-check-message "|check :line-style" data lilac-line-style
                     :begin-fill $ dev-check-message "|check :fill" data lilac-begin-fill
-                    :end-fill nil
-                    :close-path nil
+                    :end-fill &unit
+                    :close-path &unit
                     :arc $ dev-check-message "|check :arc" data lilac-arc
                     :arc-to $ dev-check-message "|check :arc-to" data lilac-arc-to
                     :bezier-to $ dev-check-message "|check :bezier-to" data lilac-bezier-to
                     :quadratic-to $ dev-check-message "|check :quadratic-to" data lilac-quadratic-to
-                    :begin-hole nil
-                    :end-hole nil
+                    :begin-hole &unit
+                    :end-hole &unit
                     _ $ js/console.warn "|not supported:" op
                   [] op data
           :examples $ []
