@@ -93,7 +93,7 @@ jobs:
         cp calcit.cirru deps.cirru "$consumer/.calcit/modules/phlox/"
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         cd "$consumer"
-        sed -i 's/0.43.0/0.44.0/; s/0.0.41/0.0.42/; s/0.9.6/0.9.7/' deps.cirru
+        sed -i 's/0.43.0/0.44.0/; s/0.0.41/0.0.43/; s/0.9.6/0.9.8/; s/0.2.18/0.2.19/' deps.cirru
         yarn up @calcit/procs@0.44.0
         yarn install --immutable
         calcit calcit.cirru --check-only --all-defs --format json
