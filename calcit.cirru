@@ -1901,6 +1901,11 @@
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
           :schema $ quote Trait
+        'PixiPointerEventHost $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ deftrait PixiPointerEventHost (:global 'PixiVectorHost) (:ctrlKey 'Bool) (:metaKey 'Bool)
+          :examples $ []
+          :ffi $ {} (:backend :js) (:kind :external-object) (:target :browser)
+          :schema $ quote Trait
         'PixiRendererHost $ %{} 'CodeEntry (:doc |)
           :code $ quote $ deftrait PixiRendererHost (:plugins 'PixiPluginsHost)
             .render $ Fn PixiRendererHost Dynamic $ -> Unit
