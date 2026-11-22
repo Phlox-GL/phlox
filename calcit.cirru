@@ -2503,6 +2503,8 @@
                     g :arc $ {} (:center center) (:radius radius) (:angle angle)
                   (:directed-arc center radius angle anticlockwise?)
                     g :arc $ {} (:center center) (:radius radius) (:angle angle) (:anticlockwise? anticlockwise?)
+                  (:directed-arc-radians center radius radians anticlockwise?)
+                    g :arc $ {} (:center center) (:radius radius) (:radian radians) (:anticlockwise? anticlockwise?)
                   (:quadratic-to control end)
                     g :quadratic-to $ {} (:p1 control) (:to-p end)
                   (:close-path) (g :close-path)
@@ -2515,13 +2517,16 @@
                 point $ [] 1 2
                 end $ [] 3 4
                 angles $ [] 0 1
-                shape $ path-graphics point $ [] (schema/PathOp :quadratic-to point end) (schema/PathOp :directed-arc point 8 angles true) (schema/PathOp :directed-arc point 8 angles false) (schema/PathOp :arc point 8 angles)
+                radians $ [] -3 2
+                shape $ path-graphics point $ [] (schema/PathOp :quadratic-to point end) (schema/PathOp :directed-arc point 8 angles true) (schema/PathOp :directed-arc point 8 angles false) (schema/PathOp :arc point 8 angles) (schema/PathOp :directed-arc-radians point 8 radians false) (schema/PathOp :directed-arc-radians point 8 radians true)
               assert=
                 []
                   [] :quadratic-to $ {} (:p1 point) (:to-p end)
                   [] :arc $ {} (:center point) (:radius 8) (:angle angles) (:anticlockwise? true)
                   [] :arc $ {} (:center point) (:radius 8) (:angle angles) (:anticlockwise? false)
                   [] :arc $ {} (:center point) (:radius 8) (:angle angles)
+                  [] :arc $ {} (:center point) (:radius 8) (:radian radians) (:anticlockwise? false)
+                  [] :arc $ {} (:center point) (:radius 8) (:radian radians) (:anticlockwise? true)
                 .unwrap $ get (:props shape) :ops
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
@@ -3826,6 +3831,7 @@
             :line-to $ List Number
             :arc (List Number) Number $ List Number
             :directed-arc (List Number) Number (List Number) Bool
+            :directed-arc-radians (List Number) Number (List Number) Bool
             :quadratic-to (List Number) (List Number)
             :close-path
             :line-style Number Number Number

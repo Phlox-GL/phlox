@@ -10,6 +10,8 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 配对正式 Calcit CLI / `@calcit/procs` **0.44.0**、Touch Control 0.0.43、Pointed Prompt 0.0.30 和 JS-FFI 0.2.19。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
 
+`PathOp :directed-arc-radians` 接收圆心、半径、起止弧度及逆时针标志；已有 `:arc` 和 `:directed-arc` 仍接收角度。直接穷尽匹配 `PathOp` 的调用方需要处理新增变体。
+
 渲染差分的内部 `phlox.util.lcs` 现在使用 `LcsState<K>` 和 `ChildChange<K>`。直接调用内部差分工具时，用 `(lcs-state-0)` 初始化并按结构体字段读取结果。
 
 `render!` 的根节点参数是具名 `PhloxElement`。用 `container` 或其他 Phlox 构造函数生成根节点。升级后请完整刷新页面，以重新初始化渲染器持有的根节点状态。
