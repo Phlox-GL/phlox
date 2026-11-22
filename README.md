@@ -16,6 +16,8 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 各图元渲染函数返回明确的 `PixiDisplayHost`，绘制入口也使用该宿主类型。绘图和事件属性按实际 `Option` 形状传递。列表首尾读取保留泛型元素类型，缩放仍用 `Scale` union 校验单值和双轴列表。
 
+CI 的 Circling Tree 消费者夹具使用已迁移到 0.44.0 的固定提交和原始锁文件，并链接本地 Phlox 候选。
+
 ### 历史 0.9.2 使用者影响
 
 配对正式 Calcit CLI / `@calcit/procs` 0.35.1、Touch Control 0.0.38、Pointed Prompt 0.0.26 与 JS-FFI 0.2.13。升级时重新解析完整依赖图并生成 JS。

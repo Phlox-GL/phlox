@@ -80,7 +80,7 @@ jobs:
       uses: actions/checkout@v7.0.1
       with:
         repository: Phlox-GL/circling-tree
-        ref: afea586b911c4cf777189c7c917b57e5c8592636
+        ref: a62577cead34635dcd05e64990f518d078e79a68
         path: .calcit/consumer
         persist-credentials: false
 
@@ -93,8 +93,6 @@ jobs:
         cp calcit.cirru deps.cirru "$consumer/.calcit/modules/phlox/"
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         cd "$consumer"
-        sed -i 's/0.43.0/0.44.0/; s/0.0.41/0.0.43/; s/0.9.6/0.9.8/; s/0.2.18/0.2.19/' deps.cirru
-        yarn up @calcit/procs@0.44.0
         yarn install --immutable
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > "$RUNNER_TEMP/consumer-strict.json"
