@@ -2507,6 +2507,8 @@
                     g :arc $ {} (:center center) (:radius radius) (:radian radians) (:anticlockwise? anticlockwise?)
                   (:quadratic-to control end)
                     g :quadratic-to $ {} (:p1 control) (:to-p end)
+                  (:bezier-to control-1 control-2 end)
+                    g :bezier-to $ {} (:p1 control-1) (:p2 control-2) (:to-p end)
                   (:close-path) (g :close-path)
                   (:line-style color width alpha)
                     g :line-style $ {} (:color color) (:width width) (:alpha alpha)
@@ -2518,9 +2520,10 @@
                 end $ [] 3 4
                 angles $ [] 0 1
                 radians $ [] -3 2
-                shape $ path-graphics point $ [] (schema/PathOp :quadratic-to point end) (schema/PathOp :directed-arc point 8 angles true) (schema/PathOp :directed-arc point 8 angles false) (schema/PathOp :arc point 8 angles) (schema/PathOp :directed-arc-radians point 8 radians false) (schema/PathOp :directed-arc-radians point 8 radians true)
+                shape $ path-graphics point $ [] (schema/PathOp :bezier-to point angles end) (schema/PathOp :quadratic-to point end) (schema/PathOp :directed-arc point 8 angles true) (schema/PathOp :directed-arc point 8 angles false) (schema/PathOp :arc point 8 angles) (schema/PathOp :directed-arc-radians point 8 radians false) (schema/PathOp :directed-arc-radians point 8 radians true)
               assert=
                 []
+                  [] :bezier-to $ {} (:p1 point) (:p2 angles) (:to-p end)
                   [] :quadratic-to $ {} (:p1 point) (:to-p end)
                   [] :arc $ {} (:center point) (:radius 8) (:angle angles) (:anticlockwise? true)
                   [] :arc $ {} (:center point) (:radius 8) (:angle angles) (:anticlockwise? false)
@@ -3833,6 +3836,7 @@
             :directed-arc (List Number) Number (List Number) Bool
             :directed-arc-radians (List Number) Number (List Number) Bool
             :quadratic-to (List Number) (List Number)
+            :bezier-to (List Number) (List Number) (List Number)
             :close-path
             :line-style Number Number Number
           :examples $ []
