@@ -6,6 +6,10 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
+### 0.11.0 使用者影响
+
+`PathOp` 新增三次贝塞尔变体，直接穷尽匹配该枚举的调用方需要增加 `:bezier-to` 分支。`path-graphics-with` 支持保留角度、旋转等原有 graphics 属性并传入类型化路径；`ops` 参数覆盖同名属性。既有 `path-graphics` 和 `g` 接口保持。请重新安装依赖并生成 JS。
+
 ### 当前工具链与使用者影响
 
 配对正式 Calcit CLI / `@calcit/procs` **0.44.0**、Touch Control 0.0.43、Pointed Prompt 0.0.30 和 JS-FFI 0.2.19。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
