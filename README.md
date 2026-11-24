@@ -8,7 +8,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 0.12.0 使用者影响
 
-`PathOp` 新增无参数的 `:end-fill`，可在类型化路径中结束填充。直接穷尽匹配该枚举的调用方需要增加对应分支；既有 `g :end-fill` 的行为保持。
+`PathOp` 新增无参数的 `:end-fill` 和包含连接、端点样式的 `:line-style-with`。后者使用具名 `LineJoin` / `LineCap`，支持渲染器已有的连接和端点选项。直接穷尽匹配 `PathOp` 的调用方需要增加对应分支；既有 `g` 和 `:line-style` 的行为保持。
 
 ### 0.11.0 使用者影响
 

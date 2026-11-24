@@ -2537,6 +2537,16 @@
                   (:end-fill) (g :end-fill)
                   (:line-style color width alpha)
                     g :line-style $ {} (:color color) (:width width) (:alpha alpha)
+                  (:line-style-with color width alpha join cap)
+                    g :line-style $ {} (:color color) (:width width) (:alpha alpha)
+                      :join $ match join
+                        (:miter) :miter
+                        (:bevel) :bevel
+                        (:round) :round
+                      :cap $ match cap
+                        (:butt) :butt
+                        (:round) :round
+                        (:square) :square
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) (List schema/PathOp) (-> schema/PhloxElement) (:features :js-ffi)
           :tests $ []
@@ -2562,6 +2572,14 @@
                   Some $ []
                     [] :move-to $ [] 1 2
                     [] :end-fill
+                  get (:props shape) :ops
+            %{} 'TestEntry (:name |line-style-with-join-cap)
+              :code $ quote $ let
+                  shape $ path-graphics-with ({})
+                    [] $ schema/PathOp :line-style-with 123 2 0.8 (schema/LineJoin :round) (schema/LineCap :round)
+                assert=
+                  Some $ [] $ [] :line-style
+                    {} (:color 123) (:width 2) (:alpha 0.8) (:join :round) (:cap :round)
                   get (:props shape) :ops
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
@@ -3860,6 +3878,14 @@
           :code $ quote $ defunion DrawMode Tag Number
           :examples $ []
           :schema $ quote UnionDef
+        'LineCap $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum LineCap (:butt) (:round) (:square)
+          :examples $ []
+          :schema $ quote EnumDef
+        'LineJoin $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum LineJoin (:miter) (:bevel) (:round)
+          :examples $ []
+          :schema $ quote EnumDef
         'PathOp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum PathOp
             :move-to $ List Number
@@ -3872,6 +3898,7 @@
             :close-path
             :end-fill
             :line-style Number Number Number
+            :line-style-with Number Number Number phlox.schema/LineJoin phlox.schema/LineCap
           :examples $ []
           :schema $ quote EnumDef
         'PhloxElement $ %{} 'CodeEntry (:doc |)
