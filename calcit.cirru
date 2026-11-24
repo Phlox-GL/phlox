@@ -2534,22 +2534,35 @@
                   (:bezier-to control-1 control-2 end)
                     g :bezier-to $ {} (:p1 control-1) (:p2 control-2) (:to-p end)
                   (:close-path) (g :close-path)
+                  (:end-fill) (g :end-fill)
                   (:line-style color width alpha)
                     g :line-style $ {} (:color color) (:width width) (:alpha alpha)
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) (List schema/PathOp) (-> schema/PhloxElement) (:features :js-ffi)
-          :tests $ [] $ %{} 'TestEntry (:name |preserves-graphics-props)
-            :code $ quote $ let
-                shape $ path-graphics-with
-                  {} (:angle 45) (:rotation 0.5)
-                  [] $ schema/PathOp :move-to $ [] 1 2
-              assert= (Some 45)
-                get (:props shape) :angle
-              assert= (Some 0.5)
-                get (:props shape) :rotation
-              assert=
-                Some $ [] $ [] :move-to ([] 1 2)
-                get (:props shape) :ops
+          :tests $ []
+            %{} 'TestEntry (:name |preserves-graphics-props)
+              :code $ quote $ let
+                  shape $ path-graphics-with
+                    {} (:angle 45) (:rotation 0.5)
+                    [] $ schema/PathOp :move-to $ [] 1 2
+                assert= (Some 45)
+                  get (:props shape) :angle
+                assert= (Some 0.5)
+                  get (:props shape) :rotation
+                assert=
+                  Some $ [] $ [] :move-to ([] 1 2)
+                  get (:props shape) :ops
+            %{} 'TestEntry (:name |end-fill-order)
+              :code $ quote $ let
+                  shape $ path-graphics-with ({})
+                    []
+                      schema/PathOp :move-to $ [] 1 2
+                      schema/PathOp :end-fill
+                assert=
+                  Some $ []
+                    [] :move-to $ [] 1 2
+                    [] :end-fill
+                  get (:props shape) :ops
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
@@ -3857,6 +3870,7 @@
             :quadratic-to (List Number) (List Number)
             :bezier-to (List Number) (List Number) (List Number)
             :close-path
+            :end-fill
             :line-style Number Number Number
           :examples $ []
           :schema $ quote EnumDef

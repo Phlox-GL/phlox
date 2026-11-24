@@ -6,6 +6,10 @@ Phlox in calcit-js
 
 Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
+### 0.12.0 使用者影响
+
+`PathOp` 新增无参数的 `:end-fill`，可在类型化路径中结束填充。直接穷尽匹配该枚举的调用方需要增加对应分支；既有 `g :end-fill` 的行为保持。
+
 ### 0.11.0 使用者影响
 
 `PathOp` 新增三次贝塞尔变体，直接穷尽匹配该枚举的调用方需要增加 `:bezier-to` 分支。`path-graphics-with` 支持保留角度、旋转等原有 graphics 属性并传入类型化路径；`ops` 参数覆盖同名属性。既有 `path-graphics` 和 `g` 接口保持。请重新安装依赖并生成 JS。
