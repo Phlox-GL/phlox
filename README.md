@@ -16,7 +16,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前工具链与使用者影响
 
-配对正式 Calcit CLI / `@calcit/procs` **0.44.0**、Touch Control 0.0.43、Pointed Prompt 0.0.30 和 JS-FFI 0.2.19。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+配对正式 Calcit CLI / `@calcit/procs` **0.45.0**、Touch Control 0.0.44、Pointed Prompt 0.0.31 和 JS-FFI 0.2.23。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
 
 `PathOp :directed-arc-radians` 接收圆心、半径、起止弧度及逆时针标志；已有 `:arc` 和 `:directed-arc` 仍接收角度。直接穷尽匹配 `PathOp` 的调用方需要处理新增变体。
 
