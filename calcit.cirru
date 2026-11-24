@@ -1008,7 +1008,7 @@
                   phlox.util/prop-or props :position $ [] 0 0
                   List Number
                 width $ + 16 $ measure-text-width! button-text size font-family
-                align-right? $ phlox.util/prop-or props :align-right? false
+                align-right? $ decode-map-as (phlox.util/prop-or props :align-right? false) Bool
               container
                 {} $ :position $ if align-right?
                   []
@@ -1063,7 +1063,7 @@
                 alpha $ decode-map-as (phlox.util/prop-or props :alpha 1) Number
                 on-change $ .unwrap-or (get props :on-change)
                   fn (pos d!) nil
-                hide-text? $ phlox.util/prop-or props :hide-text? false
+                hide-text? $ decode-map-as (phlox.util/prop-or props :hide-text? false) Bool
               let
                   position $ phlox.util/prop-or props :position $ [] 0 0
                 create-list :container
@@ -1083,7 +1083,8 @@
                                 :x0 $ [] x y
                                 :p0 position
                           :globalpointermove $ fn (e d!)
-                            when (phlox.util/prop-or state :dragging? false)
+                            when
+                              decode-map-as (phlox.util/prop-or state :dragging? false) Bool
                               let
                                   x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                                   y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
@@ -1149,7 +1150,7 @@
                 messages $ decode-map-as
                   phlox.util/prop-or options :messages $ []
                   List Dynamic
-                bottom? $ phlox.util/prop-or options :bottom? false
+                bottom? $ decode-map-as (phlox.util/prop-or options :bottom? false) Bool
                 base-position $ .unwrap-or (get options :position)
                   if bottom?
                     []
@@ -1223,7 +1224,7 @@
                 fill $ phlox.util/prop-or props :fill $ hslx 0 0 30
                 color $ phlox.util/prop-or props :color $ hslx 0 0 100
                 on-change $ phlox.util/prop props :on-change
-                rounded? $ phlox.util/prop-or props :round? false
+                rounded? $ decode-map-as (phlox.util/prop-or props :round? false) Bool
               container
                 {} $ :position $ phlox.util/prop props :position
                 rect
@@ -1236,7 +1237,8 @@
                             x1 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
                       :globalpointermove $ fn (e d!)
-                        when (phlox.util/prop-or state :dragging? false)
+                        when
+                          decode-map-as (phlox.util/prop-or state :dragging? false) Bool
                           let
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                             if-let (handler on-change)
@@ -1301,7 +1303,7 @@
                 fill $ phlox.util/prop-or props :fill $ hslx 0 0 30
                 color $ phlox.util/prop-or props :color $ hslx 0 0 100
                 on-change $ phlox.util/prop props :on-change
-                rounded? $ phlox.util/prop-or props :round? false
+                rounded? $ decode-map-as (phlox.util/prop-or props :round? false) Bool
               container
                 {} $ :position $ phlox.util/prop props :position
                 rect
@@ -1315,7 +1317,8 @@
                             x1 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           d! cursor $ {} (:dragging? true) (:v0 value) (:x0 x1)
                       :globalpointermove $ fn (e d!)
-                        when (phlox.util/prop-or state :dragging? false)
+                        when
+                          decode-map-as (phlox.util/prop-or state :dragging? false) Bool
                           let
                               x2 $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                             if-let (handler on-change)
@@ -1387,7 +1390,8 @@
                       let
                           x $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-x
                           y $ -> e phlox.core/ffi-event-data phlox.core/ffi-global phlox.core/ffi-object-y
-                        if (phlox.util/prop-or state :dragging? false)
+                        if
+                          decode-map-as (phlox.util/prop-or state :dragging? false) Bool
                           let
                               current-point $ []
                                 - x $ .unwrap-or (first @*spin-pivot) 0
@@ -1469,7 +1473,7 @@
         'comp-switch $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-switch (props) (dev-check props lilac-switch)
             let
-                value $ phlox.util/prop-or props :value false
+                value $ decode-map-as (phlox.util/prop-or props :value false) Bool
                 on-change $ phlox.util/prop props :on-change
               container
                 {} $ :position $ phlox.util/prop-or props :position ([] 0 0)
@@ -1730,7 +1734,9 @@
                     [] :demo 0 :drag
                     {} $ :dragging? true
                   root $ >>
-                    .unwrap $ get store :states
+                    decode-map-as
+                      .unwrap $ get store :states
+                      Map Dynamic Dynamic
                     , :demo
                   row $ >> root 0
                   drag $ >> row :drag
@@ -3223,36 +3229,35 @@
                     ops $ :acc list-ops
                     xs children-dict
                     ys old-children-dict
-                  when-not (empty? ops)
-                    let
-                        op $ first-value ops
-                      match (:kind op)
-                        :remains $ do
-                          when dev? $ assert
-                            = (:key op)
-                              first-value $ first-value xs
-                              first-value $ first-value ys
-                            , "|check key"
-                          update-element
-                            last-value $ first-value xs
-                            last-value $ first-value ys
-                            , parent-container idx dispatch! options
-                          recur (inc idx) (rest ops) (rest xs) (rest ys)
-                        :add $ do
-                          when dev? $ assert "|check key" $ = (:key op)
+                  if (empty? ops) &unit $ let
+                      op $ first-value ops
+                    match (:kind op)
+                      :remains $ do
+                        when dev? $ assert
+                          = (:key op)
                             first-value $ first-value xs
-                          .!addChildAt parent-container
-                            render-element
-                              last-value $ first-value xs
-                              , dispatch!
-                            , idx
-                          recur (inc idx) (rest ops) (rest xs) ys
-                        :remove $ do
-                          when dev? $ assert "|check key" $ = (:key op)
                             first-value $ first-value ys
-                          .!removeChildAt parent-container idx
-                          recur idx (rest ops) xs $ rest ys
-                        _ $ println "|Unknown op:" op
+                          , "|check key"
+                        update-element
+                          last-value $ first-value xs
+                          last-value $ first-value ys
+                          , parent-container idx dispatch! options
+                        recur (inc idx) (rest ops) (rest xs) (rest ys)
+                      :add $ do
+                        when dev? $ assert "|check key" $ = (:key op)
+                          first-value $ first-value xs
+                        .!addChildAt parent-container
+                          render-element
+                            last-value $ first-value xs
+                            , dispatch!
+                          , idx
+                        recur (inc idx) (rest ops) (rest xs) ys
+                      :remove $ do
+                        when dev? $ assert "|check key" $ = (:key op)
+                          first-value $ first-value ys
+                        .!removeChildAt parent-container idx
+                        recur idx (rest ops) xs $ rest ys
+                      _ $ println "|Unknown op:" op
             , &unit
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic Dynamic (Map Tag Dynamic) (-> Unit) (:features :io :js-ffi)
@@ -4078,7 +4083,7 @@
           :code $ quote $ defn use-number (x)
             if
               and (number? x)
-                not $ js/isNaN x
+                not $ decode-map-as (js/isNaN x) Bool
               , x $ do (js/console.error "|Invalid number:" x) nil
           :examples $ []
           :schema $ quote $ Fn T (-> Dynamic) (:generics T) (:features :js-ffi)

@@ -37,10 +37,10 @@ jobs:
         yarn --version
 
     - name: Set up Calcit and Caps
-      uses: calcit-lang/setup-calcit@v1.5.0
+      uses: calcit-lang/setup-calcit@v1.5.2
       with:
         tools: calcit,caps
-        caps-version: "0.1.1"
+        caps-version: "0.1.2"
         deps-file: deps.cirru
 
     - name: Resolve immutable dependencies
@@ -93,7 +93,12 @@ jobs:
         cp calcit.cirru deps.cirru "$consumer/.calcit/modules/phlox/"
         # Unpublished candidate: explicit local copy, not a Caps-resolved release.
         cd "$consumer"
+        # Temporary until circling-tree upgrades to Calcit 0.45.0 (same pattern as #129 -> #132).
+        sed -i 's/0.44.0/0.45.0/' deps.cirru
+        yarn up @calcit/procs@0.45.0
         yarn install --immutable
+        calcit calcit.cirru tree wrap app.comp.cycloid-demo/comp-numbers-control --path @3.1.2.1 --code 'quote $ decode-map-as self Bool'
+        calcit calcit.cirru tree replace app.comp.cycloid-demo/comp-numbers-control --path @3.2.3.1.4.1.2.1.3 --code 'quote $ assoc state :round? (not is-round?)'
         calcit calcit.cirru --check-only --all-defs --format json
         calcit calcit.cirru fix --workflow strict --verify --format json > "$RUNNER_TEMP/consumer-strict.json"
         jq -e '.data.workflow.status == "passed" and (.diagnostics | length == 0)' "$RUNNER_TEMP/consumer-strict.json"
