@@ -794,8 +794,10 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (; js/console.log PIXI)
             if dev? $ load-console-formatter!
-            -> (new FontFaceObserver "|Josefin Sans") (phlox.core/ffi-load-font)
-              phlox.core/ffi-then $ fn (event) (render-app!)
+            ->
+              phlox.core/ffi-load-font $ new FontFaceObserver "|Josefin Sans"
+              .?!catch $ fn (error) (js/console.warn "|Font load failed; using fallback" error)
+              .?!then $ fn (event) (render-app!)
             add-watch! *store :change $ fn (store prev) (render-app!)
             render-app!
             when true (render-control!) (start-control-loop! 8 on-control-event)
