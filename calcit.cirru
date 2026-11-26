@@ -2542,6 +2542,8 @@
                   (:bezier-to control-1 control-2 end)
                     g :bezier-to $ {} (:p1 control-1) (:p2 control-2) (:to-p end)
                   (:close-path) (g :close-path)
+                  (:begin-fill color alpha)
+                    g :begin-fill $ {} (:color color) (:alpha alpha)
                   (:end-fill) (g :end-fill)
                   (:line-style color width alpha)
                     g :line-style $ {} (:color color) (:width width) (:alpha alpha)
@@ -2589,6 +2591,18 @@
                   Some $ [] $ [] :line-style
                     {} (:color 123) (:width 2) (:alpha 0.8) (:join :round) (:cap :round)
                   get (:props shape) :ops
+            %{} 'TestEntry (:name |begin-fill-preserves-graphics-ops)
+              :code $ quote $ let
+                  shape $ path-graphics-with ({})
+                    [] (schema/PathOp :begin-fill 16711680 0.8)
+                      schema/PathOp :move-to $ [] 1 2
+                      schema/PathOp :end-fill
+                assert=
+                  []
+                    g :begin-fill $ {} (:color 16711680) (:alpha 0.8)
+                    g :move-to $ [] 1 2
+                    g :end-fill
+                  .unwrap $ get (:props shape) :ops
         'polyline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn polyline (props & children) (dev-check props lilac-polyline)
             let
@@ -3903,6 +3917,7 @@
             :quadratic-to (List Number) (List Number)
             :bezier-to (List Number) (List Number) (List Number)
             :close-path
+            :begin-fill Number Number
             :end-fill
             :line-style Number Number Number
             :line-style-with Number Number Number phlox.schema/LineJoin phlox.schema/LineCap
