@@ -20,7 +20,9 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前工具链与使用者影响
 
-配对正式 Calcit CLI / `@calcit/procs` **0.45.1**、Touch Control 0.0.45、Pointed Prompt 0.0.32 和 JS-FFI 0.2.24。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+尚未发布的 0.13.1 候选配对 Calcit CLI / `@calcit/procs` **0.46.0**、Touch Control 0.0.47、Pointed Prompt 0.0.34 和 JS-FFI 0.2.26。Touch Control 和 Pointed Prompt 的对应版本尚未发布；发布之前不能使用正式依赖图安装此候选。已发布 0.13.0 继续配对 Calcit 0.45.1、Touch Control 0.0.45、Pointed Prompt 0.0.32 和 JS-FFI 0.2.24。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+
+`phlox.keyboard/wrap-event` 的 Map 值改为 `KeyboardEventValue` union：原始 DOM 事件、String、Number 或 Bool。`handle-event` 用泛型保留调用方传入的 Map 值类型；字段与运行行为不变，直接使用这些函数的调用方可按实际类型处理值。
 
 `PathOp :directed-arc-radians` 接收圆心、半径、起止弧度及逆时针标志；已有 `:arc` 和 `:directed-arc` 仍接收角度。直接穷尽匹配 `PathOp` 的调用方需要处理新增变体。
 
@@ -30,7 +32,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 各图元渲染函数返回明确的 `PixiDisplayHost`，绘制入口也使用该宿主类型。绘图和事件属性按实际 `Option` 形状传递。列表首尾读取保留泛型元素类型，缩放仍用 `Scale` union 校验单值和双轴列表。
 
-CI 的 Circling Tree 消费者夹具使用已迁移到 0.44.0 的固定提交和原始锁文件，并链接本地 Phlox 候选。
+CI 的 Circling Tree 消费者夹具使用 0.44.0 的固定提交，临时迁移至 0.46.0 并链接本地 Phlox 候选。
 
 ### 历史 0.9.2 使用者影响
 
