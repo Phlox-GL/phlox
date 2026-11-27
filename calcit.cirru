@@ -2077,7 +2077,7 @@
           :schema $ quote $ Fn DomEventHost (-> Bool) (:features :js-ffi)
         'ffi-event-data $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-event-data (event)
-            .-data $ unsafe-coerce event DomEventHost
+            js-cast (js-ffi.contract/object-field |Pixi.event event |data) 'phlox.core/PixiEventDataHost
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> PixiEventDataHost) (:features :js-ffi)
         'ffi-event-delta-y $ %{} 'CodeEntry (:doc |)
