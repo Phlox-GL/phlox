@@ -780,7 +780,7 @@
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when
-              and dev? $ not=
+              and dev? $ not $ &=
                 .unwrap-or (nth op 0) :unknown
                 , :states
               js/console.log |dispatch! op
@@ -1420,6 +1420,7 @@
                                         , d!
                                       js/console.warn "|missing :on-change for spin-slider"
                                 reset! *prev-spin-point $ Some current-point
+                        , &unit
                     :pointerup $ fn (e d!) (reset! *prev-spin-point None)
                       d! cursor $ assoc state :dragging? false
                     :pointerupoutside $ fn (e d!) (reset! *prev-spin-point None)
@@ -1537,7 +1538,7 @@
                       rect $ {}
                         :position $ [] 0 0
                         :size $ [] 100 30
-                        :fill $ if (= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
+                        :fill $ if (&= selected tab) (hsluvx 180 50 50) (hsluvx 180 50 30)
                         :on $ {} $ :pointertap
                           fn (event d!) (on-select tab d!)
                       text $ {} (:text title)
@@ -2783,6 +2784,10 @@
             pointed-prompt.core :refer $ prompt-at!
     'phlox.keyboard $ %{} 'FileEntry
       :defs $ {}
+        'KeyboardEventValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion KeyboardEventValue String Number Bool phlox.core/DomEventHost
+          :examples $ []
+          :schema $ quote UnionDef
         'get-value $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-value (*x) @*x
           :examples $ []
@@ -2805,7 +2810,7 @@
                 js/console.log "|unknown tree for handling event:" tree
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Tag Dynamic (Map Tag Dynamic) Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Tag Dynamic (Map Tag EventValue) Dynamic (-> Unit) (:generics EventValue) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |struct-tree-parent-child-keyboard-dispatch)
             :code $ quote $ let
                 calls $ ref $ [] :start
@@ -2851,7 +2856,7 @@
               :shift? $ phlox.core/ffi-event-shift? event
           :examples $ []
           :schema $ quote $ Fn phlox.core/DomEventHost
-            -> $ Map Tag Dynamic
+            -> $ Map Tag KeyboardEventValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns phlox.keyboard
           :require $ phlox.util :refer $ element?
@@ -3128,7 +3133,7 @@
               init-alpha target $ phlox.util/prop props :alpha
               init-events target events dispatch!
               if
-                = :center $ .unwrap-or (get props :align) :left
+                &= :center $ .unwrap-or (get props :align) :left
                 phlox.core/ffi-set-anchor!
                   phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
                   , 0.5
@@ -3175,7 +3180,7 @@
               init-rotation target $ phlox.util/prop props :rotation
               init-alpha target $ phlox.util/prop props :alpha
               if
-                = :center $ .unwrap-or (get props :align) :left
+                &= :center $ .unwrap-or (get props :align) :left
                 phlox.core/ffi-set-anchor!
                   phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
                   , 0.5
@@ -3204,7 +3209,8 @@
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :js-ffi)
         'update-angle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-angle (target value-option value-option0)
-            when (not= value-option value-option0)
+            when
+              not $ &= value-option value-option0
               set! (.-angle target)
                 match value-option
                   (:some value) value
@@ -3214,7 +3220,8 @@
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-box-size $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-box-size (target size-option size-option0)
-            if (not= size-option size-option0)
+            if
+              not $ &= size-option size-option0
               match size-option
                 (:some size0)
                   let
@@ -3250,9 +3257,11 @@
                     match (:kind op)
                       :remains $ do
                         when dev? $ assert
-                          = (:key op)
-                            first-value $ first-value xs
-                            first-value $ first-value ys
+                          and
+                            &= (:key op)
+                              first-value $ first-value xs
+                            &= (:key op)
+                              first-value $ first-value ys
                           , "|check key"
                         update-element
                           last-value $ first-value xs
@@ -3260,7 +3269,7 @@
                           , parent-container idx dispatch! options
                         recur (inc idx) (rest ops) (rest xs) (rest ys)
                       :add $ do
-                        when dev? $ assert "|check key" $ = (:key op)
+                        when dev? $ assert "|check key" $ &= (:key op)
                           first-value $ first-value xs
                         .!addChildAt parent-container
                           render-element
@@ -3269,7 +3278,7 @@
                           , idx
                         recur (inc idx) (rest ops) (rest xs) ys
                       :remove $ do
-                        when dev? $ assert "|check key" $ = (:key op)
+                        when dev? $ assert "|check key" $ &= (:key op)
                           first-value $ first-value ys
                         .!removeChildAt parent-container idx
                         recur idx (rest ops) xs $ rest ys
@@ -3337,7 +3346,7 @@
             cond
                 or (nil? element) (nil? element)
                 js/console.error "|Not supposed to be empty"
-              (and (element? element) (element? old-element) (= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown)))
+              (and (element? element) (element? old-element) (&= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown)))
                 do
                   let
                       target $ js-cast (.!getChildAt parent-element idx) 'phlox.core/PixiDisplayHost
@@ -3355,7 +3364,7 @@
                     phlox.util/prop-or old-element :children $ []
                     .!getChildAt parent-element idx
                     , dispatch! options
-              (not= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown))
+              (not (&= (phlox.util/prop-or element :name :unknown) (phlox.util/prop-or old-element :name :unknown)))
                 do (.!removeChildAt parent-element idx)
                   .!addChildAt parent-element (render-element element dispatch!) idx
               true $ js/console.warn "|Unknown case:" element old-element
@@ -3385,7 +3394,8 @@
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-geometry $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-geometry (target geo-option geo-option0)
-            when (not= geo-option geo-option0)
+            when
+              not $ &= geo-option geo-option0
               match geo-option
                 (:some geo)
                   -> target .-geometry $ set! $ init-geometry geo
@@ -3510,7 +3520,8 @@
           :schema $ quote $ Fn phlox.core/PixiDisplayHost (Option Dynamic) (Option Dynamic) (-> Unit) (:features :js-ffi)
         'update-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-shader (target shader-option shader-option0 uniforms-option)
-            when (not= shader-option shader-option0)
+            when
+              not $ &= shader-option shader-option0
               match shader-option
                 (:some shader)
                   -> target .-shader $ set! $ init-shader shader uniforms-option
@@ -3540,9 +3551,9 @@
               update-pivot target (phlox.util/prop props :pivot) (phlox.util/prop props' :pivot)
               update-alpha target (phlox.util/prop props :alpha) (phlox.util/prop props' :alpha)
               if
-                not= (phlox.util/prop-or props :align :left) (phlox.util/prop-or props' :align :left)
+                not $ &= (phlox.util/prop-or props :align :left) (phlox.util/prop-or props' :align :left)
                 if
-                  = :center $ .unwrap-or (get props :align) :left
+                  &= :center $ .unwrap-or (get props :align) :left
                   phlox.core/ffi-set-anchor!
                     phlox.core/ffi-anchor $ js-cast target 'phlox.core/PixiAnchoredHost
                     , 0.5
@@ -3792,7 +3803,8 @@
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :io :js-ffi)
         'update-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-alpha (target value-option value-option0)
-            when (not= value-option value-option0)
+            when
+              not $ &= value-option value-option0
               set! (.-alpha target)
                 match value-option
                   (:some value) value
@@ -3832,7 +3844,8 @@
           :schema $ quote $ Fn Dynamic (Option Dynamic) (Option Dynamic) Dynamic (-> Unit) (:features :js-ffi)
         'update-pivot $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-pivot (target point-option point-option0)
-            when (not= point-option point-option0)
+            when
+              not $ &= point-option point-option0
               let
                   point $ match point-option
                     (:some value) value
@@ -3854,7 +3867,8 @@
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-position $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-position (target point-option point-option0)
-            when (not= point-option point-option0)
+            when
+              not $ &= point-option point-option0
               let
                   point $ match point-option
                     (:some value) value
@@ -3876,7 +3890,8 @@
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
         'update-rotation $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-rotation (target value-option value-option0)
-            when (not= value-option value-option0)
+            when
+              not $ &= value-option value-option0
               set! (.-rotation target)
                 match value-option
                   (:some value) value
@@ -3950,7 +3965,7 @@
                 , None
               (and (enum? value) (= (&enum:definition value) (Some Option)))
                 if
-                  = :some $ &enum:nth value 0
+                  &= :some $ &enum:nth value 0
                   Some $ &enum:nth value 1
                   , None
               true $ Some value
