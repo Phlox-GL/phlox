@@ -20,7 +20,7 @@ Previews http://r.tiye.me/Phlox-GL/phlox/ .
 
 ### 当前工具链与使用者影响
 
-尚未发布的 0.13.1 候选配对 Calcit CLI / `@calcit/procs` **0.46.0**、Touch Control 0.0.47、Pointed Prompt 0.0.34 和 JS-FFI 0.2.26。Touch Control 和 Pointed Prompt 的对应版本尚未发布；发布之前不能使用正式依赖图安装此候选。已发布 0.13.0 继续配对 Calcit 0.45.1、Touch Control 0.0.45、Pointed Prompt 0.0.32 和 JS-FFI 0.2.24。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
+尚未发布的 0.13.1 候选配对 Calcit CLI / `@calcit/procs` **0.46.0**、Touch Control 0.0.47、Pointed Prompt 0.0.34 和 JS-FFI 0.2.26；这些依赖版本均已正式发布。已发布 0.13.0 继续配对 Calcit 0.45.1、Touch Control 0.0.45、Pointed Prompt 0.0.32 和 JS-FFI 0.2.24。升级后重新安装依赖、生成 JS 并刷新。无参数的 `close-path`、`end-fill`、`begin-hole`、`end-hole` 可直接通过 `g` 使用。
 
 `phlox.keyboard/wrap-event` 的 Map 值改为 `KeyboardEventValue` union：原始 DOM 事件、String、Number 或 Bool。`handle-event` 用泛型保留调用方传入的 Map 值类型；字段与运行行为不变，直接使用这些函数的调用方可按实际类型处理值。
 
