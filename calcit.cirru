@@ -1642,7 +1642,7 @@
           :schema $ quote Trait
         'detect-mobile? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn detect-mobile? ()
-            js-present? $ .!mobile $ unsafe-coerce (new mobile-detect js/window.navigator.userAgent) MobileDetectHost
+            js-present? $ .!mobile $ js-cast (new mobile-detect js/window.navigator.userAgent) 'phlox.config/MobileDetectHost
           :examples $ []
           :schema $ quote $ Fn (-> Bool) (:features :js-ffi)
         'dev? $ %{} 'CodeEntry (:doc |)
@@ -2363,29 +2363,29 @@
           :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi :state)
         'hclx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hclx (h c l)
-            js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+            js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ js-cast
               new Color $ hcl-to-hex h c l
-              , ColorHost
+              , 'phlox.core/ColorHost
           :examples $ []
           :schema $ quote $ Fn Number Number Number (-> Number) (:features :js-ffi)
         'hsluvx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hsluvx (h c l)
             let
-                conv $ unsafe-coerce (new Hsluv) HsluvHost
+                conv $ js-cast (new Hsluv) 'phlox.core/HsluvHost
               set! (.-hsluv_h conv) h
               set! (.-hsluv_s conv) c
               set! (.-hsluv_l conv) l
               .!hsluvToRgb conv
-              js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+              js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ js-cast
                 new Color $ js-array (.-rgb_r conv) (.-rgb_g conv) (.-rgb_b conv)
-                , ColorHost
+                , 'phlox.core/ColorHost
           :examples $ []
           :schema $ quote $ Fn Number Number Number (-> Number) (:features :js-ffi)
         'hslx $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn hslx (h s l)
-            js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ unsafe-coerce
+            js-ffi.contract/expect-number |Color.toNumber $ .!toNumber $ js-cast
               new Color $ js-object (:h h) (:s s) (:l l) (:a 1)
-              , ColorHost
+              , 'phlox.core/ColorHost
           :examples $ []
           :schema $ quote $ Fn Number Number Number (-> Number) (:features :js-ffi)
         'image $ %{} 'CodeEntry (:doc |)
