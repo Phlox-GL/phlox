@@ -1270,9 +1270,7 @@
                         d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
                   text $ {}
                     :text $ str "|◀ "
-                      if (number? value)
-                        .!toFixed value $ if rounded? 0 4
-                        , |nil
+                      .!toFixed value $ if rounded? 0 4
                       , "| ▶"
                     :position $ [] 4 4
                     :style $ {} (:fill color) (:font-size 12) (:font-family "|Menlo, monospace")
@@ -1280,7 +1278,9 @@
                     :text $ str
                       match title
                         (:some t)
-                          if (string? t) (str t "| ") |
+                          match (try-decode-map-as t String)
+                            (:ok s) (str s "| ")
+                            (:err _) |
                         (:none) |
                       , "|◈ " unit
                     :position $ [] 0 -18
@@ -1349,9 +1349,7 @@
                       :pointerupoutside $ fn (e d!)
                         d! cursor $ {} (:v0 value) (:x0 0) (:dragging? false)
                   text $ {}
-                    :text $ str $ if (number? value)
-                      .!toFixed value $ if rounded? 0 4
-                      , |nil
+                    :text $ str $ .!toFixed value (if rounded? 0 4)
                     :position $ [] 20 3
                     :style $ {} (:fill color) (:font-size 10) (:font-family "|Menlo, monospace")
           :examples $ []
@@ -1428,9 +1426,10 @@
                 text $ {}
                   :text $ str $ match (phlox.util/prop props :value)
                     (:some v)
-                      if (number? v)
-                        .!toFixed v $ phlox.util/prop-or props :fraction 1
-                        , |-
+                      match (try-decode-map-as v Number)
+                        (:ok n)
+                          .!toFixed n $ phlox.util/prop-or props :fraction 1
+                        (:err _) |-
                     (:none) |-
                   :position $ complex/add position $ [] 0 -10
                   :style $ {} (:fill color) (:font-size font-size) (:font-family "|Source code pro, Menlo, Roboto Mono, monospace")
@@ -1694,11 +1693,12 @@
           :code $ quote $ defn >> (states k)
             let
                 parent-cursor $ phlox.util/prop-or states :cursor $ []
-                branch $ decode-map-as
-                  let
-                      value $ .unwrap-or (get states k) ({})
-                    if (map? value) value $ raise |expected-child-state-map
-                  Map Dynamic Dynamic
+                branch $ match
+                  try-decode-map-as
+                    .unwrap-or (get states k) ({})
+                    Map Dynamic Dynamic
+                  (:ok m) m
+                  (:err _) (raise |expected-child-state-map)
               assoc branch :cursor $ conj
                 decode-map-as parent-cursor $ List Dynamic
                 , k
@@ -2139,7 +2139,7 @@
           :examples $ []
           :schema $ quote $ Fn CanvasContextHost String (-> TextMetricsHost) (:features :js-ffi)
         'ffi-nullish? $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-nullish? (value) (nil? value)
+          :code $ quote $ defn ffi-nullish? (value) (js-nullish? value)
           :examples $ []
           :schema $ quote $ Fn T (-> Bool) (:generics T) (:features :js-ffi)
         'ffi-number $ %{} 'CodeEntry (:doc |)
@@ -2642,11 +2642,15 @@
                   ; "an op dispatched without data carries nil, as before"
                   let
                       data $ if (empty? args) nil $ .unwrap (first args)
-                    if (list? op)
-                      @*dispatch-fn $ :: :states op data
-                      if (tag? op)
-                        @*dispatch-fn $ :: op data
-                        @*dispatch-fn op
+                    match
+                      try-decode-map-as op $ List Dynamic
+                      (:ok cursor)
+                        @*dispatch-fn $ :: :states cursor data
+                      (:err _)
+                        match (try-decode-map-as op Tag)
+                          (:ok op-tag)
+                            @*dispatch-fn $ :: op-tag data
+                          (:err _) (@*dispatch-fn op)
               ; js/console.log |render! expanded-app
               match @*tree-element
                 (:none)
@@ -2932,11 +2936,14 @@
                 let
                     filters-arr $ js-array
                   &doseq (ft filters)
-                    if
-                      and (list? ft)
-                        &= 2 $ count ft
-                      let[] (ctor options) ft $ phlox.core/ffi-push-array! filters-arr $ new ctor (to-js-data options)
-                      js/console.warn "|Unknown filter:" ft
+                    match
+                      try-decode-map-as ft $ List Dynamic
+                      (:ok xs)
+                        if
+                          &= 2 $ count xs
+                          let[] (ctor options) xs $ phlox.core/ffi-push-array! filters-arr $ new ctor (to-js-data options)
+                          js/console.warn "|Unknown filter:" ft
+                      (:err _) (js/console.warn "|Unknown filter:" ft)
                   set! (.-filters target) filters-arr
             , &unit
           :examples $ []
@@ -3004,11 +3011,13 @@
         'render-children $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-children (target children dispatch!)
             &doseq (child-pair children)
-              if (non-nil? child-pair)
-                .!addChild target $ render-element
-                  .unwrap $ last child-pair
-                  , dispatch!
-                js/console.log "|nil child:" child-pair
+              match
+                try-decode-map-as child-pair $ List Dynamic
+                (:ok pair)
+                  .!addChild target $ render-element
+                    .unwrap $ last pair
+                    , dispatch!
+                (:err _) (js/console.log "|nil child:" child-pair)
           :examples $ []
           :schema $ quote $ Fn Dynamic Dynamic Dynamic (-> Unit) (:features :io :js-ffi)
         'render-circle $ %{} 'CodeEntry (:doc |)
@@ -3244,8 +3253,8 @@
                 children-dict $ decode-map-as raw-children $ List (List Dynamic)
                 old-children-dict $ decode-map-as raw-old-children $ List (List Dynamic)
               when dev? $ assert "|children should not contain nil element" $ and
-                every? (map children-dict last-value) non-nil?
-                every? (map old-children-dict last-value) non-nil?
+                every? (map children-dict last-value) element?
+                every? (map old-children-dict last-value) element?
               let
                   list-ops $ find-minimal-ops (lcs-state-0) (map old-children-dict first-value) (map children-dict first-value)
                 loop
@@ -3577,85 +3586,88 @@
         'call-graphics-ops $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn call-graphics-ops (target ops)
             &doseq (pair ops)
-              when (non-nil? pair)
-                let
-                    command $ decode-map-as pair $ List Dynamic
-                    op $ .unwrap $ first command
-                  match op
-                    :end-fill $ .!endFill target
-                    :close-path $ .!closePath target
-                    :begin-hole $ .!beginHole target
-                    :end-hole $ .!endHole target
-                    _ $ let
-                        data $ .unwrap $ .get command 1
-                      match op
-                        :move-to $ .!moveTo target
-                          .unwrap $ first data
-                          .unwrap $ last data
-                        :line-to $ .!lineTo target
-                          .unwrap $ first data
-                          .unwrap $ last data
-                        :line-style $ init-line-style target $ phlox.util/as-option data
-                        :begin-fill $ .!beginFill target
-                          .unwrap-or (get data :color) nil
-                          .unwrap-or (get data :alpha) 1
-                        :arc $ let
-                            center $ phlox.util/require-prop data :center
-                            radian $ cond
-                                .some? $ phlox.util/prop data :radian
-                                phlox.util/require-prop data :radian
-                              (.some? (phlox.util/prop data :angle))
-                                map
-                                  decode-map-as
-                                    .unwrap-or (get data :angle) ([])
-                                    List Number
-                                  , angle->radian
-                              true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
-                          .!arc target
-                            .unwrap $ first center
-                            .unwrap $ last center
-                            .unwrap-or (get data :radius) nil
-                            .unwrap $ first radian
-                            .unwrap $ last radian
-                            .unwrap-or (get data :anticlockwise?) nil
-                        :arc-to $ let
-                            p1 $ phlox.util/require-prop data :p1
-                            p2 $ phlox.util/require-prop data :p2
-                          .!arcTo target
-                            .unwrap $ first p1
-                            .unwrap $ last p1
-                            .unwrap $ first p2
-                            .unwrap $ last p2
-                            .unwrap-or (get data :radius) nil
-                        :bezier-to $ let
-                            p1 $ phlox.util/require-prop data :p1
-                            p2 $ phlox.util/require-prop data :p2
-                            to-p $ phlox.util/require-prop data :to-p
-                          .!bezierCurveTo target
-                            .unwrap $ first p1
-                            .unwrap $ last p1
-                            .unwrap $ first p2
-                            .unwrap $ last p2
-                            .unwrap $ first to-p
-                            .unwrap $ last to-p
-                        :quadratic-to $ let
-                            p1 $ phlox.util/require-prop data :p1
-                            to-p $ phlox.util/require-prop data :to-p
-                          .!quadraticCurveTo target
-                            .unwrap $ first p1
-                            .unwrap $ last p1
-                            .unwrap $ first to-p
-                            .unwrap $ last to-p
-                        _ $ js/console.warn "|not supported op:" op data
+              match
+                try-decode-map-as pair $ List Dynamic
+                (:ok command)
+                  let
+                      op $ .unwrap $ first command
+                    match op
+                      :end-fill $ .!endFill target
+                      :close-path $ .!closePath target
+                      :begin-hole $ .!beginHole target
+                      :end-hole $ .!endHole target
+                      _ $ let
+                          data $ .unwrap $ .get command 1
+                        match op
+                          :move-to $ .!moveTo target
+                            .unwrap $ first data
+                            .unwrap $ last data
+                          :line-to $ .!lineTo target
+                            .unwrap $ first data
+                            .unwrap $ last data
+                          :line-style $ init-line-style target $ phlox.util/as-option data
+                          :begin-fill $ .!beginFill target
+                            .unwrap-or (get data :color) nil
+                            .unwrap-or (get data :alpha) 1
+                          :arc $ let
+                              center $ phlox.util/require-prop data :center
+                              radian $ cond
+                                  .some? $ phlox.util/prop data :radian
+                                  phlox.util/require-prop data :radian
+                                (.some? (phlox.util/prop data :angle))
+                                  map
+                                    decode-map-as
+                                      .unwrap-or (get data :angle) ([])
+                                      List Number
+                                    , angle->radian
+                                true $ do (js/console.warn "|Unknown arc" data) ([] 0 0)
+                            .!arc target
+                              .unwrap $ first center
+                              .unwrap $ last center
+                              .unwrap-or (get data :radius) nil
+                              .unwrap $ first radian
+                              .unwrap $ last radian
+                              .unwrap-or (get data :anticlockwise?) nil
+                          :arc-to $ let
+                              p1 $ phlox.util/require-prop data :p1
+                              p2 $ phlox.util/require-prop data :p2
+                            .!arcTo target
+                              .unwrap $ first p1
+                              .unwrap $ last p1
+                              .unwrap $ first p2
+                              .unwrap $ last p2
+                              .unwrap-or (get data :radius) nil
+                          :bezier-to $ let
+                              p1 $ phlox.util/require-prop data :p1
+                              p2 $ phlox.util/require-prop data :p2
+                              to-p $ phlox.util/require-prop data :to-p
+                            .!bezierCurveTo target
+                              .unwrap $ first p1
+                              .unwrap $ last p1
+                              .unwrap $ first p2
+                              .unwrap $ last p2
+                              .unwrap $ first to-p
+                              .unwrap $ last to-p
+                          :quadratic-to $ let
+                              p1 $ phlox.util/require-prop data :p1
+                              to-p $ phlox.util/require-prop data :to-p
+                            .!quadraticCurveTo target
+                              .unwrap $ first p1
+                              .unwrap $ last p1
+                              .unwrap $ first to-p
+                              .unwrap $ last to-p
+                          _ $ js/console.warn "|not supported op:" op data
+                (:err _) &unit
           :examples $ []
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic (-> Unit) (:features :io :js-ffi)
         'draw-circle $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn draw-circle (target radius-option)
             match radius-option
               (:some radius)
-                if (number? radius)
-                  .!drawCircle target 0 0 $ use-number radius
-                  js/console.warn "|Unknown radius" radius
+                match (try-decode-map-as radius Number)
+                  (:ok n)
+                    .!drawCircle target 0 0 $ use-number n
+                  (:err _) (js/console.warn "|Unknown radius" radius)
               (:none) (js/console.warn "|Unknown radius" radius-option)
             , &unit
           :examples $ []
@@ -3664,18 +3676,20 @@
           :code $ quote $ defn draw-rect (target size-option radius-option)
             match size-option
               (:some size)
-                if (list? size)
-                  match radius-option
-                    (:some radius)
-                      .!drawRoundedRect target 0 0
-                        use-number $ .unwrap $ first size
-                        use-number $ .unwrap $ last size
-                        , radius
-                    (:none)
-                      .!drawRect target 0 0
-                        use-number $ .unwrap $ first size
-                        use-number $ .unwrap $ last size
-                  js/console.warn "|Unknown size" size
+                match
+                  try-decode-map-as size $ List Number
+                  (:ok xs)
+                    match radius-option
+                      (:some radius)
+                        .!drawRoundedRect target 0 0
+                          use-number $ .unwrap $ first xs
+                          use-number $ .unwrap $ last xs
+                          , radius
+                      (:none)
+                        .!drawRect target 0 0
+                          use-number $ .unwrap $ first xs
+                          use-number $ .unwrap $ last xs
+                  (:err _) (js/console.warn "|Unknown size" size)
               (:none) (js/console.warn "|Unknown size" size-option)
             , &unit
           :examples $ []
@@ -3735,19 +3749,7 @@
           :code $ quote $ defn init-pivot (target point-option)
             match point-option
               (:some point)
-                do
-                  phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
-                    if (list? point)
-                      decode-map-as
-                        .unwrap-or (first point) 0
-                        , Number
-                      , 0
-                  phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
-                    if (list? point)
-                      decode-map-as
-                        .unwrap-or (last point) 0
-                        , Number
-                      , 0
+                set-point-vector! (phlox.core/ffi-pivot target) point
               (:none) &unit
             , &unit
           :examples $ []
@@ -3756,19 +3758,7 @@
           :code $ quote $ defn init-position (target point-option)
             match point-option
               (:some point)
-                do
-                  phlox.core/ffi-set-x! (phlox.core/ffi-position target)
-                    if (list? point)
-                      decode-map-as
-                        .unwrap-or (first point) 0
-                        , Number
-                      , 0
-                  phlox.core/ffi-set-y! (phlox.core/ffi-position target)
-                    if (list? point)
-                      decode-map-as
-                        .unwrap-or (last point) 0
-                        , Number
-                      , 0
+                set-point-vector! (phlox.core/ffi-position target) point
               (:none) &unit
             , &unit
           :examples $ []
@@ -3802,6 +3792,19 @@
               _ $ println "|unknown line-join value:" x
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Dynamic) (:features :io :js-ffi)
+        'set-point-vector! $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn set-point-vector! (vec point)
+            match
+              try-decode-map-as point $ List Number
+              (:ok xs)
+                do
+                  phlox.core/ffi-set-x! vec $ .unwrap-or (first xs) 0
+                  phlox.core/ffi-set-y! vec $ .unwrap-or (last xs) 0
+              (:err _)
+                do (phlox.core/ffi-set-x! vec 0) (phlox.core/ffi-set-y! vec 0)
+            , &unit
+          :examples $ []
+          :schema $ quote $ Fn phlox.core/PixiVectorHost Dynamic (-> Unit) (:features :js-ffi)
         'update-alpha $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-alpha (target value-option value-option0)
             when
@@ -3851,18 +3854,7 @@
                   point $ match point-option
                     (:some value) value
                     (:none) ([] 0 0)
-                phlox.core/ffi-set-x! (phlox.core/ffi-pivot target)
-                  if (list? point)
-                    decode-map-as
-                      .unwrap-or (first point) 0
-                      , Number
-                    , 0
-                phlox.core/ffi-set-y! (phlox.core/ffi-pivot target)
-                  if (list? point)
-                    decode-map-as
-                      .unwrap-or (last point) 0
-                      , Number
-                    , 0
+                set-point-vector! (phlox.core/ffi-pivot target) point
             , &unit
           :examples $ []
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3874,18 +3866,7 @@
                   point $ match point-option
                     (:some value) value
                     (:none) ([] 0 0)
-                phlox.core/ffi-set-x! (phlox.core/ffi-position target)
-                  if (list? point)
-                    decode-map-as
-                      .unwrap-or (first point) 0
-                      , Number
-                    , 0
-                phlox.core/ffi-set-y! (phlox.core/ffi-position target)
-                  if (list? point)
-                    decode-map-as
-                      .unwrap-or (last point) 0
-                      , Number
-                    , 0
+                set-point-vector! (phlox.core/ffi-position target) point
             , &unit
           :examples $ []
           :schema $ quote $ Fn phlox.core/PixiDisplayHost Dynamic Dynamic (-> Unit) (:features :js-ffi)
@@ -3923,6 +3904,18 @@
           :code $ quote $ defenum LineJoin (:miter) (:bevel) (:round)
           :examples $ []
           :schema $ quote EnumDef
+        'LineStyleKey $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion LineStyleKey Tag String
+          :examples $ []
+          :schema $ quote UnionDef
+        'LineStyleScalar $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion LineStyleScalar Tag String Number Bool
+          :examples $ []
+          :schema $ quote UnionDef
+        'LineStyleValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion LineStyleValue Tag String Number Bool (List LineStyleScalar)
+          :examples $ []
+          :schema $ quote UnionDef
         'PathOp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum PathOp
             :move-to $ List Number
@@ -3999,11 +3992,12 @@
               to-pairs
               map $ fn (pair)
                 let[] (k v) pair $ let
-                    key-name $ camel-case $ cond
-                        tag? k
-                        to-string k
-                      (string? k) k
-                      true $ str k
+                    key-name $ camel-case $ match (try-decode-map-as k schema/LineStyleKey)
+                      (:ok key)
+                        match key
+                          (Tag t) (to-string t)
+                          (String s) s
+                      (:err _) (str k)
                   [] key-name $ match k
                     :fill-gradient-type $ match v
                       :h $ -> PIXI/TEXT_GRADIENT .-LINEAR_HORIZONTAL
@@ -4011,14 +4005,16 @@
                       :v $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
                       :vertical $ -> PIXI/TEXT_GRADIENT .-LINEAR_VERTICAL
                       _ $ do (println "|unknown gradient type:") v
-                    _ $ cond
-                        tag? v
-                        to-string v
-                      (string? v) v
-                      (number? v) v
-                      (bool? v) v
-                      (list? v) v
-                      true $ do (println "|Unknown style value:" v) v
+                    _ $ match (try-decode-map-as v schema/LineStyleValue)
+                      (:ok val)
+                        match val
+                          (Tag t) (to-string t)
+                          (String s) s
+                          (Number n) n
+                          (Bool b) b
+                          (List xs) xs
+                      (:err _)
+                        do (println "|Unknown style value:" v) v
               &set:to-list
               pairs-map
               to-js-data
@@ -4114,10 +4110,17 @@
           :schema $ quote $ Fn M Tag (-> Dynamic) (:generics M)
         'use-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn use-number (x)
-            if
-              and (number? x)
-                not $ decode-map-as (js/isNaN x) Bool
-              , x $ do (js/console.error "|Invalid number:" x) nil
+            let
+                n? $ match (try-decode-map-as x Number)
+                  (:ok n)
+                    if
+                      decode-map-as (js/isNaN n) Bool
+                      , None $ Some n
+                  (:err _) None
+              match n?
+                (:some n) n
+                (:none)
+                  do (js/console.error "|Invalid number:" x) nil
           :examples $ []
           :schema $ quote $ Fn T (-> Dynamic) (:generics T) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
