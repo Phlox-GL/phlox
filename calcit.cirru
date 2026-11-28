@@ -2147,11 +2147,13 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> Number) (:features :js-ffi)
         'ffi-object-x $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-object-x (value) (.-x value)
+          :code $ quote $ defn ffi-object-x (value)
+            js-ffi.contract/expect-number |Pixi.global.x $ .-x value
           :examples $ []
           :schema $ quote $ Fn PixiVectorHost (-> Number) (:features :js-ffi)
         'ffi-object-y $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-object-y (value) (.-y value)
+          :code $ quote $ defn ffi-object-y (value)
+            js-ffi.contract/expect-number |Pixi.global.y $ .-y value
           :examples $ []
           :schema $ quote $ Fn PixiVectorHost (-> Number) (:features :js-ffi)
         'ffi-pivot $ %{} 'CodeEntry (:doc |)
