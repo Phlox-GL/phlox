@@ -2139,10 +2139,9 @@
           :examples $ []
           :schema $ quote $ Fn CanvasContextHost String (-> TextMetricsHost) (:features :js-ffi)
         'ffi-nullish? $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn ffi-nullish? (value)
-            nil? $ unsafe-coerce value Dynamic
+          :code $ quote $ defn ffi-nullish? (value) (nil? value)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Bool) (:features :js-ffi)
+          :schema $ quote $ Fn T (-> Bool) (:generics T) (:features :js-ffi)
         'ffi-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn ffi-number (value) (js-ffi.contract/expect-number |Phlox.number value)
           :examples $ []
